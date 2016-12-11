@@ -57,7 +57,7 @@ class StcApp(TrafficGenerator):
     project = None
 
     def __init__(self, logger, api_wrapper):
-        """ Create low level connector to STC.
+        """ Set all kinds of application level objects - logger, api, etc.
 
         :param logger: python logger (e.g. logging.getLogger('log'))
         :param api_wrapper: api wrapper object inheriting and implementing StcApi base class.
