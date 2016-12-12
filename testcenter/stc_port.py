@@ -100,8 +100,7 @@ class StcPort(StcObject):
         """
         if media_type.value != self.activephy.obj_type():
             new_phy = StcObject(parent=self, objType=media_type.value)
-            attributes = {'activephy-Targets': new_phy.obj_ref()}
-            self.set_attributes(apply_=True, **attributes)
+            self.set_targets(apply_=True, SctivePhy=new_phy.obj_ref())
             self.activephy = new_phy
 
     #
