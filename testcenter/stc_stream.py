@@ -3,7 +3,6 @@ This module implements classes and utility functions to manage STC streamblocks.
 """
 
 from stc_object import StcObject
-from trafficgenerator.tgn_tcl import tcl_list_2_py_list
 
 
 class StcStream(StcObject):
@@ -50,6 +49,9 @@ class StcGroupCollection(StcObject):
         self.api.config(gc_ref, GroupName=self.obj_name())
         return gc_ref
 
+    def get_name(self):
+        return self.get_attribute('GroupName')
+
 
 class StcTrafficGroup(StcObject):
     """ Represent STC traffic group. """
@@ -72,12 +74,15 @@ class StcTrafficGroup(StcObject):
         self.api.config(tg_ref, GroupName=self.obj_name())
         return tg_ref
 
+    def get_name(self):
+        return self.get_attribute('GroupName')
+
     def set_attributes(self, apply_=False, **attributes):
         for sb in self.get_stream_blocks():
             sb.set_attributes(apply_, **attributes)
 
     def get_stream_blocks(self):
-        streamBlocks = tcl_list_2_py_list(self.get_attribute('AffiliationTrafficGroup-Targets'))
+        streamBlocks = self.get_list_attribute('AffiliationTrafficGroup-Targets')
         stc_sbs = [self.project.get_object_by_ref(r) for r in streamBlocks]
         if None in stc_sbs:
             self.project.get_stream_blocks()

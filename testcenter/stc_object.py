@@ -68,6 +68,12 @@ class StcObject(TgnObject):
         """
         return self.api.get(self.obj_ref(), attribute)
 
+    def get_list_attribute(self, attribute):
+        """
+        :return: attribute value as Python list.
+        """
+        return self.api.getList(self.obj_ref(), attribute)
+
     def get_objects_from_attribute(self, attribute):
         objects = []
         for handle in self.get_attribute(attribute).split():

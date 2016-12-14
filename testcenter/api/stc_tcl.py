@@ -81,6 +81,11 @@ class StcTclWrapper(TgnTclWrapper):
         attributes_dict = dict(zip(*[iter(tcl_list_2_py_list(output))] * 2))
         return dict(zip([s[1:] for s in attributes_dict.keys()], attributes_dict.values()))
 
+    def getList(self, obj_ref, attribute):
+
+        output = self.stc_command('get', obj_ref, '-' + attribute if attribute is not None else '')
+        return tcl_list_2_py_list(output)
+
     def perform(self, command, **arguments):
         """ Execute a command.
 

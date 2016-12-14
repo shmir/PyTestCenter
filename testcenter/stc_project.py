@@ -158,8 +158,7 @@ class StcProject(StcObject):
         :param wait_after: time to wait after command execution in seconds.
         """
 
-        self._command_emulations('ProtocolStart', wait_after,
-                                 ProtocolList=build_obj_ref_list(emulations))
+        self._command_emulations('ProtocolStart', wait_after, ProtocolList=build_obj_ref_list(emulations))
 
     def stop_emulations(self, emulations, wait_after=4):
         """ Start emulations.
@@ -168,8 +167,7 @@ class StcProject(StcObject):
         :param wait_after: time to wait after command execution in seconds.
         """
 
-        self._command_emulations('ProtocolStop', wait_after,
-                                 ProtocolList=build_obj_ref_list(emulations))
+        self._command_emulations('ProtocolStop', wait_after, ProtocolList=build_obj_ref_list(emulations))
 
     def get_stream_blocks(self):
         """

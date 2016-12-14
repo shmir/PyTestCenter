@@ -97,6 +97,11 @@ class StcTestOffline(StcTestBase):
         assert(len(self.stc.project.get_devices(stc_ports[0])) == 6)
         assert(len(self.stc.project.get_devices(stc_ports[1])) == 6)
 
+        assert(len(self.stc.project.get_children('GroupCollection')) == 2)
+        assert(len(self.stc.project.get_object_by_name('TG 1').get_children('TrafficGroup')) == 2)
+        assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
+        assert(len(self.stc.project.get_stream_blocks()) == 4)
+
         pass
 
     def testBuildEmulation(self):

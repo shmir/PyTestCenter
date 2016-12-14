@@ -54,6 +54,16 @@ class StcPythonWrapper(object):
 
         return self.stc.get(obj_ref, attribute)
 
+    def getList(self, obj_ref, attribute):
+        """ Returns the value of the object attributes or a python list.
+
+        :param obj_ref: requested object reference.
+        :param attribute: requested attribute.
+        :return: requested value as returned by get command.
+        """
+
+        return self.stc.get(obj_ref, attribute).split()
+
     def config(self, obj_ref, **attributes):
         """ Set or modifies one or more object attributes, or a relation.
 

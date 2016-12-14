@@ -31,7 +31,7 @@ class StcTestBase(TgnTest):
         super(StcTestBase, self).setUp()
         if self.config.get('STC', 'api').lower() == 'tcl':
             api_wrapper = StcTclWrapper(self.logger, self.config.get('STC', 'install_dir'))
-        elif self.config.get('STC', 'python').lower() == 'python':
+        elif self.config.get('STC', 'api').lower() == 'python':
             api_wrapper = StcPythonWrapper(self.logger, self.config.get('STC', 'install_dir'))
         else:
             api_wrapper = StcRestWrapper(self.logger, self.config.get('STC', 'lab_server'))
