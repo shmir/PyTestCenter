@@ -31,6 +31,13 @@ class StcProject(StcObject):
     def __init__(self, **data):
         super(StcProject, self).__init__(objType='project', **data)
 
+    def get_ports(self):
+        """
+        :return: dictionary {name: object} of all port.
+        """
+
+        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('Port')}
+
     #
     # Port command.
     #

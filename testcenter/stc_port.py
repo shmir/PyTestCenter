@@ -34,6 +34,20 @@ class StcPort(StcObject):
         super(self.__class__, self).__init__(**data)
         self.generator = self.get_child('generator')
 
+    def get_devices(self):
+        """
+        :return: dictionary {name: object} of all emulated devices.
+        """
+
+        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('EmulatedDevice')}
+
+    def get_stream_blocks(self):
+        """
+        :return: dictionary {name: object} of all streams.
+        """
+
+        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('StreamBlock')}
+
     def reserve(self, location, force=False):
         """ Reserve physical port.
 

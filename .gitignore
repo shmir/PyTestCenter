@@ -94,6 +94,7 @@ ENV/
 *-2way.*
 test*.tcc
 testcenter/test/logs
+testcenter/test/configs/test*.tcc
 
 syntax: regexp
 ^ixnetwork/test/logs/configs_per_protocol$

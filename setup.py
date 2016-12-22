@@ -34,7 +34,7 @@ class PyTest(TestCommand):
         sys.exit(errcode)
 
 setup(
-    name='testcenter',
+    name='stcooapi',
     version=testcenter.__version__,
     url='https://github.com/shmir/TestCenter/',
     license='Apache Software License',

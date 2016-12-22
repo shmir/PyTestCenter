@@ -129,6 +129,9 @@ class StcObject(TgnObject):
         if apply_:
             self.api.apply()
 
+    def set_active(self, active):
+        self.set_attributes(Active=active)
+
     def set_targets(self, apply_=False, **attributes):
         attributes_targets = {}
         for attribute, value in attributes.items():
@@ -142,7 +145,10 @@ class StcObject(TgnObject):
         self.set_attributes(apply_, **attributes_targets)
 
     def get_name(self):
-        return self.get_attribute('name')
+        return self.get_attribute('Name')
+
+    def get_active(self):
+        return self.get_attribute('Active')
 
     def test_command_rc(self, attribute):
         status = self.api.command_rc[attribute].lower()

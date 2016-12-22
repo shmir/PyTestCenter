@@ -23,6 +23,63 @@ class StcTestOffline(StcTestBase):
 
     stc_config_file = path.join(path.dirname(__file__), stc_config_files[0])
 
+    def testLoadConfig(self):
+        """ Load existing configuration. """
+        self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
+
+        self.stc.load_config(self.stc_config_file)
+        file_name, file_ext = path.splitext(self.stc_config_file)
+        self.stc.save_config(file_name + '-save' + file_ext)
+        pass
+
+    def testAnalyzeConfig(self):
+        """ Analyze existing configuration. """
+        self.logger.info(StcTestOffline.testAnalyzeConfig.__doc__.strip())
+
+        self.stc.load_config(self.stc_config_file)
+        project = self.stc.project
+
+        project.get_children('port')
+        port1_obj = project.get_object_by_name('Port 1')
+
+        print "Port1 object reference = ", port1_obj.obj_ref()
+        print "Port1 name = ", port1_obj.obj_name()
+        print 'Ports = ', project.get_objects_by_type('port')
+        print 'Port 1 state = ', port1_obj.get_attribute('Location')
+        print 'Port 1 attributes = ', port1_obj.get_attributes()
+        print 'Port 1 streamblocks = ', port1_obj.get_children('streamblock')
+        print 'Port 2 streamblocks = ', port1_obj.get_children('streamblock')
+
+        stc_ports = project.get_children('port')
+        assert(len(stc_ports) == 2)
+
+        assert(len(stc_ports[0].get_children('emulateddevice')) == 1)
+        assert(len(stc_ports[1].get_children('emulateddevice')) == 1)
+
+        assert(len(self.stc.project.get_devices()) == 2)
+        assert(len(self.stc.project.get_devices(stc_ports[0])) == 1)
+        assert(len(self.stc.project.get_devices(stc_ports[1])) == 1)
+
+        assert(len(self.stc.project.get_children('GroupCollection')) == 1)
+        assert(len(self.stc.project.get_object_by_name('TG 1').get_children('TrafficGroup')) == 1)
+        assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
+        assert(len(self.stc.project.get_stream_blocks()) == 2)
+
+        pass
+
+    def testChildren(self):
+        """ Test specific get children methods. """
+        self.logger.info(StcTestOffline.testChildren.__doc__)
+
+        self.stc.load_config(self.stc_config_file)
+        project = self.stc.project
+
+        ports = project.get_ports()
+        assert(len(ports) == 2)
+        for port in ports.values():
+            assert(len(port.get_devices()) == 1)
+            assert(len(port.get_stream_blocks()) == 1)
+
     def testBuildConfig(self):
         """ Build simple config from scratch. """
         self.logger.info(StcTestOffline.testBuildConfig.__doc__.strip())
@@ -57,50 +114,6 @@ class StcTestOffline(StcTestBase):
 
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
-
-        pass
-
-    def testLoadConfig(self):
-        """ Load existing configuration. """
-        self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
-
-        self.stc.load_config(self.stc_config_file)
-        file_name, file_ext = path.splitext(self.stc_config_file)
-        self.stc.save_config(file_name + '-save' + file_ext)
-        pass
-
-    def testAnalyzeConfig(self):
-        """ Analyze existing configuration. """
-        self.logger.info(StcTestOffline.testAnalyzeConfig.__doc__.strip())
-
-        self.stc.load_config(self.stc_config_file)
-        project = self.stc.project
-
-        project.get_children('port')
-        port1_obj = project.get_object_by_name('Port 1')
-
-        print "Port1 object reference = ", port1_obj.obj_ref()
-        print "Port1 name = ", port1_obj.obj_name()
-        print 'Ports = ', project.get_objects_by_type('port')
-        print 'Port 1 state = ', port1_obj.get_attribute('Location')
-        print 'Port 1 attributes = ', port1_obj.get_attributes()
-        print 'Port 1 streamblocks = ', port1_obj.get_children('streamblock')
-        print 'Port 2 streamblocks = ', port1_obj.get_children('streamblock')
-
-        stc_ports = project.get_children('port')
-        assert(len(stc_ports) == 2)
-
-        assert(len(stc_ports[0].get_children('emulateddevice')) == 6)
-        assert(len(stc_ports[1].get_children('emulateddevice')) == 6)
-
-        assert(len(self.stc.project.get_devices()) == 12)
-        assert(len(self.stc.project.get_devices(stc_ports[0])) == 6)
-        assert(len(self.stc.project.get_devices(stc_ports[1])) == 6)
-
-        assert(len(self.stc.project.get_children('GroupCollection')) == 2)
-        assert(len(self.stc.project.get_object_by_name('TG 1').get_children('TrafficGroup')) == 2)
-        assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
-        assert(len(self.stc.project.get_stream_blocks()) == 4)
 
         pass
 
