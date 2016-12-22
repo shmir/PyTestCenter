@@ -179,7 +179,7 @@ class StcTestOnline(StcTestOffline):
         fg_tx_stats.read_stats()
         fg_rx_stats.read_stats()
 
-        p1_gen_counters = gen_stats.get_stats('Port 1')
+        p1_gen_counters = gen_stats.get_object_stats('Port 1')
         print p1_gen_counters['GeneratorFrameCount']
         print analayzer_stats.get_counter('Port 2', 'SigFrameCount')
 

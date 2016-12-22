@@ -40,6 +40,9 @@ class StcDevice(StcObject):
     def send_arp_ns(self):
         StcObject.send_arp_ns(self)
 
+    def get_arp_cache(self):
+        return StcObject.get_arp_cache(self)
+
     def ping(self, ip):
         self.command('PingVerifyConnectivity', PingAddress=ip)
         self.test_command_rc('PassFailState')

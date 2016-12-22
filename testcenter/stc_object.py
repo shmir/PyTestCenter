@@ -156,6 +156,15 @@ class StcObject(TgnObject):
             raise TgnError('{} = {}'.format(attribute, status))
 
     @classmethod
-    def send_arp_ns(cls, *handle_list):
+    def send_arp_ns(cls, *objects):
         """ Send ARP and NS for ports, devices or stream blocks. """
-        StcObject.api.perform('ArpNdStart', HandleList=build_obj_ref_list(handle_list))
+        StcObject.api.perform('ArpNdStart', HandleList=build_obj_ref_list(objects))
+
+    @classmethod
+    def get_arp_cache(self, *objects):
+        arp_table = []
+        for obj in objects:
+            obj.command('ArpNdUpdateArpCache', HandleList=obj.obj_ref())
+            arp_cache = obj.get_child('ArpCache')
+            arp_table += arp_cache.get_list_attribute('ArpCacheData')
+        return arp_table

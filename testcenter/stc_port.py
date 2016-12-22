@@ -5,9 +5,10 @@ This module implements classes and utility functions to manage STC port.
 """
 
 import re
+import time
 from enum import Enum
 
-from trafficgenerator.tgn_utils import is_local_host
+from trafficgenerator.tgn_utils import is_local_host, TgnError
 
 from stc_object import StcObject
 
@@ -20,13 +21,6 @@ class MediaType(Enum):
 
 class StcPort(StcObject):
     """ Represent STC port. """
-
-    _location = None
-
-    generator = None
-    """ Port generator. """
-    activephy = None
-    """ Port phy. """
 
     def __init__(self, **data):
         data['objType'] = 'port'
@@ -61,7 +55,16 @@ class StcPort(StcObject):
         if not is_local_host(location):
             self.api.perform('AttachPorts', portList=self.obj_ref(), autoConnect=True, RevokeOwner=force)
             self.api.apply()
-        self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
+            self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
+            self.wait_for_states(40, 'UP', 'DOWN', 'ADMIN_DOWN')
+
+    def wait_for_states(self, timeout=40, *states):
+        for _ in range(timeout):
+            if self.activephy.get_attribute('LinkStatus') in states:
+                return
+            time.sleep(1)
+        raise TgnError('Failed to reserve port, port is {} after {} seconds'.
+                       format(self.activephy.get_attribute('LinkStatus'), timeout))
 
     def release(self):
         """ Release the physical port reserved for the port. """
@@ -74,6 +77,7 @@ class StcPort(StcObject):
                   True - port is up.
                   False - port is offline.
         """
+
         return self.activephy.get_attribute('linkstatus').lower() == 'up'
 
     def is_running(self):
@@ -87,6 +91,10 @@ class StcPort(StcObject):
     def send_arp_ns(self):
         """ Send ARP/ND for the port. """
         StcObject.send_arp_ns(self)
+
+    def get_arp_cache(self):
+        """ Send ARP/ND for the port. """
+        return StcObject.get_arp_cache(self)
 
     def start(self, blocking=False):
         """ Start port traffic.
@@ -114,7 +122,7 @@ class StcPort(StcObject):
         """
         if media_type.value != self.activephy.obj_type():
             new_phy = StcObject(parent=self, objType=media_type.value)
-            self.set_targets(apply_=True, SctivePhy=new_phy.obj_ref())
+            self.set_targets(apply_=True, ActivePhy=new_phy.obj_ref())
             self.activephy = new_phy
 
     #

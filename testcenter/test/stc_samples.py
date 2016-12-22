@@ -19,17 +19,17 @@ from testcenter.api.stc_tcl import StcTclWrapper
 from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_app import StcApp
-from ixnetwork.ixn_statistics_view import IxnPortStatistics, IxnTrafficItemStatistics
+from testcenter.stc_statistics_view import StcStats
 
 
 # API type = tcl, python or rest. Default is tcl with DEBUG log messages (see bellow) because it gives best visibility.
-api = 'tcl'
-install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.66'
+api = 'python'
+install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.62'
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '10.192.18.200/2/5'
-port2_location = '10.192.18.200/2/8'
+port1_location = '10.224.18.200/9/1'
+port2_location = '10.224.18.200/9/2'
 
 
 class IxnTestBase(unittest.TestCase):
@@ -108,25 +108,25 @@ class IxnTestBase(unittest.TestCase):
 
     def reserve_ports(self):
         self.load_config()
-        self.ports = self.ixn.root.get_children('vport')
-        self.ixn.root.get_object_by_name('Port 1').reserve(port1_location)
-        self.ixn.root.get_object_by_name('Port 2').reserve(port2_location)
+        self.ports = self.stc.project.get_ports()
+        self.ports['Port 1'].reserve(port1_location)
+        self.ports['Port 2'].reserve(port2_location)
 
-    def protocols(self):
+    def devices(self):
         self.reserve_ports()
-        self.ixn.send_arp_ns()
-        self.ixn.protocols_start()
+        self.stc.send_arp_ns()
+        print self.stc.get_arp_cache()
+        self.stc.start_devices()
+        time.sleep(8)
+        self.stc.stop_devices()
 
     def traffic(self):
         self.reserve_ports()
-        self.ixn.traffic_apply()
-        self.ixn.l23_traffic_start()
+        self.stc.start_traffic()
         time.sleep(8)
-        self.ixn.l23_traffic_stop()
-        port_stats = IxnPortStatistics()
+        self.stc.stop_traffic()
+        port_stats = StcStats('generatorportresults')
         port_stats.read_stats()
-        ti_stats = IxnTrafficItemStatistics()
-        ti_stats.read_stats()
         print port_stats.get_object_stats('Port 1')
-        print port_stats.get_counters('Frames Tx.')
-        assert(ti_stats.get_counter('Traffic Item 1', 'Rx Frames') == 1600)
+        print port_stats.get_stats('TotalFrameCount')
+        print port_stats.get_stat('Port 1', 'TotalFrameCount')

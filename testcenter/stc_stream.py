@@ -28,6 +28,9 @@ class StcStream(StcObject):
     def send_arp_ns(self):
         StcObject.send_arp_ns(self)
 
+    def get_arp_cache(self):
+        return StcObject.get_arp_cache(self)
+
 
 class StcGroupCollection(StcObject):
     """ Represent STC group collection. """

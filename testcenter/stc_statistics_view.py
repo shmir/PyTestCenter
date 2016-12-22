@@ -82,20 +82,21 @@ class StcStats(object):
         if objs_stats:
             self.statistics = dict(zip(keys, zip(*objs_stats)))
 
-    def get_row(self, row='topLevelName'):
+    def get_stats(self, row='topLevelName'):
         """
         :param row: requested row (== statistic name)
         :returns: all statistics values for the requested row.
         """
         return self.statistics[row]
 
-    def get_stats(self, obj_id, obj_id_stat='topLevelName'):
+    def get_object_stats(self, obj_id, obj_id_stat='topLevelName'):
         """
         :param obj_id: requested object ID.
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
         :returns: all statistics values for the requested object ID.
         """
+
         obj_statistics = {}
         for counter in self.statistics.keys():
             if self.statistics[counter]:
@@ -119,17 +120,14 @@ class StcStats(object):
         :param counter: requested statistics (note that some statistics are not counters).
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
-        :returns: the float value of the requested counter for the requested object ID.
+        :returns: the int value of the requested counter for the requested object ID.
         """
-        return float(self.get_stat(obj_id, counter, obj_id_stat))
+        return int(self.get_stat(obj_id, counter, obj_id_stat))
 
-    #
-    # Private methods.
-    #
-
-    def _command(self, command, *arguments):
-        return self.api.eval('::TestCenter::' + command + ' ' + self.view + ' ' + ' '.join(arguments))
-
-view_2_config_Type = {'analyzerportresults': 'Analyzer',
-                      'generatorportresults': 'Generator',
+view_2_config_Type = {'generatorportresults': 'Generator',
+                      'analyzerportresults': 'Analyzer',
+                      'txstreamblockresults': 'StreamBlock',
+                      'rxstreamblockresults': 'StreamBlock',
+                      'txstreamresults': 'StreamBlock',
+                      'rxstreamsummaryresults': 'StreamBlock',
                       }

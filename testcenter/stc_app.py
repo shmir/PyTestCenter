@@ -143,13 +143,20 @@ class StcApp(TrafficGenerator):
     #
 
     def send_arp_ns(self):
-        StcObject.send_arp_ns(*self.project.get_objects_by_type('port'))
+        StcObject.send_arp_ns(*self.project.get_objects_or_children_by_type('port'))
+
+    def get_arp_cache(self):
+        return StcObject.get_arp_cache(*self.project.get_objects_or_children_by_type('port'))
 
     #
     # Devices commands.
     #
 
     def start_devices(self):
+        """ Start all devices.
+
+        It is the test responsibility to wait for devices to reach required state.
+        """
         self._command_devices('DeviceStart')
 
     def stop_devices(self):
@@ -157,7 +164,7 @@ class StcApp(TrafficGenerator):
 
     def _command_devices(self, command):
         self.project.command_devices(command, 4)
-        self.test_command_rc('Status')
+        self.project.test_command_rc('Status')
         time.sleep(4)
 
     #
