@@ -53,7 +53,7 @@ class StcPort(StcObject):
         self._location = location
         self.set_attributes(location=location)
         if not is_local_host(location):
-            self.api.perform('AttachPorts', portList=self.obj_ref(), autoConnect=True, RevokeOwner=force)
+            self.api.perform('AttachPorts', PortList=self.obj_ref(), AutoConnect=True, RevokeOwner=force)
             self.api.apply()
             self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
             self.wait_for_states(40, 'UP', 'DOWN', 'ADMIN_DOWN')

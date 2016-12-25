@@ -5,6 +5,12 @@
 import os
 import posixpath
 import imp
+from sys import platform
+
+if platform == 'win32':
+    app_subdir = 'Spirent TestCenter Application'
+else:
+    app_subdir = 'Spirent_TestCenter_Application_Linux'
 
 
 class StcPythonWrapper(object):
@@ -17,7 +23,7 @@ class StcPythonWrapper(object):
         """
 
         super(self.__class__, self).__init__()
-        stc_private_install_dir = posixpath.sep.join([stc_install_dir, 'Spirent TestCenter Application'])
+        stc_private_install_dir = posixpath.sep.join([stc_install_dir, app_subdir])
         os.environ['STC_PRIVATE_INSTALL_DIR'] = stc_private_install_dir
         stc_python_module = posixpath.sep.join([stc_private_install_dir, 'API/Python/StcPython.py'])
         self.stc = imp.load_source('StcPython', stc_python_module).StcPython()

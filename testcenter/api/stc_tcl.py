@@ -3,8 +3,15 @@
 """
 
 from os import path
+from sys import platform
 
 from trafficgenerator.tgn_tcl import TgnTclWrapper, get_args_pairs, tcl_file_name, tcl_list_2_py_list
+
+
+if platform == 'win32':
+    app_subdir = 'Spirent TestCenter Application'
+else:
+    app_subdir = 'Spirent_TestCenter_Application_Linux'
 
 
 class StcTclWrapper(TgnTclWrapper):
@@ -12,16 +19,8 @@ class StcTclWrapper(TgnTclWrapper):
 
     def __init__(self, logger, stc_install_dir, tcl_interp=None):
         super(self.__class__, self).__init__(logger, tcl_interp)
-        tcl_lib_dir = path.join(stc_install_dir, 'Tcl/lib')
-        if path.exists(tcl_lib_dir):
-            # If STC Tcl is installed add it's directory to auto_path
-            self.eval('lappend auto_path ' + tcl_file_name(tcl_lib_dir))
-        else:
-            # Set Tcl variable dir and source pkgIndex.
-            # It is the user responsibility to edit pkgIndex.
-            self.eval('set dir ' + tcl_file_name(path.join(stc_install_dir,
-                                                           'Spirent TestCenter Application')))
-            self.source(path.join(stc_install_dir, 'Spirent TestCenter Application/pkgIndex.tcl'))
+        self.eval('set dir ' + tcl_file_name(path.join(stc_install_dir, app_subdir)))
+        self.source(path.join(stc_install_dir, app_subdir, 'pkgIndex.tcl'))
         self.ver = self.eval('package require SpirentTestCenter')
 
     def stc_command(self, command, *attributes):
