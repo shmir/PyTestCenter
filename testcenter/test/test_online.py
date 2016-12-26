@@ -14,7 +14,6 @@ Two STC ports connected back to back.
 from os import path
 
 from testcenter.stc_statistics_view import StcStats
-from testcenter.stc_port import MediaType
 
 from testcenter.test.test_base import stc_config_files
 from testcenter.test.test_offline import StcTestOffline
@@ -22,7 +21,7 @@ from testcenter.test.test_offline import StcTestOffline
 
 class StcTestOnline(StcTestOffline):
 
-    media_type = MediaType.fiber
+    media_type = 'EthernetFiber'
 
     ports = []
 

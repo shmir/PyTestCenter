@@ -11,7 +11,7 @@ import logging
 
 from trafficgenerator.trafficgenerator import TrafficGenerator
 
-from api.stc_rest import StcRestWrapper
+from testcenter.api.stc_rest import StcRestWrapper
 from stc_object import StcObject
 from stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter, StcPimv4Group,
                         StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier, StcIgmpGroup, StcOseSwitch,

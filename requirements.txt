@@ -1,2 +1,2 @@
 stcrestclient
-trafficgenerator
+tgnooapi

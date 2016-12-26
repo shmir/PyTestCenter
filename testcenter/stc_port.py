@@ -6,17 +6,10 @@ This module implements classes and utility functions to manage STC port.
 
 import re
 import time
-from enum import Enum
 
 from trafficgenerator.tgn_utils import is_local_host, TgnError
 
 from stc_object import StcObject
-
-
-class MediaType(Enum):
-    """ Enum - media type values. """
-    copper = 'EthernetCopper'
-    fiber = 'EthernetFiber'
 
 
 class StcPort(StcObject):
@@ -118,7 +111,7 @@ class StcPort(StcObject):
     def set_media_type(self, media_type):
         """ Set media type for dual phy 1G ports.
 
-        :param media_type: requested media type, one of the values in MediaType.
+        :param media_type: requested media type - EthernetCopper or EthernetFiber.
         """
         if media_type.value != self.activephy.obj_type():
             new_phy = StcObject(parent=self, objType=media_type.value)
