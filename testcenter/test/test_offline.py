@@ -16,19 +16,17 @@ from testcenter.stc_port import StcPort
 from testcenter.stc_device import StcDevice
 from testcenter.stc_stream import StcStream
 
-from testcenter.test.test_base import StcTestBase, stc_config_files
+from testcenter.test.test_base import StcTestBase
 
 
 class StcTestOffline(StcTestBase):
-
-    stc_config_file = path.join(path.dirname(__file__), stc_config_files[0])
 
     def testLoadConfig(self):
         """ Load existing configuration. """
         self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
 
-        self.stc.load_config(self.stc_config_file)
-        file_name, file_ext = path.splitext(self.stc_config_file)
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        file_name, file_ext = path.splitext(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self.stc.save_config(file_name + '-save' + file_ext)
         pass
 
@@ -36,7 +34,7 @@ class StcTestOffline(StcTestBase):
         """ Analyze existing configuration. """
         self.logger.info(StcTestOffline.testAnalyzeConfig.__doc__.strip())
 
-        self.stc.load_config(self.stc_config_file)
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         project = self.stc.project
 
         project.get_children('port')
@@ -71,7 +69,7 @@ class StcTestOffline(StcTestBase):
         """ Test specific get children methods. """
         self.logger.info(StcTestOffline.testChildren.__doc__)
 
-        self.stc.load_config(self.stc_config_file)
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         project = self.stc.project
 
         ports = project.get_ports()

@@ -35,7 +35,7 @@ class StcPort(StcObject):
 
         return {o.obj_name(): o for o in self.get_objects_or_children_by_type('StreamBlock')}
 
-    def reserve(self, location, force=False):
+    def reserve(self, location, force=False, wait_for_up=True):
         """ Reserve physical port.
 
         :param location: port location in the form ip/slot/port.
@@ -43,13 +43,16 @@ class StcPort(StcObject):
         :todo: seems like reserve takes forever even if port is already owned by the user.
             should test for ownership and take it forcefully only if really needed.
         """
+
         self._location = location
         self.set_attributes(location=location)
         if not is_local_host(location):
             self.api.perform('AttachPorts', PortList=self.obj_ref(), AutoConnect=True, RevokeOwner=force)
             self.api.apply()
             self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
-            self.wait_for_states(40, 'UP', 'DOWN', 'ADMIN_DOWN')
+            self.activephy.get_attributes()
+            if wait_for_up:
+                self.wait_for_states(40, 'UP', 'DOWN', 'ADMIN_DOWN')
 
     def wait_for_states(self, timeout=40, *states):
         for _ in range(timeout):
@@ -113,8 +116,9 @@ class StcPort(StcObject):
 
         :param media_type: requested media type - EthernetCopper or EthernetFiber.
         """
-        if media_type.value != self.activephy.obj_type():
-            new_phy = StcObject(parent=self, objType=media_type.value)
+
+        if media_type != self.activephy.obj_type():
+            new_phy = StcObject(parent=self, objType=media_type)
             self.set_targets(apply_=True, ActivePhy=new_phy.obj_ref())
             self.activephy = new_phy
 

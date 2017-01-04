@@ -13,13 +13,6 @@ from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_app import StcApp
 
-stc_config_files = ('configs/test_config.tcc',
-                    'configs/dhcp_sample.tcc',
-                    'configs/statistics.tcc',
-                    'configs/ospf_sample.tcc',
-                    'configs/analyzer_sample.tcc',
-                    'configs/loopback.tcc')
-
 
 class StcTestBase(TgnTest):
 

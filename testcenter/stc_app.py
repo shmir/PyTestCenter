@@ -19,7 +19,7 @@ from stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRou
 from stc_port import StcPort, StcGenerator, StcAnalyzer
 from stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
-
+from stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'bgprouterconfig': StcBgpRouter,
@@ -41,6 +41,11 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'pimrouterconfig': StcPimRouter,
                  'pimv4groupblk': StcPimv4Group,
                  'port': StcPort,
+                 'physicalchassis': StcPhyChassis,
+                 'physicalchassismanager': StcHw,
+                 'physicalport': StcPhyPort,
+                 'physicalportgroup': StcPhyPortGroup,
+                 'physicaltestmodule': StcPhyModule,
                  'routerlsa': StcRouterLsa,
                  'streamblock': StcStream,
                  'summarylsablock': StcRouterLsa,
@@ -72,12 +77,12 @@ class StcApp(TrafficGenerator):
         StcObject.str_2_class = TYPE_2_OBJECT
 
         self.system = StcObject(objType='system', objRef='system1')
+        self.hw = self.system.get_child('PhysicalChassisManager')
 
-    def connect(self, lab_server=None, chassis=None):
-        """ Create project object and optionally connect to chassis.
+    def connect(self, lab_server=None):
+        """ Create object and (optionally) connect to lab server.
 
         :param lab_server: optional lab server address.
-        :param chassis: optional chassis address.
         """
 
         self.project = StcProject(parent=self.system)
@@ -85,16 +90,12 @@ class StcApp(TrafficGenerator):
         self.lab_server = lab_server
         if self.lab_server:
             self.api.perform('CSTestSessionConnect', Host=self.lab_server, CreateNewTestSession=True)
-        if chassis:
-            self.api.perform('ChassisConnect', Hostname=chassis)
 
     def disconnect(self):
-        """ Disconnect from chassis and lab server (if used). """
+        """ Disconnect from lab server (if used) and reset configuration. """
 
         if self.lab_server:
             self.api.perform('CSTestSessionDisconnect', Terminate=True)
-        else:
-            self.api.perform('ChassisDisconnectAll')
         self.reset_config()
 
     def load_config(self, config_file_name):

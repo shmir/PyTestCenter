@@ -15,37 +15,49 @@ from os import path
 
 from testcenter.stc_statistics_view import StcStats
 
-from testcenter.test.test_base import stc_config_files
-from testcenter.test.test_offline import StcTestOffline
+from testcenter.test.test_base import StcTestBase
 
 
-class StcTestOnline(StcTestOffline):
-
-    media_type = 'EthernetFiber'
+class StcTestOnline(StcTestBase):
 
     ports = []
 
-    def testReservePorts(self):
-        """ Load configuration and reserve ports. """
-        self.testLoadConfig()
-        project = self.stc.project
-        self.ports = project.get_children('port')
-        project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'))
-        project.get_object_by_name('Port 2').reserve(self.config.get('STC', 'port2'))
-        for port in self.ports:
-            port.set_media_type(self.media_type)
+    def testGetHw(self):
+        """ Get chassis inventory. """
+        self.logger.info(StcTestOnline.testGetHw.__doc__.strip())
+
+        chassis = self.stc.hw.get_chassis(self.config.get('STC', 'port1').split('/')[0])
+        chassis.get_inventory()
+        for module_name, module in chassis.modules.items():
+            print module_name
+            for pg_name, pg in module.pgs.items():
+                print pg_name
+                for port_name in pg.ports:
+                    print port_name
+        for module_name, module in chassis.get_thin_inventory().items():
+            print module_name
+            for port_name in module.ports:
+                print port_name
         pass
 
     def testOnline(self):
         """ Load configuration on ports and verify that ports are online. """
-        self.testReservePorts()
+        self.logger.info(StcTestOnline.testOnline.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        self._reserve_ports()
+
         for port in self.ports:
             assert(port.is_online())
         pass
 
     def testArp(self):
         """ Test ARP commands. """
-        self.testReservePorts()
+        self.logger.info(StcTestOnline.testArp.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        self._reserve_ports()
+
         self.stc.send_arp_ns()
         for port in self.ports:
             port.send_arp_ns()
@@ -57,7 +69,12 @@ class StcTestOnline(StcTestOffline):
 
     # If this test fails, consider adding delay between ping commands.
     def testPing(self):
-        self.testReservePorts()
+        """ Test Ping commands. """
+        self.logger.info(StcTestOnline.testPing.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        self._reserve_ports()
+
         self.stc.send_arp_ns()
         for port in self.ports:
             for device in port.get_children('emulateddevice'):
@@ -67,9 +84,10 @@ class StcTestOnline(StcTestOffline):
 
     def testDevices(self):
         """ Test device operations using DHCP emulation. """
+        self.logger.info(StcTestOnline.testDevices.__doc__.strip())
 
-        self.stc_config_file = path.join(path.dirname(__file__), stc_config_files[1])
-        self.testReservePorts()
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/dhcp_sample.tcc'))
+        self._reserve_ports()
 
         # Retrieve DHCP servers and clients from configuration file.
         self.ports[0].get_subtree(types=['emulateddevice'], level=2)
@@ -82,7 +100,7 @@ class StcTestOnline(StcTestOffline):
         dhcp_server_device.start()
         assert(dhcp_server.get_attribute('ServerState') == 'UP')
         for dhcp_client_device in dhcp_clients:
-            dhcp_client_device.start(wait_after=8)
+            dhcp_client_device.start(wait_after=16)
             dhcp_client = dhcp_client_device.get_child('dhcpv4blockconfig')
             assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
 
@@ -105,16 +123,18 @@ class StcTestOnline(StcTestOffline):
 
         # Test get_emulations and start_emulations.
         dhcp_clients = self.stc.project.get_emulations('dhcpv4blockconfig')
-        self.stc.project.start_emulations(dhcp_clients)
+        self.stc.project.start_emulations(dhcp_clients, wait_after=8)
         for dhcp_client in dhcp_clients:
             assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
 
         pass
 
     def testPortTraffic(self):
+        """ Test traffic and counters. """
+        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
 
-        self.testReservePorts()
-        self.stc.send_arp_ns()
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        self._reserve_ports()
 
         gen_stats = StcStats('generatorportresults')
         analyzer_stats = StcStats('analyzerportresults')
@@ -157,35 +177,12 @@ class StcTestOnline(StcTestOffline):
 
         pass
 
-    def testStats(self):
-
-        self.stc_config_file = path.join(path.dirname(__file__), stc_config_files[0])
-        self.testReservePorts()
-
-        self.stc.start_traffic(blocking=False)
-
-        gen_stats = StcStats('generatorportresults')
-        analayzer_stats = StcStats('analyzerportresults')
-        sb_tx_stats = StcStats('txstreamblockresults')
-        sb_rx_stats = StcStats('rxstreamblockresults')
-        fg_tx_stats = StcStats('txstreamresults')
-        fg_rx_stats = StcStats('rxstreamsummaryresults')
-
-        gen_stats.read_stats()
-        analayzer_stats.read_stats()
-        sb_tx_stats.read_stats()
-        sb_rx_stats.read_stats()
-        fg_tx_stats.read_stats()
-        fg_rx_stats.read_stats()
-
-        p1_gen_counters = gen_stats.get_object_stats('Port 1')
-        print p1_gen_counters['GeneratorFrameCount']
-        print analayzer_stats.get_counter('Port 2', 'SigFrameCount')
-
     def testSinglePortTraffic(self):
+        """ Test traffic and counters in loopback mode. """
+        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
 
         self.stc_config_file = path.join(path.dirname(__file__), 'configs/loopback.tcc')
-        self.testLoadConfig()
+        self.stc.load_config(self.stc_config_file)
         self.ports = self.stc.project.get_children('port')
         self.stc.project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'))
 
@@ -214,18 +211,10 @@ class StcTestOnline(StcTestOffline):
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
         assert(analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0)
 
-    def testLoadChassis(self):
-        resources = []
-        self.stc.connect(chassis='10.224.18.200')
-        chassis_manager = self.stc.system.get_child('PhysicalChassisManager')
-        chassis = chassis_manager.get_child('PhysicalChassis')
-        resources.append(chassis)
-        for test_module in chassis.get_children('PhysicalTestModule'):
-            description = test_module.get_attribute('Description')
-            if description:
-                resources.append(test_module)
-                for port_group in test_module.get_children('PhysicalPortGroup'):
-                    resources.append(port_group)
-                    for port in port_group.get_children('PhysicalPort'):
-                        resources.append(port)
-        print ', '.join(r.obj_ref() for r in resources)
+    def _reserve_ports(self):
+        project = self.stc.project
+        self.ports = project.get_children('port')
+        project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'), wait_for_up=False)
+        project.get_object_by_name('Port 2').reserve(self.config.get('STC', 'port2'), wait_for_up=False)
+        for port in self.ports:
+            port.wait_for_states(40, 'UP')
