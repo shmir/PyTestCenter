@@ -22,24 +22,6 @@ class StcTestOnline(StcTestBase):
 
     ports = []
 
-    def testGetHw(self):
-        """ Get chassis inventory. """
-        self.logger.info(StcTestOnline.testGetHw.__doc__.strip())
-
-        chassis = self.stc.hw.get_chassis(self.config.get('STC', 'port1').split('/')[0])
-        chassis.get_inventory()
-        for module_name, module in chassis.modules.items():
-            print module_name
-            for pg_name, pg in module.pgs.items():
-                print pg_name
-                for port_name in pg.ports:
-                    print port_name
-        for module_name, module in chassis.get_thin_inventory().items():
-            print module_name
-            for port_name in module.ports:
-                print port_name
-        pass
-
     def testOnline(self):
         """ Load configuration on ports and verify that ports are online. """
         self.logger.info(StcTestOnline.testOnline.__doc__.strip())
