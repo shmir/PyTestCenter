@@ -50,7 +50,7 @@ class StcPhyChassis(StcPhyBase):
             index = name.split('-')[1]
             if status != 'POWER_STATUS_NOT_PRESENT':
                 if name.startswith('chs'):
-                    self.pss['Power ' + index] = StcPhyPowerSupply(status, index)
+                    self.pss['Power ' + index] = StcPhyPowerSupply(index, status)
                 else:
                     self.get_module_by_index(index).ps = StcPhyPowerSupply(index, status)
 

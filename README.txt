@@ -1,6 +1,5 @@
-# TestCenter
 
-+++ WORK IN PROGRESS - fully functional, testing, documentation and packaging under construction. +++
++++ WORK IN PROGRESS - fully functional documentation under construction. +++
 
 TGN - Traffic Generator
 STC - Spirent TestCenter.
@@ -20,3 +19,13 @@ Logging:
 	API calls are logged at debug level 
 - calls to underlining API are also logged to a separate file to create a 'script' that can be run 'as is'.
 Currently supported only over serialized APIs - Tcl and custom.
+
+Installation:
+stable - pip instsll stcooapi
+testing - pip install stcooapi -r --extra-index-url https://testpypi.python.org/pypi
+
+Samples:
+testcenter.test.stc_samples contains useful samples for all main operations.  
+
+Contact:
+Feel free to contact me with any question or feature request at yoram@ignissoft.com
