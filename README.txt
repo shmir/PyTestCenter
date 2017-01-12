@@ -24,8 +24,35 @@ Installation:
 stable - pip instsll stcooapi
 testing - pip install stcooapi -r --extra-index-url https://testpypi.python.org/pypi
 
-Samples:
-testcenter.test.stc_samples contains useful samples for all main operations.  
+Prerequisite:
+TestCenter application installed for Tcl and Python API OR lab server installed for REST API.
+
+Licensing:
+This package uses STC Tcl API which is the default, non-licensed, API for STC.
+
+Getting started:
+Under testcenter.test.stc_samples you will find some basic samples.
+See inside for more info.
+
+Functionality
+The current version supports the following test flow:
+	Load configuration -> Get/Set attributes -> Start/Stop traffic -> Get statistics.
+Supported operations:
+	- Basic operations - get/set attributes, get/create children.
+	- Connect - to chassis or lab server
+	- Load configuration - load configuration (tcc or XML), reserve ports and analyze the configuration
+	- Start/Stop - arp, ping, devices, ports, streams
+	- Statistics - subscribe, read views, unsubscribe
+	- Save configuration and results
+	- Disconnect
+The package also support Add/Remove objects so it supports the following test case:
+	Build configuration -> Start/Stop traffic -> Get statistics.
+But this is less documented at this version.
+
+TestCenter and IxNetwork:
+IxNetwork package and TestCenter extend the same base classes from TrafficGenerator.
+In some future version we plan TrafficGenerator a complete abstract API so tests that work in the basic test flow will
+be able to run over IxNetwork and TestCenter seamlessly.   
 
 Contact:
 Feel free to contact me with any question or feature request at yoram@ignissoft.com

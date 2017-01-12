@@ -2,7 +2,7 @@
 This module implements classes and utility functions to manage STC emulated device.
 """
 
-from stc_object import StcObject
+from testcenter.stc_object import StcObject
 
 
 class StcDevice(StcObject):

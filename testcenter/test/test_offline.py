@@ -10,6 +10,7 @@ These tests serve two purposes:
 
 from os import path
 import inspect
+from test.test_tcl import _tkinter
 
 from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
@@ -28,6 +29,10 @@ class StcTestOffline(StcTestBase):
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         file_name, file_ext = path.splitext(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self.stc.save_config(file_name + '-save' + file_ext)
+
+        self.assertRaises(ValueError, self.stc.load_config, path.join(path.dirname(__file__), 'tcc.invalid'))
+        self.assertRaises(_tkinter.TclError, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
+
         pass
 
     def testAnalyzeConfig(self):
@@ -40,13 +45,13 @@ class StcTestOffline(StcTestBase):
         project.get_children('port')
         port1_obj = project.get_object_by_name('Port 1')
 
-        print "Port1 object reference = ", port1_obj.obj_ref()
-        print "Port1 name = ", port1_obj.obj_name()
-        print 'Ports = ', project.get_objects_by_type('port')
-        print 'Port 1 state = ', port1_obj.get_attribute('Location')
-        print 'Port 1 attributes = ', port1_obj.get_attributes()
-        print 'Port 1 streamblocks = ', port1_obj.get_children('streamblock')
-        print 'Port 2 streamblocks = ', port1_obj.get_children('streamblock')
+        print('Port1 object reference = ', port1_obj.obj_ref())
+        print('Port1 name = ', port1_obj.obj_name())
+        print('Ports = ', project.get_objects_by_type('port'))
+        print('Port 1 state = ', port1_obj.get_attribute('Location'))
+        print('Port 1 attributes = ', port1_obj.get_attributes())
+        print('Port 1 streamblocks = ', port1_obj.get_children('streamblock'))
+        print('Port 2 streamblocks = ', port1_obj.get_children('streamblock'))
 
         stc_ports = project.get_children('port')
         assert(len(stc_ports) == 2)

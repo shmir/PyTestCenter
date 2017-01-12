@@ -12,14 +12,14 @@ import logging
 from trafficgenerator.trafficgenerator import TrafficGenerator
 
 from testcenter.api.stc_rest import StcRestWrapper
-from stc_object import StcObject
-from stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter, StcPimv4Group,
-                        StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier, StcIgmpGroup, StcOseSwitch,
-                        StcIsisRouter)
-from stc_port import StcPort, StcGenerator, StcAnalyzer
-from stc_project import StcProject, StcIpv4Group, StcIpv6Group
-from stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
-from stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
+from testcenter.stc_object import StcObject
+from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
+                                   StcPimv4Group, StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier,
+                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter)
+from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
+from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
+from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
+from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'bgprouterconfig': StcBgpRouter,

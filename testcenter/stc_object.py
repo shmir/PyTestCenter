@@ -118,7 +118,7 @@ class StcObject(TgnObject):
         for child_type in types:
             output = self.get_attribute('children' + '-' + child_type)
             children_objs.update(self._build_children_objs(child_type, output.split(' ')))
-        return children_objs.values()
+        return list(children_objs.values())
 
     def get_all_child_types(self):
         children = self.get_attribute('children').split()

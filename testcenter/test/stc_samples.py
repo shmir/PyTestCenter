@@ -68,35 +68,35 @@ class IxnTestBase(unittest.TestCase):
         assert(len(ports) == 2)
 
         # Now we can iterate and print all objects:
-        print 'Name\tObject Reference\tPython Object'
+        print('Name\tObject Reference\tPython Object')
         for port in ports:
-            print '{}\t{}\t{}'.format(port.obj_name(), port.obj_ref(), port)
+            print('{}\t{}\t{}'.format(port.obj_name(), port.obj_ref(), port))
 
         # But... frequently used objects (like ports...) can be accessed specifically:
         ports = self.stc.project.get_ports()
         assert(len(ports) == 2)
 
         # Now we can iterate and print all objects:
-        print 'Name\tObject Reference\tPython Object'
+        print('Name\tObject Reference\tPython Object')
         for name, obj in ports.items():
-            print '{}\t{}\t{}'.format(name, obj.obj_ref(), obj)
+            print('{}\t{}\t{}'.format(name, obj.obj_ref(), obj))
 
     def get_set_attribute(self):
         self.load_config()
         device = self.stc.project.get_ports()['Port 1'].get_devices()['Device 1']
 
         # Get all attributes
-        print device.get_attributes()
+        print(device.get_attributes())
 
         # Get group of attributes
-        print device.get_attributes('RouterId', 'RouterIdStep')
+        print(device.get_attributes('RouterId', 'RouterIdStep'))
 
         # Get specific attribute
-        print 'RouterId: ' + device.get_attribute('RouterId')
+        print('RouterId: ' + device.get_attribute('RouterId'))
 
         # Special cases - name and active
-        print 'name: ' + device.get_name()
-        print 'enabled: ' + str(device.get_active())
+        print('name: ' + device.get_name())
+        print('enabled: ' + str(device.get_active()))
 
         # Set attribute
         device.set_attributes(RouterId='1.2.3.4')
@@ -115,7 +115,7 @@ class IxnTestBase(unittest.TestCase):
     def devices(self):
         self.reserve_ports()
         self.stc.send_arp_ns()
-        print self.stc.get_arp_cache()
+        print(self.stc.get_arp_cache())
         self.stc.start_devices()
         time.sleep(8)
         self.stc.stop_devices()
@@ -127,30 +127,30 @@ class IxnTestBase(unittest.TestCase):
         self.stc.stop_traffic()
         port_stats = StcStats('generatorportresults')
         port_stats.read_stats()
-        print port_stats.get_object_stats('Port 1')
-        print port_stats.get_stats('TotalFrameCount')
-        print port_stats.get_stat('Port 1', 'TotalFrameCount')
+        print(port_stats.get_object_stats('Port 1'))
+        print(port_stats.get_stats('TotalFrameCount'))
+        print(port_stats.get_stat('Port 1', 'TotalFrameCount'))
 
     def inventory(self):
 
         chassis = self.stc.hw.get_chassis(port1_location.split('/')[0])
         chassis.get_inventory()
 
-        print 'Full Inventory'
-        print '=' * len('Full Inventory')
+        print('Full Inventory')
+        print('=' * len('Full Inventory'))
         for module_name, module in chassis.modules.items():
-            print module_name
+            print(module_name)
             for pg_name, pg in module.pgs.items():
-                print pg_name
+                print(pg_name)
                 for port_name in pg.ports:
-                    print port_name
-            print module.ps.attributes['Index']
+                    print(port_name)
+            print(module.ps.attributes['Index'])
         for ps_name in chassis.pss:
-            print ps_name
+            print(ps_name)
 
-        print '\nThin Inventory'
-        print '=' * len('Thin Inventory')
+        print('\nThin Inventory')
+        print('=' * len('Thin Inventory'))
         for module_name, module in chassis.get_thin_inventory().items():
-            print module_name
+            print(module_name)
             for port_name in module.ports:
-                print port_name
+                print(port_name)

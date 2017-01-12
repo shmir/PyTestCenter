@@ -9,7 +9,7 @@ import time
 
 from trafficgenerator.tgn_utils import is_local_host, TgnError
 
-from stc_object import StcObject
+from testcenter.stc_object import StcObject
 
 
 class StcPort(StcObject):
@@ -35,26 +35,39 @@ class StcPort(StcObject):
 
         return {o.obj_name(): o for o in self.get_objects_or_children_by_type('StreamBlock')}
 
-    def reserve(self, location, force=False, wait_for_up=True):
+    def reserve(self, location=None, force=False, wait_for_up=True, timeout=40):
         """ Reserve physical port.
 
         :param location: port location in the form ip/slot/port.
         :param force: whether to revoke existing reservation (True) or not (False).
+        :param wait_for_up: True - wait for port to come up, False - return immediately.
+        :param timeout: how long (seconds) to wait for port to come up.
+
         :todo: seems like reserve takes forever even if port is already owned by the user.
-            should test for ownership and take it forcefully only if really needed.
+            should test for ownership and take it forcefully only if really needed?
         """
 
-        self._location = location
-        self.set_attributes(location=location)
-        if not is_local_host(location):
+        if location:
+            self.location = location
+            self.set_attributes(location=self.location)
+        else:
+            self.location = self.get_attribute('Location')
+
+        if not is_local_host(self.location):
             self.api.perform('AttachPorts', PortList=self.obj_ref(), AutoConnect=True, RevokeOwner=force)
             self.api.apply()
             self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
             self.activephy.get_attributes()
             if wait_for_up:
-                self.wait_for_states(40, 'UP', 'DOWN', 'ADMIN_DOWN')
+                self.wait_for_states(timeout, 'UP', 'DOWN', 'ADMIN_DOWN')
 
     def wait_for_states(self, timeout=40, *states):
+        """ Wait until port reaches requested state(s).
+
+        :param timeout: how long (seconds) to wait for port to come up.
+        :param states: list of requested states.
+        """
+
         for _ in range(timeout):
             if self.activephy.get_attribute('LinkStatus') in states:
                 return
@@ -64,7 +77,8 @@ class StcPort(StcObject):
 
     def release(self):
         """ Release the physical port reserved for the port. """
-        if not is_local_host(self._location):
+
+        if not is_local_host(self.location):
             self.api.perform('ReleasePort', portList=self.obj_ref())
 
     def is_online(self):
@@ -74,7 +88,7 @@ class StcPort(StcObject):
                   False - port is offline.
         """
 
-        return self.activephy.get_attribute('linkstatus').lower() == 'up'
+        return self.activephy.get_attribute('LinkStatus').lower() == 'up'
 
     def is_running(self):
         """

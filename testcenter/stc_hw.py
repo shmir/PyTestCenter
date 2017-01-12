@@ -6,7 +6,7 @@ This module implements classes and utility functions to manage STC chassis.
 
 from collections import OrderedDict
 
-from stc_object import StcObject
+from testcenter.stc_object import StcObject
 
 
 class StcHw(StcObject):

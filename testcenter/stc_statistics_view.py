@@ -2,7 +2,7 @@
 Classes and utilities to manage STC statistics views.
 """
 
-from stc_object import StcObject
+from testcenter.stc_object import StcObject
 
 
 class StcStats(object):

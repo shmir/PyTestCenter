@@ -2,7 +2,7 @@
 This module implements classes and utility functions to manage STC streamblocks.
 """
 
-from stc_object import StcObject
+from testcenter.stc_object import StcObject
 
 
 class StcStream(StcObject):
