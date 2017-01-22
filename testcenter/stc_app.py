@@ -5,9 +5,8 @@ This module implements classes and utility functions to manage STC application.
 """
 
 from os import path
-import sys
 import time
-import logging
+
 
 from trafficgenerator.trafficgenerator import TrafficGenerator
 
@@ -76,8 +75,7 @@ class StcApp(TrafficGenerator):
         StcObject.api = self.api
         StcObject.str_2_class = TYPE_2_OBJECT
 
-        self.system = StcObject(objType='system', objRef='system1')
-        self.hw = self.system.get_child('PhysicalChassisManager')
+        self.system = StcObject(objType='system', objRef='system1', parent=None)
 
     def connect(self, lab_server=None):
         """ Create object and (optionally) connect to lab server.
@@ -85,11 +83,14 @@ class StcApp(TrafficGenerator):
         :param lab_server: optional lab server address.
         """
 
-        self.project = StcProject(parent=self.system)
-        StcObject.project = self.project
         self.lab_server = lab_server
         if self.lab_server:
             self.api.perform('CSTestSessionConnect', Host=self.lab_server, CreateNewTestSession=True)
+
+        # Every object creation/retrieval must come AFTER we connect to lab server (if needed).
+        self.hw = self.system.get_child('PhysicalChassisManager')
+        self.project = StcProject(parent=self.system)
+        StcObject.project = self.project
 
     def disconnect(self):
         """ Disconnect from lab server (if used) and reset configuration. """
@@ -180,27 +181,3 @@ class StcApp(TrafficGenerator):
 
     def wait_traffic(self):
         self.project.wait_traffic()
-
-
-def testcenter(args):
-    """ Stand alone STC application.
-
-    Serves as code snippet and environment testing.
-    """
-
-    # TODO: replace with ini file.
-    install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.60'
-    log_level = 'INFO'
-    log_file_name = 'test/logs/testcenter.txt'
-
-    logger = logging.getLogger('log')
-    logger.setLevel(log_level)
-    logger.addHandler(logging.FileHandler(log_file_name))
-    logger.addHandler(logging.StreamHandler(sys.stdout))
-
-    stc = StcApp(logger, install_dir)
-    stc.system.get_child('automationoptions').set_attributes(LogLevel=log_level)
-    stc.connect()
-
-if __name__ == "__main__":
-    sys.exit(testcenter((sys.argv[1:])))

@@ -1,6 +1,5 @@
 future
 configparser
-pytest
 
 stcrestclient
 tgnooapi

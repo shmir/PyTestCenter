@@ -29,18 +29,28 @@ class StcStats(object):
     statistics = {}
 
     def __init__(self, view):
+        """ Subscribe to view with default configuration type as defined by config_2_type.
+
+        :param view: statistics view to subscribe to. If view is None it is the test responsibility to subscribe with
+            specific config_type.
+        """
+
         super(StcStats, self).__init__()
-        self.view = view
         self.api = StcObject.api
-        self.subscribe()
+        if view:
+            self.subscribe(view, view_2_config_type[view])
         self.statistics = {}
 
-    def subscribe(self):
-        """ Subscribe to statistics view. """
+    def subscribe(self, view, config_type):
+        """ Subscribe to statistics view.
+
+        :parama view: statistics view to subscribe to.
+        :parama config_type: configuration type to subscribe to.
+        """
 
         project = StcObject.project
-        rds = self.api.subscribe(Parent=project.obj_ref(), ResultParent=project.obj_ref(),
-                                 ConfigType=view_2_config_Type[self.view], ResultType=self.view)
+        rds = self.api.subscribe(Parent=project.obj_ref(), ResultParent=project.obj_ref(), ConfigType=config_type,
+                                 ResultType=view)
         self.rds = StcObject(ObjType='ResultDataSet', parent=project, objRef=rds)
 
     def unsubscribe(self):
@@ -124,10 +134,93 @@ class StcStats(object):
         """
         return int(self.get_stat(obj_id, counter, obj_id_stat))
 
-view_2_config_Type = {'generatorportresults': 'Generator',
-                      'analyzerportresults': 'Analyzer',
-                      'txstreamblockresults': 'StreamBlock',
-                      'rxstreamblockresults': 'StreamBlock',
-                      'txstreamresults': 'StreamBlock',
-                      'rxstreamsummaryresults': 'StreamBlock',
-                      }
+view_2_config_type = {
+    'igmpgroupmembershipresults': 'IgmpGroupMembership',
+    'igmprouterresults': 'IgmpRouterConfig',
+    'ldplspresults': 'LdpRouterConfig',
+    'eoamlinktraceresults': 'EoamMaintenancePointConfig',
+    'ospfv2routerresults': 'Ospfv2RouterConfig',
+    'portavglatencyresults': 'Analyzer',
+    'riprouterresults': 'RipRouterConfig',
+    'eoamloopbackresults': 'EoamMaintenancePointConfig',
+    'dhcpv4portresults': 'Dhcpv4PortConfig',
+    'txstreamresults': 'StreamBlock',
+    'pppoeportresults': ('PppoaClientBlockConfig', 'PppoaServerBlockConfig', 'PppoeClientBlockConfig',
+                         'PppoeServerBlockConfig', 'PppoL2tpv2ClientBlockConfig', 'PppoL2tpv2ServerBlockConfig',
+                         'PppoxPortConfig', 'PppProtocolConfig'),
+    'eoamlossmeasurementresponserxresults': 'EoamMaintenancePointConfig',
+    'eoammegresults': 'EoamMegConfig',
+    'dhcpv4blockresults': 'Dhcpv4BlockConfig',
+    'eoamloopbackmessagerxresults': 'EoamMaintenancePointConfig',
+    'generatorportresults': 'Generator',
+    'dhcpv6blockresults': 'Dhcpv6PdBlockConfig Dhcpv6BlockConfig',
+    'mldrouterresults': 'MldRouterConfig',
+    'mldgroupmembershipresults': 'MldGroupMembership',
+    'eoamloopbackmessagetxresults': 'EoamMaintenancePointConfig',
+    'dhcpv6sessionresults': 'Dhcpv6PdBlockConfig Dhcpv6BlockConfig',
+    'eoamaisresults': 'EoamMaintenancePointConfig',
+    'eoamportresults': 'EoamPortConfig',
+    'iptvportresults': 'Port',
+    'txcpuportresults': 'Generator',
+    'bridgeportresults': 'BridgePortConfig MstiConfig',
+    'bgprouterresults': 'BgpRouterConfig',
+    'cifsserverresults': 'CifsServerProtocolConfig',
+    'eoamlinktracepathresults': 'EoamMaintenancePointConfig',
+    'iptvchannelresults': 'IptvViewedChannels',
+    'bfdipv6sessionresults': 'BfdRouterConfig',
+    'eoamlinktracemessagerxresults': 'EoamMaintenancePointConfig',
+    'pimrouterresults': 'PimRouterConfig',
+    'bfdsessionresults': 'BfdRouterConfig',
+    'eoamcontchkremoteresults': 'EoamMaintenancePointConfig',
+    'eoamdelaymeasurementresponserxresults': 'EoamMaintenancePointConfig',
+    'eoamlinktracemessagetxresults': 'EoamMaintenancePointConfig',
+    'sonetalarmsresults': 'Port',
+    'igmphostresults': 'IgmpHostConfig',
+    'arpndresults': 'Port',
+    'eoamloopbackresponserxresults': 'EoamMaintenancePointConfig',
+    'rxcpuportresults': 'Analyzer',
+    'eoamdelaymeasurementresults': 'EoamMaintenancePointConfig',
+    'eoamloopbackresponsetxresults': 'EoamMaintenancePointConfig',
+    'sonetresults': 'Port',
+    'isisrouterresults': 'IsisRouterConfig',
+    'ancpaccessnoderesults': 'AncpAccessNodeConfig',
+    'eoamlossmeasurementresponserxresults': 'EoamMaintenancePointConfig',
+    'igmpportresults': 'IgmpPortConfig',
+    'txstreamblockresults': 'StreamBlock',
+    'analyzerportresults': 'Analyzer',
+    'filteredstreamresults': 'Analyzer',
+    'rxstreamsummaryresults': 'StreamBlock',
+    'eoamlckresults': 'EoamMaintenancePointConfig',
+    'rxstreamresults': 'StreamBlock',
+    'iptvstbblockresults': 'IptvStbBlockConfig',
+    'eoamcontchklocalresults': 'EoamMaintenancePointConfig',
+    'dhcpv4serverresults': 'Dhcpv4ServerConfig',
+    'diffservresults': 'Analyzer',
+    'rsvplspresults': 'RsvpRouterConfig',
+    'pppprotocolresults': 'PppProtocolConfig',
+    'ospfv3routerresults': 'Ospfv3RouterConfig',
+    'mldhostresults': 'MldHostConfig',
+    'rsvprouterresults': 'RsvpRouterConfig',
+    'dhcpv4sessionresults': 'Dhcpv4BlockConfig',
+    'rxtrafficgroupresults': 'StreamBlock TrafficGroup',
+    'ancpportresults': 'AncpPortConfig',
+    'txtrafficgroupresults': 'StreamBlock TrafficGroup',
+    'eoamlossmeasurementmessagerxresults': 'EoamMaintenancePointConfig',
+    'rxstreamblockresults': 'StreamBlock',
+    'mldportresults': 'MldPortConfig',
+    'bfdipv4sessionresults': 'BfdRouterConfig',
+    'lacpportconfig': 'IsisRouterConfig',
+    'iptvviewingprofileresults': 'IptvViewingProfileConfig',
+    'bfdrouterresults': 'BfdRouterConfig',
+    'eoamdelaymeasurementmessagerxresults': 'EoamMaintenancePointConfig',
+    'pppoesessionresults': ('PppoeClientBlockConfig', 'PppoeServerBlockConfig'),
+    'dhcpv6portresults': 'Dhcpv6PortConfig',
+    'eoamlinktraceresponserxresults': 'EoamMaintenancePointConfig',
+    'ldprouterresults': 'LdpRouterConfig',
+    'eoamlinktraceresponsetxresults': 'EoamMaintenancePointConfig',
+    'rxportpairresults': 'Port',
+    'iptvtestresults': 'Project',
+    'overflowresults': 'Analyzer',
+    'cifsclientresults': 'CifsClientProtocolConfig',
+    'txportpairresults': 'Port',
+    }

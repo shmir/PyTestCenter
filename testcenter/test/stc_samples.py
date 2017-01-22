@@ -23,8 +23,9 @@ from testcenter.stc_statistics_view import StcStats
 
 
 # API type = tcl, python or rest. Default is tcl with DEBUG log messages (see bellow) because it gives best visibility.
-api = 'python'
-install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.62'
+api = 'tcl'
+install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
+lab_server = '192.168.42.157'
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
@@ -44,9 +45,9 @@ class IxnTestBase(unittest.TestCase):
         elif api == 'python':
             api_wrapper = StcPythonWrapper(logger, install_dir)
         else:
-            api_wrapper = StcRestWrapper(logger, install_dir)
+            api_wrapper = StcRestWrapper(logger, lab_server)
         self.stc = StcApp(logger, api_wrapper=api_wrapper)
-        self.stc.connect()
+        self.stc.connect(lab_server)
 
     def tearDown(self):
         super(IxnTestBase, self).tearDown()

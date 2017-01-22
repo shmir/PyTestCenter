@@ -10,7 +10,6 @@ These tests serve two purposes:
 
 from os import path
 import inspect
-from test.test_tcl import _tkinter
 
 from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
@@ -30,8 +29,8 @@ class StcTestOffline(StcTestBase):
         file_name, file_ext = path.splitext(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self.stc.save_config(file_name + '-save' + file_ext)
 
-        self.assertRaises(ValueError, self.stc.load_config, path.join(path.dirname(__file__), 'tcc.invalid'))
-        self.assertRaises(_tkinter.TclError, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
+        self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'tcc.invalid'))
+        self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
 
         pass
 

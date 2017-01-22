@@ -39,8 +39,13 @@ class StcObject(TgnObject):
             self.__class__ = self.get_obj_class(data['objType'])
         super(StcObject, self).__init__(**data)
 
-    def get_obj_class(self, str_obj):
-        return StcObject.str_2_class.get(str_obj.lower(), StcObject)
+    def get_obj_class(self, obj_type):
+        """
+        :param obj_type: STC object type.
+        :return: object class if specific class else StcObject.
+        """
+
+        return StcObject.str_2_class.get(obj_type.lower(), StcObject)
 
     def _create(self):
         """ Create new object on STC.
