@@ -87,6 +87,9 @@ class StcPhyPort(StcPhyBase):
     attributes_names = ('Index',)
     children_types = {}
 
+    def get_supported_speeds(self):
+        pass
+
 
 class StcPhyPowerSupply(object):
 
