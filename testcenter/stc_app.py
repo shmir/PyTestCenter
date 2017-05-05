@@ -95,9 +95,9 @@ class StcApp(TrafficGenerator):
     def disconnect(self):
         """ Disconnect from lab server (if used) and reset configuration. """
 
+        self.reset_config()
         if self.lab_server:
             self.api.perform('CSTestSessionDisconnect', Terminate=True)
-        self.reset_config()
 
     def load_config(self, config_file_name):
         """ Load configuration file from tcc or xml.

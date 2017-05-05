@@ -25,7 +25,7 @@ from testcenter.stc_statistics_view import StcStats
 # API type = tcl, python or rest. Default is tcl with DEBUG log messages (see bellow) because it gives best visibility.
 api = 'tcl'
 install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
-lab_server = '192.168.42.157'
+lab_server = '192.168.42.158'
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
@@ -33,10 +33,10 @@ port1_location = '10.224.18.200/9/1'
 port2_location = '10.224.18.200/9/2'
 
 
-class IxnTestBase(unittest.TestCase):
+class StcSamples(unittest.TestCase):
 
     def setUp(self):
-        super(IxnTestBase, self).setUp()
+        super(StcSamples, self).setUp()
         logger = logging.getLogger('log')
         logger.setLevel('DEBUG')
         logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -50,7 +50,8 @@ class IxnTestBase(unittest.TestCase):
         self.stc.connect(lab_server)
 
     def tearDown(self):
-        super(IxnTestBase, self).tearDown()
+        self.stc.disconnect()
+        super(StcSamples, self).tearDown()
 
     def load_config(self):
         self.stc.load_config(stc_config_file)
