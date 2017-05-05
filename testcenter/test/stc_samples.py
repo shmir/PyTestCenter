@@ -29,8 +29,8 @@ lab_server = '192.168.42.158'
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '10.224.18.200/9/1'
-port2_location = '10.224.18.200/9/2'
+port1_location = '192.168.42.165/1/1'
+port2_location = '192.168.42.165/1/2'
 
 
 class StcSamples(unittest.TestCase):
@@ -146,7 +146,8 @@ class StcSamples(unittest.TestCase):
                 print(pg_name)
                 for port_name in pg.ports:
                     print(port_name)
-            print(module.ps.attributes['Index'])
+            if module.ps:
+                print(module.ps.attributes['Index'])
         for ps_name in chassis.pss:
             print(ps_name)
 

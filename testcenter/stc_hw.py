@@ -39,6 +39,8 @@ class StcPhyChassis(StcPhyBase):
     attributes_names = ('Model', 'SerialNum', 'FirmwareVersion')
     children_types = {'modules': ('PhysicalTestModule', 'Slot ')}
 
+    pss = {}
+
     def get_inventory(self):
         super(self.__class__, self).get_inventory()
 
@@ -74,6 +76,8 @@ class StcPhyModule(StcPhyBase):
 
     attributes_names = ('Index', 'Model', 'Description', 'SerialNum', 'FirmwareVersion')
     children_types = {'pgs': ('PhysicalPortGroup', 'Port Group ')}
+
+    ps = None
 
 
 class StcPhyPortGroup(StcPhyBase):
