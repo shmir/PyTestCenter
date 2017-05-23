@@ -141,7 +141,7 @@ class StcSamples(unittest.TestCase):
         print('Full Inventory')
         print('=' * len('Full Inventory'))
         for module_name, module in chassis.modules.items():
-            print(module_name)
+            print('{} : {}'.format(module_name, module.get_supported_speeds()))
             for pg_name, pg in module.pgs.items():
                 print(pg_name)
                 for port_name in pg.ports:

@@ -79,6 +79,9 @@ class StcPhyModule(StcPhyBase):
 
     ps = None
 
+    def get_supported_speeds(self):
+        self.command('spirent.core.GetSupportedSpeedsCommand', PhyTestModule=self.obj_ref())
+
 
 class StcPhyPortGroup(StcPhyBase):
 
@@ -90,9 +93,6 @@ class StcPhyPort(StcPhyBase):
 
     attributes_names = ('Index',)
     children_types = {}
-
-    def get_supported_speeds(self):
-        pass
 
 
 class StcPhyPowerSupply(object):
