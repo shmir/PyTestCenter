@@ -62,8 +62,9 @@ class StcObject(TgnObject):
             return stc_obj
 
     def command(self, command, wait_after=0, **arguments):
-        self.api.perform(command, **arguments)
+        rc = self.api.perform(command, **arguments)
         time.sleep(wait_after)
+        return rc
 
     def get_attribute(self, attribute):
         """ Get single attribute value.

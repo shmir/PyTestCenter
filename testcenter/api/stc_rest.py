@@ -22,7 +22,8 @@ class StcRestWrapper(object):
         """
 
         super(self.__class__, self).__init__()
-        self.ls = stchttp.StcHttp(server, port)
+        debug_print = True if logger.level == 10 else False
+        self.ls = stchttp.StcHttp(server, port, debug_print=debug_print)
         self.session_id = self.ls.new_session(user_name, session_name, kill_existing=True)
 
     def create(self, obj_type, parent, **attributes):
@@ -43,6 +44,8 @@ class StcRestWrapper(object):
         :param arguments: additional arguments.
         """
 
+        if (command in ['CSTestSessionConnect', 'CSTestSessionDisconnect']):
+            return
         self.command_rc = self.ls.perform(command, **arguments)
         return self.command_rc
 

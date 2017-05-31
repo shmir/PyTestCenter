@@ -119,8 +119,7 @@ class StcProject(StcObject):
         """
 
         arguments['DeviceList'] = build_obj_ref_list(self._get_devices(*devices))
-        self.command(command, **arguments)
-        time.sleep(wait_after)
+        self.command(command, wait_after, **arguments)
 
     def command_device_emulations(self, command, wait_after=4, *devices, **arguments):
         """ Perform emulation command on list of devices.

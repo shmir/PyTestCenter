@@ -4,6 +4,7 @@ This module implements classes and utility functions to manage STC chassis.
 :author: yoram@ignissoft.com
 """
 
+import re
 from collections import OrderedDict
 
 from testcenter.stc_object import StcObject
@@ -79,8 +80,11 @@ class StcPhyModule(StcPhyBase):
 
     ps = None
 
-    def get_supported_speeds(self):
-        self.command('spirent.core.GetSupportedSpeedsCommand', PhyTestModule=self.obj_ref())
+    def get_inventory(self):
+        super(self.__class__, self).get_inventory()
+
+        supported_speeds = self.command('spirent.core.GetSupportedSpeedsCommand', PhyTestModule=self.obj_ref())
+        self.attributes['SupportedSpeeds'] = re.findall(r'([0-9.]*[M|G]):', supported_speeds['SpeedInfoList'])
 
 
 class StcPhyPortGroup(StcPhyBase):
