@@ -117,6 +117,7 @@ class StcApp(TrafficGenerator):
             self.api.perform('LoadFromXml', FileName=path.normpath(config_file_name))
         else:
             raise ValueError('Configuration file type {} not supported.'.format(ext))
+        self.project.objects = {}
 
     def reset_config(self):
         self.api.perform('ResetConfig', config='system1')

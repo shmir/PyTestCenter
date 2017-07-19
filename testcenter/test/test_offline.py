@@ -33,6 +33,17 @@ class StcTestOffline(StcTestBase):
         self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
 
         pass
+    
+    def testReloadConfig(self):
+        """ Reload existing configuration. """
+        self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        for port in self.stc.project.get_ports().values():
+            print(port.get_name())
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        for port in self.stc.project.get_ports().values():
+            print(port.get_name())
 
     def testAnalyzeConfig(self):
         """ Analyze existing configuration. """
