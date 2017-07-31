@@ -38,7 +38,7 @@ class StcStats(object):
         super(StcStats, self).__init__()
         self.api = StcObject.api
         if view:
-            self.subscribe(view, view_2_config_type[view])
+            self.subscribe(view, view_2_config_type[view.lower()])
         self.statistics = {}
 
     def subscribe(self, view, config_type):
