@@ -29,7 +29,8 @@ class StcPhyBase(StcObject):
             child_type, child_name = child_type_name
             children = OrderedDict()
             for child in self.get_objects_or_children_by_type(child_type):
-                children[child_name + child.get_attribute('Index')] = child
+                if type(child) == StcPhyModule and child.get_attribute('Description'):
+                    children[child_name + child.get_attribute('Index')] = child
             setattr(self, child_var, children)
             for child in getattr(self, child_var).values():
                 child.get_inventory()
@@ -55,7 +56,8 @@ class StcPhyChassis(StcPhyBase):
                 if name.startswith('chs'):
                     self.pss['Power ' + index] = StcPhyPowerSupply(index, status)
                 else:
-                    self.get_module_by_index(index).ps = StcPhyPowerSupply(index, status)
+                    if self.get_module_by_index(index):
+                        self.get_module_by_index(index).ps = StcPhyPowerSupply(index, status)
 
     def get_thin_inventory(self):
         thin_inventory = OrderedDict()
