@@ -69,7 +69,7 @@ class StcProject(StcObject):
         """
 
         for port in self._get_ports(*ports):
-            while port.is_running:
+            while port.is_running():
                 time.sleep(1)
 
     def clear_results(self, *ports):

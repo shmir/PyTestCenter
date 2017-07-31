@@ -151,7 +151,7 @@ class StcTestOnline(StcTestBase):
         analyzer_stats.read_stats()
         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
 
-        self.stc.start_traffic()
+        self.stc.start_traffic(blocking=True)
         self.stc.stop_traffic()
         gen_stats.read_stats()
         analyzer_stats.read_stats()
