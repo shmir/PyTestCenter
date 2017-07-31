@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 from __future__ import print_function
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
@@ -19,6 +22,10 @@ def read(*filenames, **kwargs):
             buf.append(f.read())
     return sep.join(buf)
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+install_requires = [r for r in required if r and r[0] != '#' and not r.startswith('git')]
+
 long_description = read('README.txt')
 
 
@@ -39,16 +46,15 @@ setup(
     url='https://github.com/shmir/PyTestCenter/',
     license='Apache Software License',
     author='Yoram Shamir',
-    tests_require=['pytest'],
-    install_requires=['tgnooapi', 'stcrestclient'],
-    cmdclass={'test': PyTest},
+    install_requires=install_requires,
     author_email='yoram@ignissoft.com',
     description='Python OO API package to automate Spirent TestCenter (STC) traffic generator',
     long_description=long_description,
     packages=['testcenter', 'testcenter.test', 'testcenter.api'],
     include_package_data=True,
     platforms='any',
-    test_suite='testcenter.test',
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
@@ -57,7 +63,4 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Testing :: Traffic Generation'],
-    extras_require={
-        'testing': ['pytest'],
-    }
 )

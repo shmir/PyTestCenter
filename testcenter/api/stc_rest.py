@@ -96,3 +96,8 @@ class StcRestWrapper(object):
         """
 
         self.perform('ResultDataSetUnsubscribe', ResultDataSet=result_data_set)
+
+    def apply(self):
+        """ Sends a test configuration to the Spirent TestCenter chassis. """
+
+        self.ls.apply()

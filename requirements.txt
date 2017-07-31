@@ -1,5 +1,6 @@
 future
 configparser
 
+pwd
 stcrestclient
 tgnooapi

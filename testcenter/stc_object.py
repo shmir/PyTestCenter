@@ -54,10 +54,13 @@ class StcObject(TgnObject):
         """
 
         # At this time objRef is not set yet so we must use direct calls to api.
+        attributes = dict(self._data)
+        attributes.pop('objType')
+        attributes.pop('parent')
         if 'name' in self._data:
-            return self.api.create(self.obj_type(), self.obj_parent(), name=self.obj_name())
+            return self.api.create(self.obj_type(), self.obj_parent(), **attributes)
         else:
-            stc_obj = self.api.create(self.obj_type(), self.obj_parent())
+            stc_obj = self.api.create(self.obj_type(), self.obj_parent(), **attributes)
             self._data['name'] = self.api.get(stc_obj, 'name')
             return stc_obj
 

@@ -33,7 +33,7 @@ class StcTestOffline(StcTestBase):
         self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
 
         pass
-    
+
     def testReloadConfig(self):
         """ Reload existing configuration. """
         self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
