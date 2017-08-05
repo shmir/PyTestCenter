@@ -140,7 +140,7 @@ class StcTestOffline(StcTestBase):
         stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')
         stc_ip = StcObject(objType='Ipv4If', parent=stc_dev)
         stc_ip.set_attributes(Address='1.2.3.4', PrefixLength=16)
-        stc_bgp = StcObject(objType='BgpRouterConfig', parent=stc_dev)
+        StcObject(objType='BgpRouterConfig', parent=stc_dev)
 
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))

@@ -14,13 +14,14 @@ from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_object import StcObject
 from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
                                    StcPimv4Group, StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier,
-                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter)
+                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange)
 from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
+                 'bfdrouterconfig': StcBfdRouter,
                  'bgprouterconfig': StcBgpRouter,
                  'bgpipv4routeconfig': StcBgpRoute,
                  'dhcpv4serverconfig': StcServer,
@@ -32,6 +33,8 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'igmpgroupmembership': StcIgmpGroup,
                  'ipv4group': StcIpv4Group,
                  'ipv6group': StcIpv6Group,
+                 'Ipv4IsisRoutesConfig': StcIsisRouterRange,
+                 'Ipv6IsisRoutesConfig': StcIsisRouterRange,
                  'isisrouterconfig': StcIsisRouter,
                  'generator': StcGenerator,
                  'groupcollection': StcGroupCollection,

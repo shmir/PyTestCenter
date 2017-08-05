@@ -92,6 +92,10 @@ class StcServer(StcEmulation):
     objects_list = 'ServerList'
 
 
+class StcOseSwitch(StcEmulation):
+    objects_list = 'HandleList'
+
+
 class StcOspfv2Router(StcRouter):
     pass
 
@@ -100,46 +104,50 @@ class StcBgpRouter(StcRouter):
     pass
 
 
-class StcBgpRoute(StcObject):
-
-    def get_network_block(self):
-        return self.get_objects_by_type_in_subtree(None, 'ipv4networkblock', 'ipv6networkblock')[0]
-
-
-class StcRouterLsa(StcObject):
-
-    def get_network_block(self):
-        return self.get_objects_by_type_in_subtree(None, 'ipv4networkblock', 'ipv6networkblock')[0]
-
-
 class StcPimRouter(StcRouter):
     pass
 
 
-class StcPimv4Group(StcObject):
+class StcIsisRouter(StcRouter):
+    pass
 
-    def get_network_block(self):
-        stc_group = self.project.get_object_by_ref(self.get_attribute('JoinedGroup-targets'))
-        return stc_group.network_block
+
+class StcBfdRouter(StcRouter):
+    pass
 
 
 class StcIgmpHost(StcClient):
     pass
 
 
-class StcIgmpGroup(StcObject):
-
-    def get_network_block(self):
-        return self.get_objects_by_type_in_subtree(None, 'ipv4networkblock', 'ipv6networkblock')[0]
-
-
 class StcIgmpQuerier(StcClient):
     pass
 
 
-class StcOseSwitch(StcEmulation):
-    objects_list = 'HandleList'
+class StcObjWithNetworkBlock(StcObject):
+
+    def get_network_block(self):
+        return self.get_objects_by_type_in_subtree('ipv4networkblock', 'ipv6networkblock')[0]
 
 
-class StcIsisRouter(StcRouter):
+class StcBgpRoute(StcObjWithNetworkBlock):
+    pass
+
+
+class StcRouterLsa(StcObjWithNetworkBlock):
+    pass
+
+
+class StcPimv4Group(StcObjWithNetworkBlock):
+
+    def get_network_block(self):
+        stc_group = self.project.get_object_by_ref(self.get_attribute('JoinedGroup-targets'))
+        return stc_group.network_block
+
+
+class StcIgmpGroup(StcObjWithNetworkBlock):
+    pass
+
+
+class StcIsisRouterRange(StcObjWithNetworkBlock):
     pass
