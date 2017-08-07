@@ -14,13 +14,16 @@ from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_object import StcObject
 from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
                                    StcPimv4Group, StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier,
-                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange)
+                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
+                                   StcBfdSession)
 from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
+                 'bfdipv4controlplaneindependentsession': StcBfdSession,
+                 'bfdipv6controlplaneindependentsession': StcBfdSession,
                  'bfdrouterconfig': StcBfdRouter,
                  'bgprouterconfig': StcBgpRouter,
                  'bgpipv4routeconfig': StcBgpRoute,

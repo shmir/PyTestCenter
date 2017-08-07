@@ -2,6 +2,7 @@
 This module implements classes and utility functions to manage STC emulated device.
 """
 
+from trafficgenerator.tgn_utils import is_ipv4, is_ipv6
 from testcenter.stc_object import StcObject
 
 
@@ -70,6 +71,10 @@ class StcDevice(StcObject):
             stc_next_if_ref = stc_next_if.get_attribute('StackedOnEndpoint-sources')
             stc_next_if = self.get_object_by_ref(stc_next_if_ref)
         return stc_vlans
+
+    def has_ip(self, ip_type):
+        return (is_ipv4(ip_type) and self.get_objects_or_children_by_type('ipv4if') or
+                is_ipv6(ip_type) and self.get_objects_or_children_by_type('ipv6if'))
 
 
 class StcEmulation(StcObject):
@@ -150,4 +155,8 @@ class StcIgmpGroup(StcObjWithNetworkBlock):
 
 
 class StcIsisRouterRange(StcObjWithNetworkBlock):
+    pass
+
+
+class StcBfdSession(StcObjWithNetworkBlock):
     pass
