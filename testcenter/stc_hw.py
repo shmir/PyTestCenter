@@ -29,8 +29,10 @@ class StcPhyBase(StcObject):
             child_type, child_name = child_type_name
             children = OrderedDict()
             for child in self.get_objects_or_children_by_type(child_type):
-                if type(child) == StcPhyModule and child.get_attribute('Description'):
-                    children[child_name + child.get_attribute('Index')] = child
+                # Ignore empty slots.
+                if type(child) is StcPhyModule and not child.get_attribute('Description'):
+                    continue
+                children[child_name + child.get_attribute('Index')] = child
             setattr(self, child_var, children)
             for child in getattr(self, child_var).values():
                 child.get_inventory()
@@ -51,6 +53,9 @@ class StcPhyChassis(StcPhyBase):
         power_supply_list = ps_status.get_list_attribute('PowerSupplyList')
         power_supply_status_list = ps_status.get_list_attribute('PowerSupplyStatusList')
         for name, status in zip(power_supply_list, power_supply_status_list):
+            # name can be 'slot-n' (e.g. 4.52) or 'n' (e.g. 4.70). BUG? waiting for Spirent response.
+            if len(name.split('-')) < 2:
+                continue
             index = name.split('-')[1]
             if status != 'POWER_STATUS_NOT_PRESENT':
                 if name.startswith('chs'):

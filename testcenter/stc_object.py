@@ -61,7 +61,7 @@ class StcObject(TgnObject):
             return self.api.create(self.obj_type(), self.obj_parent(), **attributes)
         else:
             stc_obj = self.api.create(self.obj_type(), self.obj_parent(), **attributes)
-            self._data['name'] = self.api.get(stc_obj, 'name')
+            self._data['name'] = self._get_name(self.api.get(stc_obj, 'name'), stc_obj)
             return stc_obj
 
     def command(self, command, wait_after=0, **arguments):
@@ -154,7 +154,7 @@ class StcObject(TgnObject):
         self.set_attributes(apply_, **attributes_targets)
 
     def get_name(self):
-        return self.get_attribute('Name')
+        return self._get_name(self.get_attribute('Name'), self.obj_ref())
 
     def get_active(self):
         return self.get_attribute('Active')
@@ -177,3 +177,9 @@ class StcObject(TgnObject):
             arp_cache = obj.get_child('ArpCache')
             arp_table += arp_cache.get_list_attribute('ArpCacheData')
         return arp_table
+
+    def _get_name(self, read_name, obj_ref):
+        name = read_name
+        if read_name.replace(' ', '').lower() == obj_ref:
+            name = self.obj_parent().obj_name() + '/' + self.obj_type()
+        return name
