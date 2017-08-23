@@ -21,51 +21,9 @@ from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
-TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
-                 'bfdipv4controlplaneindependentsession': StcBfdSession,
-                 'bfdipv6controlplaneindependentsession': StcBfdSession,
-                 'bfdrouterconfig': StcBfdRouter,
-                 'bgprouterconfig': StcBgpRouter,
-                 'bgpipv4routeconfig': StcBgpRoute,
-                 'bgpipv6routeconfig': StcBgpRoute,
-                 'dhcpv4serverconfig': StcServer,
-                 'dhcpv4blockconfig': StcClient,
-                 'emulateddevice': StcDevice,
-                 'externallsablock': StcRouterLsa,
-                 'igmphostconfig': StcIgmpHost,
-                 'igmprouterconfig': StcIgmpQuerier,
-                 'igmpgroupmembership': StcIgmpGroup,
-                 'ipv4group': StcIpv4Group,
-                 'ipv6group': StcIpv6Group,
-                 'Ipv4IsisRoutesConfig': StcIsisRouterRange,
-                 'Ipv6IsisRoutesConfig': StcIsisRouterRange,
-                 'isisrouterconfig': StcIsisRouter,
-                 'generator': StcGenerator,
-                 'groupcollection': StcGroupCollection,
-                 'ospfv2routerconfig': StcOspfv2Router,
-                 'oseswitchconfig': StcOseSwitch,
-                 'pimrouterconfig': StcPimRouter,
-                 'pimv4groupblk': StcPimv4Group,
-                 'port': StcPort,
-                 'physicalchassis': StcPhyChassis,
-                 'physicalchassismanager': StcHw,
-                 'physicalport': StcPhyPort,
-                 'physicalportgroup': StcPhyPortGroup,
-                 'physicaltestmodule': StcPhyModule,
-                 'routerlsa': StcRouterLsa,
-                 'streamblock': StcStream,
-                 'summarylsablock': StcRouterLsa,
-                 'trafficgroup': StcTrafficGroup,
-                 }
-
 
 class StcApp(TrafficGenerator):
     """ TestCenter driver. Equivalent to TestCenter Application. """
-
-    lab_server = None
-
-    system = None
-    project = None
 
     def __init__(self, logger, api_wrapper):
         """ Set all kinds of application level objects - logger, api, etc.
@@ -79,10 +37,11 @@ class StcApp(TrafficGenerator):
         self.api = api_wrapper
 
         StcObject.logger = self.logger
-        StcObject.api = self.api
         StcObject.str_2_class = TYPE_2_OBJECT
 
         self.system = StcObject(objType='system', objRef='system1', parent=None)
+        self.system.api = self.api
+        self.system.logger = self.logger
 
     def connect(self, lab_server=None):
         """ Create object and (optionally) connect to lab server.
@@ -189,3 +148,40 @@ class StcApp(TrafficGenerator):
 
     def wait_traffic(self):
         self.project.wait_traffic()
+
+TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
+                 'bfdipv4controlplaneindependentsession': StcBfdSession,
+                 'bfdipv6controlplaneindependentsession': StcBfdSession,
+                 'bfdrouterconfig': StcBfdRouter,
+                 'bgprouterconfig': StcBgpRouter,
+                 'bgpipv4routeconfig': StcBgpRoute,
+                 'bgpipv6routeconfig': StcBgpRoute,
+                 'dhcpv4serverconfig': StcServer,
+                 'dhcpv4blockconfig': StcClient,
+                 'emulateddevice': StcDevice,
+                 'externallsablock': StcRouterLsa,
+                 'igmphostconfig': StcIgmpHost,
+                 'igmprouterconfig': StcIgmpQuerier,
+                 'igmpgroupmembership': StcIgmpGroup,
+                 'ipv4group': StcIpv4Group,
+                 'ipv6group': StcIpv6Group,
+                 'Ipv4IsisRoutesConfig': StcIsisRouterRange,
+                 'Ipv6IsisRoutesConfig': StcIsisRouterRange,
+                 'isisrouterconfig': StcIsisRouter,
+                 'generator': StcGenerator,
+                 'groupcollection': StcGroupCollection,
+                 'ospfv2routerconfig': StcOspfv2Router,
+                 'oseswitchconfig': StcOseSwitch,
+                 'pimrouterconfig': StcPimRouter,
+                 'pimv4groupblk': StcPimv4Group,
+                 'port': StcPort,
+                 'physicalchassis': StcPhyChassis,
+                 'physicalchassismanager': StcHw,
+                 'physicalport': StcPhyPort,
+                 'physicalportgroup': StcPhyPortGroup,
+                 'physicaltestmodule': StcPhyModule,
+                 'routerlsa': StcRouterLsa,
+                 'streamblock': StcStream,
+                 'summarylsablock': StcRouterLsa,
+                 'trafficgroup': StcTrafficGroup,
+                 }

@@ -10,6 +10,7 @@ These tests serve two purposes:
 
 from os import path
 import inspect
+import pytest
 
 from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
@@ -19,6 +20,7 @@ from testcenter.stc_stream import StcStream
 from testcenter.test.test_base import StcTestBase
 
 
+@pytest.mark.usefixtures("virtualenv")
 class StcTestOffline(StcTestBase):
 
     def testLoadConfig(self):
