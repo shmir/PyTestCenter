@@ -15,7 +15,7 @@ from testcenter.stc_object import StcObject
 from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
                                    StcPimv4Group, StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier,
                                    StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
-                                   StcBfdSession)
+                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel)
 from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
@@ -53,6 +53,9 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'physicalportgroup': StcPhyPortGroup,
                  'physicaltestmodule': StcPhyModule,
                  'routerlsa': StcRouterLsa,
+                 'rsvpegresstunnelparams': StcRsvpTunnel,
+                 'rsvpingresstunnelparams': StcRsvpTunnel,
+                 'rsvprouterconfig': StcRsvpRouter,
                  'streamblock': StcStream,
                  'summarylsablock': StcRouterLsa,
                  'trafficgroup': StcTrafficGroup,
