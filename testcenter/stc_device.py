@@ -121,6 +121,10 @@ class StcBfdRouter(StcRouter):
     pass
 
 
+class StcRsvpRouter(StcRouter):
+    pass
+
+
 class StcIgmpHost(StcClient):
     pass
 
@@ -160,3 +164,9 @@ class StcIsisRouterRange(StcObjWithNetworkBlock):
 
 class StcBfdSession(StcObjWithNetworkBlock):
     pass
+
+
+class StcRsvpTunnel(StcObjWithNetworkBlock):
+
+    def get_network_block(self):
+        return self.get_objects_or_children_by_type('ipv4networkblock', 'ipv6networkblock')[0]
