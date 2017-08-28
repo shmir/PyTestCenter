@@ -6,12 +6,10 @@ Base class for all STC package tests.
 
 from os import path
 
+from trafficgenerator.tgn_utils import ApiType
 from trafficgenerator.test.test_tgn import TgnTest
 
-from testcenter.api.stc_tcl import StcTclWrapper
-from testcenter.api.stc_python import StcPythonWrapper
-from testcenter.api.stc_rest import StcRestWrapper
-from testcenter.stc_app import StcApp
+from testcenter.stc_app import init_stc
 
 
 class StcTestBase(TgnTest):
@@ -22,13 +20,8 @@ class StcTestBase(TgnTest):
 
     def setUp(self):
         super(StcTestBase, self).setUp()
-        if self.config.get('STC', 'api').lower() == 'tcl':
-            api_wrapper = StcTclWrapper(self.logger, self.config.get('STC', 'install_dir'))
-        elif self.config.get('STC', 'api').lower() == 'python':
-            api_wrapper = StcPythonWrapper(self.logger, self.config.get('STC', 'install_dir'))
-        else:
-            api_wrapper = StcRestWrapper(self.logger, self.config.get('STC', 'lab_server'))
-        self.stc = StcApp(self.logger, api_wrapper=api_wrapper)
+        self.stc = init_stc(ApiType[self.config.get('STC', 'api')], self.logger, self.config.get('STC', 'install_dir'),
+                            self.config.get('STC', 'lab_server'))
         log_level = self.config.get('STC', 'log_level')
         self.stc.system.get_child('automationoptions').set_attributes(LogLevel=log_level)
         self.stc.connect()

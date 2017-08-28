@@ -211,7 +211,6 @@ class StcIpGroup(StcObject):
     """ Base class for STC IP groups. """
 
     def __init__(self, **data):
-        data['parent'] = self.project
         super(StcIpGroup, self).__init__(**data)
         if 'joinedGroup' in data:
             self.set_sources(JoinedGroup=data['joinedGroup'].obj_ref())

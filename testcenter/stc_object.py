@@ -23,10 +23,11 @@ def extract_stc_obj_type_from_obj_ref(obj_ref):
 class StcObject(TgnObject):
 
     # Class level variables
-
     str_2_class = {}
 
     def __init__(self, **data):
+        if data['parent']:
+            self.project = data['parent'].project
         if 'objRef' in data:
             data['objType'] = extract_stc_obj_type_from_obj_ref(data['objRef'])
             if 'parent' not in data:

@@ -17,7 +17,7 @@ class StcDevice(StcObject):
 
         # Make sure parent is project.
         parent = data.pop('parent', None)
-        data['parent'] = self.project
+        data['parent'] = parent.project
 
         # Create StcDevice object.
         data['objType'] = 'emulateddevice'

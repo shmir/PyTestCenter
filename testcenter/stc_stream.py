@@ -44,7 +44,6 @@ class StcGroupCollection(StcObject):
         :return: group collection object.
         """
         data['objType'] = 'GroupCollection'
-        data['parent'] = self.project
         super(StcGroupCollection, self).__init__(**data)
 
     def _create(self):

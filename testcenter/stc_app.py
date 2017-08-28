@@ -6,9 +6,14 @@ This module implements classes and utility functions to manage STC application.
 
 from os import path
 import time
+from random import randint
 
+from trafficgenerator.tgn_utils import ApiType
+from trafficgenerator.tgn_tcl import TgnTkMultithread
 from trafficgenerator.trafficgenerator import TrafficGenerator
 
+from testcenter.api.stc_tcl import StcTclWrapper
+from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_object import StcObject
 from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
@@ -19,6 +24,30 @@ from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
+
+
+def init_stc(api, logger, install_dir=None, lab_server=None):
+    """ Create STC object.
+
+    :param api: configuration file object (-c option)
+    :type api: trafficgenerator.tgn_utils.ApiType
+    :param logger: logger object
+    :param install_dir: STC installation directory
+    :param lab_server: lab server address
+    :return: STC object
+    """
+
+    if api == ApiType.tcl:
+        stc_api_wrapper = StcTclWrapper(logger, install_dir)
+    if api == ApiType.tcl_multithread:
+        tcl_interp = TgnTkMultithread()
+        tcl_interp.start()
+        stc_api_wrapper = StcTclWrapper(logger, install_dir, tcl_interp)
+    elif api == ApiType.python:
+        stc_api_wrapper = StcPythonWrapper(logger, install_dir)
+    elif api == ApiType.rest:
+        stc_api_wrapper = StcRestWrapper(logger, lab_server, session_name='session' + str(randint(0, 99)))
+    return StcApp(logger, api_wrapper=stc_api_wrapper)
 
 
 class StcApp(TrafficGenerator):
@@ -41,6 +70,7 @@ class StcApp(TrafficGenerator):
         self.system = StcObject(objType='system', objRef='system1', parent=None)
         self.system.api = self.api
         self.system.logger = self.logger
+        self.system.project = None
 
     def connect(self, lab_server=None):
         """ Create object and (optionally) connect to lab server.
@@ -55,7 +85,7 @@ class StcApp(TrafficGenerator):
         # Every object creation/retrieval must come AFTER we connect to lab server (if needed).
         self.hw = self.system.get_child('PhysicalChassisManager')
         self.project = StcProject(parent=self.system)
-        StcObject.project = self.project
+        self.project.project = self.project
 
     def disconnect(self):
         """ Disconnect from lab server (if used) and reset configuration. """

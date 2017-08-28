@@ -101,7 +101,7 @@ class StcTestOffline(StcTestBase):
 
         for port_name in ('Port 1', 'Port 2'):
             self.logger.info('Create Port "%s"', port_name)
-            stc_port = StcPort(name=port_name)
+            stc_port = StcPort(name=port_name, parent=self.stc.project)
 
             for dev_name in (port_name + ' Device 1', port_name + ' Device 2'):
                 self.logger.info('Build Device "%s"', dev_name)
@@ -136,7 +136,7 @@ class StcTestOffline(StcTestBase):
         """ Build simple BGP configuration. """
         self.logger.info(StcTestOffline.testBuildEmulation.__doc__.strip())
 
-        stc_port = StcPort(name='Port 1')
+        stc_port = StcPort(name='Port 1', parent=self.stc.project)
         stc_dev = StcDevice(name='Device 1', parent=stc_port)
         stc_eth = StcObject(objType='EthIIIf', parent=stc_dev)
         stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')

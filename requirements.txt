@@ -3,4 +3,4 @@ configparser
 
 pwd
 stcrestclient
-tgnooapi>=1.0.0.dev1
+tgnooapi>=1.0.0.dev2

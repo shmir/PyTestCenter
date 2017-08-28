@@ -17,7 +17,6 @@ class StcPort(StcObject):
 
     def __init__(self, **data):
         data['objType'] = 'port'
-        data['parent'] = self.project
         super(self.__class__, self).__init__(**data)
         self.generator = self.get_child('generator')
 
@@ -193,7 +192,7 @@ class StcLag(StcObject):
     """ Represents STC LAG. """
 
     def __init__(self, **data):
-        self.port = StcPort(name=data['name'])
+        self.port = StcPort(name=data['name'], parent=data['parent'])
         data['objType'] = 'lag'
         data['parent'] = self.port
         super(self.__class__, self).__init__(**data)
