@@ -91,6 +91,8 @@ class StcApp(TrafficGenerator):
         """ Disconnect from lab server (if used) and reset configuration. """
 
         self.reset_config()
+        if type(self.api) == StcRestWrapper:
+            self.api.disconnect()
         if self.lab_server:
             self.api.perform('CSTestSessionDisconnect', Terminate=True)
 

@@ -26,6 +26,9 @@ class StcRestWrapper(object):
         self.ls = stchttp.StcHttp(server, port, debug_print=debug_print)
         self.session_id = self.ls.new_session(user_name, session_name, kill_existing=True)
 
+    def disconnect(self):
+        self.ls.end_session(self.session_id)
+
     def create(self, obj_type, parent, **attributes):
         """ Creates one or more Spirent TestCenter Automation objects.
 

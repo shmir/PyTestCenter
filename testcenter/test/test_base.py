@@ -24,7 +24,7 @@ class StcTestBase(TgnTest):
                             self.config.get('STC', 'lab_server'))
         log_level = self.config.get('STC', 'log_level')
         self.stc.system.get_child('automationoptions').set_attributes(LogLevel=log_level)
-        self.stc.connect()
+        self.stc.connect(self.config.get('STC', 'lab_server'))
 
     def tearDown(self):
         super(StcTestBase, self).tearDown()
