@@ -1,6 +1,5 @@
 future
 configparser
 
-pwd
 stcrestclient
-tgnooapi>=1.0.0.dev2
+tgnooapi>=1.0.0.dev3
