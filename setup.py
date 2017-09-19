@@ -36,7 +36,6 @@ setup(
     packages=['testcenter', 'testcenter.test', 'testcenter.api'],
     include_package_data=True,
     platforms='any',
-    setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     classifiers=[
         'Programming Language :: Python',

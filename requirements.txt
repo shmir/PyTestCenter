@@ -1,5 +1,6 @@
 future
 configparser
+pytest-runner
 
 stcrestclient
-tgnooapi>=1.0.0.dev3
+tgnooapi==1.0.0rc1
