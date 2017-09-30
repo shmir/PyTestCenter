@@ -9,8 +9,7 @@ import time
 from random import randint
 
 from trafficgenerator.tgn_utils import ApiType
-from trafficgenerator.tgn_tcl import TgnTkMultithread
-from trafficgenerator.trafficgenerator import TrafficGenerator
+from trafficgenerator.tgn_app import TgnApp
 
 from testcenter.api.stc_tcl import StcTclWrapper
 from testcenter.api.stc_python import StcPythonWrapper
@@ -29,9 +28,9 @@ from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGrou
 def init_stc(api, logger, install_dir=None, lab_server=None):
     """ Create STC object.
 
-    :param api: configuration file object (-c option)
+    :param api: tcl/python/rest
     :type api: trafficgenerator.tgn_utils.ApiType
-    :param logger: logger object
+    :param logger: python logger object
     :param install_dir: STC installation directory
     :param lab_server: lab server address
     :return: STC object
@@ -39,10 +38,6 @@ def init_stc(api, logger, install_dir=None, lab_server=None):
 
     if api == ApiType.tcl:
         stc_api_wrapper = StcTclWrapper(logger, install_dir)
-    if api == ApiType.tcl_multithread:
-        tcl_interp = TgnTkMultithread()
-        tcl_interp.start()
-        stc_api_wrapper = StcTclWrapper(logger, install_dir, tcl_interp)
     elif api == ApiType.python:
         stc_api_wrapper = StcPythonWrapper(logger, install_dir)
     elif api == ApiType.rest:
@@ -50,7 +45,7 @@ def init_stc(api, logger, install_dir=None, lab_server=None):
     return StcApp(logger, api_wrapper=stc_api_wrapper)
 
 
-class StcApp(TrafficGenerator):
+class StcApp(TgnApp):
     """ TestCenter driver. Equivalent to TestCenter Application. """
 
     def __init__(self, logger, api_wrapper):
@@ -60,9 +55,7 @@ class StcApp(TrafficGenerator):
         :param api_wrapper: api wrapper object inheriting and implementing StcApi base class.
         """
 
-        super(self.__class__, self).__init__()
-        self.logger = logger
-        self.api = api_wrapper
+        super(self.__class__, self).__init__(logger, api_wrapper)
 
         StcObject.logger = self.logger
         StcObject.str_2_class = TYPE_2_OBJECT

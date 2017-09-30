@@ -5,7 +5,6 @@ Base class for all STC package tests.
 """
 
 from os import path
-import ast
 
 from trafficgenerator.tgn_utils import ApiType
 from trafficgenerator.test.test_tgn import TgnTest
