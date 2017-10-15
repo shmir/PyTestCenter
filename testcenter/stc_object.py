@@ -151,6 +151,10 @@ class StcObject(TgnObject):
             attributes_targets[attribute + '-sources'] = value
         self.set_attributes(apply_, **attributes_targets)
 
+    def delete(self):
+        self.api.delete(self.ref)
+        self.del_object_from_parent()
+
     def get_name(self):
         return self._get_name(self.get_attribute('Name'), self.obj_ref())
 

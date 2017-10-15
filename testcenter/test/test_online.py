@@ -1,10 +1,6 @@
 """
 TestCenter package tests that require actual TestCenter chassis and active ports.
 
-These tests serve two purposes:
-- Unit test for TestCenter package.
-- Code snippet showing how to work with TestCenter package.
-
 Test setup:
 Two STC ports connected back to back.
 

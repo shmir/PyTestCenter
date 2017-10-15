@@ -1,10 +1,6 @@
 """
 TestCenter package tests that can run in offline mode.
 
-These tests serve two purposes:
-- Unit test for TestCenter package.
-- Code snippet showing how to work with TestCenter package.
-
 @author yoram@ignissoft.com
 """
 

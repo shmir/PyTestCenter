@@ -3,4 +3,4 @@ configparser
 pytest-runner
 
 stcrestclient
-tgnooapi==1.0.0rc1
+tgnooapi>=1.1.0
