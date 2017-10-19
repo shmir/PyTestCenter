@@ -169,7 +169,7 @@ class StcObject(TgnObject):
     @classmethod
     def send_arp_ns(cls, *objects):
         """ Send ARP and NS for ports, devices or stream blocks. """
-        StcObject.api.perform('ArpNdStart', HandleList=build_obj_ref_list(objects))
+        objects[0].api.perform('ArpNdStart', HandleList=build_obj_ref_list(objects))
 
     @classmethod
     def get_arp_cache(self, *objects):

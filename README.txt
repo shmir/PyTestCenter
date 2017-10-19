@@ -1,6 +1,4 @@
 
-+++ WORK IN PROGRESS - fully functional documentation under construction. +++
-
 TGN - Traffic Generator
 STC - Spirent TestCenter.
 

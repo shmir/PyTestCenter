@@ -121,8 +121,8 @@ class StcTestOnline(StcTestBase):
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
 
-        gen_stats = StcStats('GeneratorPortResults')
-        analyzer_stats = StcStats('analyzerportresults')
+        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
 
         gen_stats.read_stats()
         analyzer_stats.read_stats()
@@ -171,8 +171,8 @@ class StcTestOnline(StcTestBase):
         self.ports = self.stc.project.get_children('port')
         self.stc.project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'))
 
-        gen_stats = StcStats('generatorportresults')
-        analyzer_stats = StcStats('analyzerportresults')
+        gen_stats = StcStats(self.stc.project, 'generatorportresults')
+        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
 
         gen_stats.read_stats()
         analyzer_stats.read_stats()

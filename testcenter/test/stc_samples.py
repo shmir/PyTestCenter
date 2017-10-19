@@ -131,7 +131,7 @@ class StcSamples(unittest.TestCase):
         self.stc.start_traffic()
         time.sleep(8)
         self.stc.stop_traffic()
-        port_stats = StcStats('generatorportresults')
+        port_stats = StcStats(self.stc.project, 'generatorportresults')
         port_stats.read_stats()
         print(port_stats.get_object_stats('Port 1'))
         print(port_stats.get_stats('TotalFrameCount'))

@@ -25,18 +25,18 @@ class StcStats(object):
     ...
     """
 
-    api = None
     statistics = {}
 
-    def __init__(self, view):
+    def __init__(self, project, view):
         """ Subscribe to view with default configuration type as defined by config_2_type.
 
+        :param project: parent project object for all statistics.
         :param view: statistics view to subscribe to. If view is None it is the test responsibility to subscribe with
             specific config_type.
         """
 
         super(StcStats, self).__init__()
-        self.api = StcObject.api
+        self.project = project
         if view:
             self.subscribe(view, view_2_config_type[view.lower()])
         self.statistics = {}
@@ -48,15 +48,14 @@ class StcStats(object):
         :parama config_type: configuration type to subscribe to.
         """
 
-        project = StcObject.project
-        rds = self.api.subscribe(Parent=project.obj_ref(), ResultParent=project.obj_ref(), ConfigType=config_type,
-                                 ResultType=view)
-        self.rds = StcObject(ObjType='ResultDataSet', parent=project, objRef=rds)
+        rds = self.project.api.subscribe(Parent=self.project.obj_ref(), ResultParent=self.project.obj_ref(),
+                                         ConfigType=config_type, ResultType=view)
+        self.rds = StcObject(ObjType='ResultDataSet', parent=self.project, objRef=rds)
 
     def unsubscribe(self):
         """ UnSubscribe from statistics view. """
 
-        self.api.unsubscribe(self.rds.obj_ref())
+        self.project.api.unsubscribe(self.rds.obj_ref())
 
     def read_stats(self, *stats):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
@@ -66,18 +65,17 @@ class StcStats(object):
         :todo: add support for user and dynamic statistics.
         """
 
-        project = StcObject.project
         self.statistics = {}
 
         objs_stats = []
-        self.api.perform('RefreshResultView', ResultDataSet=self.rds.obj_ref())
+        self.project.api.perform('RefreshResultView', ResultDataSet=self.rds.obj_ref())
         for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
             self.rds.set_attributes(PageNumber=page_number)
             for results in self.rds.get_objects_from_attribute('ResultHandleList'):
                 parent = results.get_object_from_attribute('parent')
                 parents = parent.obj_ref()
                 name = ''
-                while parent != project:
+                while parent != self.project:
                     if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
                         name = parent.get_name()
                     parent = parent.obj_parent()
