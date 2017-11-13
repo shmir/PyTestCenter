@@ -8,7 +8,7 @@ from os import path
 import time
 from random import randint
 
-from trafficgenerator.tgn_utils import ApiType
+from trafficgenerator.tgn_utils import ApiType, TgnError
 from trafficgenerator.tgn_app import TgnApp
 
 from testcenter.api.stc_tcl import StcTclWrapper
@@ -42,6 +42,8 @@ def init_stc(api, logger, install_dir=None, lab_server=None):
         stc_api_wrapper = StcPythonWrapper(logger, install_dir)
     elif api == ApiType.rest:
         stc_api_wrapper = StcRestWrapper(logger, lab_server, session_name='session' + str(randint(0, 99)))
+    else:
+        raise TgnError('{} API not supported - use Tcl, python or REST'.format(api))
     return StcApp(logger, api_wrapper=stc_api_wrapper)
 
 

@@ -86,7 +86,7 @@ class StcObject(TgnObject):
         for handle in self.get_attribute(attribute).split():
             obj = self.project.get_object_by_ref(handle)
             if not obj:
-                obj = StcObject(objRef=handle)
+                obj = StcObject(objRef=handle, parent=self)
             objects.append(obj)
         return objects
 
