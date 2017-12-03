@@ -96,7 +96,7 @@ class StcPhyModule(StcPhyBase):
 
 class StcPhyPortGroup(StcPhyBase):
 
-    attributes_names = ('Index',)
+    attributes_names = ('Index', 'TestPackage')
     children_types = {'ports': ('PhysicalPort', 'Port ')}
 
 

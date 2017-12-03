@@ -23,17 +23,14 @@ from testcenter.stc_statistics_view import StcStats
 
 
 # API type = tcl, python or rest. Default is tcl with DEBUG log messages (see bellow) because it gives best visibility.
-api = 'rest'
-install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
+api = 'tcl'
+install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.80'
 lab_server = ''
-lab_server = '192.168.42.156'
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '10.26.4.151/3/1'
-port2_location = '10.26.4.151/3/2'
-port1_location = '192.168.42.156/1/1'
-port2_location = '192.168.42.156/1/2'
+port1_location = '10.210.3.10/2/1'
+port2_location = '10.210.3.10/2/2'
 
 
 class StcSamples(unittest.TestCase):
@@ -144,16 +141,19 @@ class StcSamples(unittest.TestCase):
 
         print('Full Inventory')
         print('=' * len('Full Inventory'))
+        print(chassis.name)
+        print(chassis.attributes)
         for module_name, module in chassis.modules.items():
-            print('{} speed: {}'.format(module_name, module.attributes['SupportedSpeeds']))
+            print('\t' + module_name)
+            print('\t' + str(module.attributes))
             for pg_name, pg in module.pgs.items():
-                print(pg_name)
-                for port_name in pg.ports:
-                    print(port_name)
-            if module.ps:
-                print(module.ps.attributes['Index'])
+                print('\t\t' + pg_name)
+                print('\t\t' + str(pg.attributes))
+                for port_name, port in pg.ports.items():
+                    print('\t\t\t' + port_name)
+                    print('\t\t\t' + str(port.attributes))
         for ps_name in chassis.pss:
-            print(ps_name)
+            print('\t' + ps_name)
 
         print('\nThin Inventory')
         print('=' * len('Thin Inventory'))

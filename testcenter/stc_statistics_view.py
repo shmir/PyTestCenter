@@ -78,7 +78,7 @@ class StcStats(object):
                 while parent != self.project:
                     if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
                         name = parent.get_name()
-                    parent = parent.obj_parent()
+                    parent = parent.get_object_from_attribute('parent')
                     parents = parent.obj_ref() + '/' + parents
                 obj_stats = ({'object': results.obj_ref(), 'parents': parents, 'topLevelName': name})
                 obj_stats.update(results.get_attributes(*stats))
