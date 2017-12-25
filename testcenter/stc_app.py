@@ -175,6 +175,7 @@ class StcApp(TgnApp):
     def wait_traffic(self):
         self.project.wait_traffic()
 
+
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'bfdipv4controlplaneindependentsession': StcBfdSession,
                  'bfdipv6controlplaneindependentsession': StcBfdSession,

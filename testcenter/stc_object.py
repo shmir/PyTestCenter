@@ -90,9 +90,6 @@ class StcObject(TgnObject):
             objects.append(obj)
         return objects
 
-    def get_object_from_attribute(self, attribute):
-        return self.get_objects_from_attribute(attribute)[0] if self.get_objects_from_attribute(attribute) else None
-
     def append_attribute(self, attribute, value, apply_=False):
         cur_value = self.api.get(self.obj_ref(), attribute)
         attributes = {attribute: cur_value + ' ' + str(value)}
