@@ -143,7 +143,7 @@ class StcBgpRoute(StcObjWithNetworkBlock):
     pass
 
 
-class StcRouterLsa(StcObjWithNetworkBlock):
+class StcOspfLsa(StcObjWithNetworkBlock):
     pass
 
 

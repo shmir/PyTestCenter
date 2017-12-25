@@ -16,7 +16,7 @@ from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_object import StcObject
 from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
-                                   StcPimv4Group, StcOspfv2Router, StcRouterLsa, StcIgmpHost, StcIgmpQuerier,
+                                   StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost, StcIgmpQuerier,
                                    StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
                                    StcBfdSession, StcRsvpRouter, StcRsvpTunnel)
 from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
@@ -186,7 +186,7 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'dhcpv4serverconfig': StcServer,
                  'dhcpv4blockconfig': StcClient,
                  'emulateddevice': StcDevice,
-                 'externallsablock': StcRouterLsa,
+                 'externallsablock': StcOspfLsa,
                  'igmphostconfig': StcIgmpHost,
                  'igmprouterconfig': StcIgmpQuerier,
                  'igmpgroupmembership': StcIgmpGroup,
@@ -207,11 +207,11 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'physicalport': StcPhyPort,
                  'physicalportgroup': StcPhyPortGroup,
                  'physicaltestmodule': StcPhyModule,
-                 'routerlsa': StcRouterLsa,
+                 'routerlsa': StcOspfLsa,
                  'rsvpegresstunnelparams': StcRsvpTunnel,
                  'rsvpingresstunnelparams': StcRsvpTunnel,
                  'rsvprouterconfig': StcRsvpRouter,
                  'streamblock': StcStream,
-                 'summarylsablock': StcRouterLsa,
+                 'summarylsablock': StcOspfLsa,
                  'trafficgroup': StcTrafficGroup,
                  }
