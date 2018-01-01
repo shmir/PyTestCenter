@@ -153,7 +153,8 @@ class StcObject(TgnObject):
         self.del_object_from_parent()
 
     def get_name(self):
-        return self._get_name(self.get_attribute('Name'), self.obj_ref())
+        self._data['name'] = self._get_name(self.get_attribute('Name'), self.obj_ref())
+        return self._data['name']
 
     def get_active(self):
         return self.get_attribute('Active')
