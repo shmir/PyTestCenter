@@ -162,6 +162,43 @@ class StcTestOnline(StcTestBase):
 
         pass
 
+    def testCustomView(self):
+        """ Test custom statistics view. """
+        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        self._reserve_ports()
+        self.ports[0].start(blocking=True)
+
+        user_stats = StcStats(self.stc.project, 'UserDynamicResultView')
+        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+        
+        gen_stats.read_stats()
+        print gen_stats.statistics
+
+        user_stats.read_stats()
+        print user_stats.statistics
+        print user_stats.get_stats('Port.GeneratorFrameCount')
+        print user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name')
+        print user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name')
+        
+#         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+#         analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
+# 
+#         gen_stats.read_stats()
+#         analyzer_stats.read_stats()
+#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
+#         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
+#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+#                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+# 
+#         self.ports[0].start()
+#         self.ports[0].stop()
+#         gen_stats.read_stats()
+#         analyzer_stats.read_stats()
+#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+#                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+
     def testSinglePortTraffic(self):
         """ Test traffic and counters in loopback mode. """
         self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
@@ -199,7 +236,7 @@ class StcTestOnline(StcTestBase):
     def _reserve_ports(self):
         project = self.stc.project
         self.ports = project.get_children('port')
-        project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'), wait_for_up=False)
-        project.get_object_by_name('Port 2').reserve(self.config.get('STC', 'port2'), wait_for_up=False)
+        project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'), force=True, wait_for_up=False)
+        project.get_object_by_name('Port 2').reserve(self.config.get('STC', 'port2'), force=True, wait_for_up=False)
         for port in self.ports:
             port.wait_for_states(40, 'UP')

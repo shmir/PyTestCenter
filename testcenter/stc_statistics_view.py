@@ -2,6 +2,8 @@
 Classes and utilities to manage STC statistics views.
 """
 
+from trafficgenerator.tgn_utils import is_false
+
 from testcenter.stc_object import StcObject
 
 
@@ -38,19 +40,27 @@ class StcStats(object):
         super(StcStats, self).__init__()
         self.project = project
         if view:
-            self.subscribe(view, view_2_config_type[view.lower()])
+            self.subscribe(view)
         self.statistics = {}
 
-    def subscribe(self, view, config_type):
+    def subscribe(self, view, config_type=None):
         """ Subscribe to statistics view.
 
         :parama view: statistics view to subscribe to.
         :parama config_type: configuration type to subscribe to.
         """
 
-        rds = self.project.api.subscribe(Parent=self.project.obj_ref(), ResultParent=self.project.obj_ref(),
-                                         ConfigType=config_type, ResultType=view)
-        self.rds = StcObject(ObjType='ResultDataSet', parent=self.project, objRef=rds)
+        if view.lower() in view_2_config_type:
+            if not config_type:
+                config_type = view_2_config_type[view.lower()]
+            rds = self.project.api.subscribe(Parent=self.project.obj_ref(), ResultParent=self.project.obj_ref(),
+                                             ConfigType=config_type, ResultType=view)
+            self.rds = StcObject(objType='ResultDataSet', parent=self.project, objRef=rds)
+        else:
+            self.project.get_children('DynamicResultView')
+            drv = self.project.get_object_by_name(view)
+            rc = self.project.command('SubscribeDynamicResultView', DynamicResultView=drv.ref)
+            self.rds = StcObject(objType='DynamicResultView', parent=self.project, objRef=rc['DynamicResultView'])
 
     def unsubscribe(self):
         """ UnSubscribe from statistics view. """
@@ -61,34 +71,16 @@ class StcStats(object):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
 
         :param stats: list of statistics names to read, empty list will read all statistics.
+            Relevant for system (not dynamic) result views only. 
 
-        :todo: add support for user and dynamic statistics.
+        :todo: add support for user statistics.
         """
 
         self.statistics = {}
-
-        objs_stats = []
-        self.project.api.perform('RefreshResultView', ResultDataSet=self.rds.obj_ref())
-        for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
-            self.rds.set_attributes(PageNumber=page_number)
-            for results in self.rds.get_objects_from_attribute('ResultHandleList'):
-                parent = results.get_object_from_attribute('parent')
-                parents = parent.obj_ref()
-                name = ''
-                while parent != self.project:
-                    if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
-                        name = parent.get_name()
-                    parent = parent.get_object_from_attribute('parent')
-                    parents = parent.obj_ref() + '/' + parents
-                obj_stats = ({'object': results.obj_ref(), 'parents': parents, 'topLevelName': name})
-                obj_stats.update(results.get_attributes(*stats))
-                obj_stats.pop('parent', None)
-                obj_stats.pop('Name', None)
-                obj_stats.pop('resultchild-Sources', None)
-                objs_stats.append(obj_stats.values())
-                keys = obj_stats.keys()
-        if objs_stats:
-            self.statistics = dict(zip(keys, zip(*objs_stats)))
+        if self.rds.type == 'dynamicresultview':
+            self._read_custom_view()
+        else:
+            self._read_view(*stats)
 
     def get_stats(self, row='topLevelName'):
         """
@@ -131,6 +123,57 @@ class StcStats(object):
         :returns: the int value of the requested counter for the requested object ID.
         """
         return int(self.get_stat(obj_id, counter, obj_id_stat))
+
+    def get_all_stats(self):
+        from collections import OrderedDict
+        statistics = OrderedDict()
+        for obj_name in self.statistics['topLevelName']:
+            statistics[obj_name] = self.get_object_stats(obj_name)
+        
+    def _read_custom_view(self):
+
+        self.project.command('RefreshResultView', ResultDataSet=self.rds.ref)
+        self.project.command('UpdateDynamicResultViewCommand', DynamicResultView=self.rds.ref)
+        presentationResultQuery = self.rds.get_child('PresentationResultQuery')
+        selectedProperties = presentationResultQuery.get_list_attribute('SelectProperties')
+        self.objs_stats = []
+        for rvd in presentationResultQuery.get_children('ResultViewData'):
+            self.objs_stats.append(rvd.get_list_attribute('ResultData')[:len(selectedProperties)])
+            self._get_result_data(rvd, len(selectedProperties))
+        self.statistics = dict(zip(selectedProperties, zip(*self.objs_stats)))
+
+    def _get_result_data(self, rvd, num_columns):
+        self.project.command('ExpandResultViewDataCommand', ResultViewData=rvd.ref)
+        for child_rvd in rvd.get_children('ResultViewData'):
+            if is_false(child_rvd.get_attribute('IsDummy')):
+                self.objs_stats.append(child_rvd.get_list_attribute('ResultData')[:num_columns])
+            self._get_result_data(child_rvd, num_columns)
+
+    def _read_view(self, *stats):
+
+        objs_stats = []
+        self.project.command('RefreshResultView', ResultDataSet=self.rds.obj_ref())
+        for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
+            self.rds.set_attributes(PageNumber=page_number)
+            for results in self.rds.get_objects_from_attribute('ResultHandleList'):
+                parent = results.get_object_from_attribute('parent')
+                parents = parent.obj_ref()
+                name = ''
+                while parent != self.project:
+                    if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
+                        name = parent.get_name()
+                    parent = parent.get_object_from_attribute('parent')
+                    parents = parent.obj_ref() + '/' + parents
+                obj_stats = ({'object': results.obj_ref(), 'parents': parents, 'topLevelName': name})
+                obj_stats.update(results.get_attributes(*stats))
+                obj_stats.pop('parent', None)
+                obj_stats.pop('Name', None)
+                obj_stats.pop('resultchild-Sources', None)
+                objs_stats.append(obj_stats.values())
+                keys = obj_stats.keys()
+        if objs_stats:
+            self.statistics = dict(zip(keys, zip(*objs_stats)))
+
 
 view_2_config_type = {
     'igmpgroupmembershipresults': 'IgmpGroupMembership',

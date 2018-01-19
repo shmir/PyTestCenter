@@ -25,7 +25,7 @@ install_requires = [r for r in required if r and r[0] != '#' and not r.startswit
 long_description = read('README.txt')
 
 setup(
-    name='stcooapi',
+    name='pytestcenter',
     version=testcenter.__version__,
     url='https://github.com/shmir/PyTestCenter/',
     license='Apache Software License',
