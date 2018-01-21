@@ -150,12 +150,13 @@ class StcOspfLsa(StcObjWithNetworkBlock):
 class StcPimv4Group(StcObjWithNetworkBlock):
 
     def get_network_block(self):
-        stc_group = self.project.get_object_by_ref(self.get_attribute('JoinedGroup-targets'))
-        return stc_group.network_block
+        return self.get_object_from_attribute('JoinedGroup-targets').network_block
 
 
 class StcIgmpGroup(StcObjWithNetworkBlock):
-    pass
+
+    def get_network_block(self):
+        return self.get_object_from_attribute('SubscribedGroups-targets').network_block
 
 
 class StcIsisRouterRange(StcObjWithNetworkBlock):
