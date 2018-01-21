@@ -22,7 +22,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 install_requires = [r for r in required if r and r[0] != '#' and not r.startswith('git')]
 
-long_description = read('README.txt')
+long_description = read('README.rst')
 
 setup(
     name='pytestcenter',
