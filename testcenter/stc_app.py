@@ -25,14 +25,15 @@ from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
 
 
-def init_stc(api, logger, install_dir=None, lab_server=None):
+def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
     """ Create STC object.
 
     :param api: tcl/python/rest
     :type api: trafficgenerator.tgn_utils.ApiType
     :param logger: python logger object
     :param install_dir: STC installation directory
-    :param lab_server: lab server address
+    :param rest_server: rest server address (either stcweb or lab server)
+    :param rest_port: rest server port (either stcweb or lab server)
     :return: STC object
     """
 
@@ -41,7 +42,7 @@ def init_stc(api, logger, install_dir=None, lab_server=None):
     elif api == ApiType.python:
         stc_api_wrapper = StcPythonWrapper(logger, install_dir)
     elif api == ApiType.rest:
-        stc_api_wrapper = StcRestWrapper(logger, lab_server, session_name='session' + str(randint(0, 99)))
+        stc_api_wrapper = StcRestWrapper(logger, rest_server, rest_port, session_name='session' + str(randint(0, 99)))
     else:
         raise TgnError('{} API not supported - use Tcl, python or REST'.format(api))
     return StcApp(logger, api_wrapper=stc_api_wrapper)

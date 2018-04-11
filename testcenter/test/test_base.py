@@ -21,7 +21,7 @@ class StcTestBase(TgnTest):
     def setUp(self):
         super(StcTestBase, self).setUp()
         self.stc = init_stc(ApiType[self.config.get('STC', 'api')], self.logger, self.config.get('STC', 'install_dir'),
-                            self.config.get('STC', 'lab_server'))
+                            self.config.get('STC', 'rest_server'), self.config.get('STC', 'rest_port'))
         log_level = self.config.get('STC', 'log_level')
         self.stc.system.get_child('automationoptions').set_attributes(LogLevel=log_level)
         lab_server = None if self.config.get('STC', 'lab_server') == 'None' else self.config.get('STC', 'lab_server')
