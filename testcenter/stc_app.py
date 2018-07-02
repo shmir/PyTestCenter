@@ -7,6 +7,7 @@ This module implements classes and utility functions to manage STC application.
 from os import path
 import time
 from random import randint
+from enum import Enum
 
 from trafficgenerator.tgn_utils import ApiType, TgnError
 from trafficgenerator.tgn_app import TgnApp
@@ -23,6 +24,14 @@ from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
+
+
+class StcSequencerOperation(Enum):
+    start = 'SequencerStart'
+    stop = 'SequencerStop'
+    step = 'SequencerStep'
+    pause = 'SequencerPause'
+    wait = 'waituntilcomplete'
 
 
 def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
@@ -115,20 +124,26 @@ class StcApp(TgnApp):
     def reset_config(self):
         self.api.perform('ResetConfig', config='system1')
 
-    def save_config(self, config_file_name):
+    def save_config(self, config_file_name, server_folder='c:/temp'):
         """ Save configuration file as tcc or xml.
 
         Configuration file type is extracted from the file suffix - xml or tcc.
         :param config_file_name: full path to the configuration file.
+        :param server_temp_folder: folder on the server where the system will save the files before download.
         """
 
+        if type(self.api) == StcRestWrapper:
+            config_file_name_full_path = config_file_name
+            config_file_name = server_folder.replace('\\', '/') + '/' + path.basename(config_file_name)
         ext = path.splitext(config_file_name)[-1].lower()
         if ext == '.tcc':
-            self.api.perform('SaveToTcc', FileName=path.normpath(config_file_name))
+            rc = self.api.perform('SaveToTcc', FileName=path.normpath(config_file_name))
         elif ext == '.xml':
-            self.api.perform('SaveAsXml', FileName=path.normpath(config_file_name))
+            rc = self.api.perform('SaveAsXml', FileName=path.normpath(config_file_name))
         else:
             raise ValueError('Configuration file type {0} not supported.'.format(ext))
+        if type(self.api) == StcRestWrapper:
+            self.api.ls.download(rc['FileName'], config_file_name_full_path)
 
     def clear_results(self):
         self.project.clear_results()
@@ -175,6 +190,21 @@ class StcApp(TgnApp):
 
     def wait_traffic(self):
         self.project.wait_traffic()
+
+    #
+    # Sequencer commands.
+    #
+
+    def sequencer_command(self, command):
+        """ Perform sequencer command.
+
+        :param command: sequencer command.
+        :type command: testcenter.stc_app.StcSequencerOperation
+        """
+        if command != StcSequencerOperation.wait:
+            self.project.command(command.value)
+        else:
+            self.project.wait()
 
 
 TYPE_2_OBJECT = {'analyzer': StcAnalyzer,

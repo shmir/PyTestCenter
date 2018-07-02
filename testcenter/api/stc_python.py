@@ -102,3 +102,8 @@ class StcPythonWrapper(object):
         """
 
         self.stc.unsubscribe(result_data_set)
+
+    def wait(self):
+        """ Wait until sequencer is finished. """
+
+        self.stc.waitUntilComplete()

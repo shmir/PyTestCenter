@@ -10,6 +10,7 @@ Two STC ports connected back to back.
 from os import path
 
 from testcenter.stc_statistics_view import StcStats
+from testcenter.stc_app import StcSequencerOperation
 
 from testcenter.test.test_base import StcTestBase
 
@@ -160,7 +161,22 @@ class StcTestOnline(StcTestBase):
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
 
-        pass
+    def testSequencer(self):
+        """ Test Sequencer commands. """
+        self.logger.info(StcTestOnline.testArp.__doc__.strip())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_sequencer.tcc'))
+        self._reserve_ports()
+
+        self.stc.sequencer_command(StcSequencerOperation.start)
+        self.stc.sequencer_command(StcSequencerOperation.wait)
+
+        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
+
+        gen_stats.read_stats()
+        analyzer_stats.read_stats()
+        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 8000)
 
     def testCustomView(self):
         """ Test custom statistics view. """
@@ -172,7 +188,7 @@ class StcTestOnline(StcTestBase):
 
         user_stats = StcStats(self.stc.project, 'UserDynamicResultView')
         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
-        
+
         gen_stats.read_stats()
         print gen_stats.statistics
 
@@ -181,17 +197,17 @@ class StcTestOnline(StcTestBase):
         print user_stats.get_stats('Port.GeneratorFrameCount')
         print user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name')
         print user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name')
-        
+
 #         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
 #         analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
-# 
+#
 #         gen_stats.read_stats()
 #         analyzer_stats.read_stats()
 #         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
 #         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
 #         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
 #                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
-# 
+#
 #         self.ports[0].start()
 #         self.ports[0].stop()
 #         gen_stats.read_stats()

@@ -7,6 +7,8 @@ TestCenter package tests that can run in offline mode.
 from os import path
 import inspect
 
+from trafficgenerator.tgn_utils import ApiType
+
 from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
 from testcenter.stc_device import StcDevice
@@ -27,8 +29,6 @@ class StcTestOffline(StcTestBase):
 
         self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'tcc.invalid'))
         self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
-
-        pass
 
     def testReloadConfig(self):
         """ Reload existing configuration. """
@@ -124,7 +124,22 @@ class StcTestOffline(StcTestBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-        pass
+    def testStreamUnderProject(self):
+        """ Build simple config with ports under project object. """
+        self.logger.info(StcTestOffline.testBuildConfig.__doc__.strip())
+
+        for port_name in ('Port 1', 'Port 2'):
+            self.logger.info('Create Port "%s"', port_name)
+            stc_port = StcPort(name=port_name, parent=self.stc.project)
+
+            for sb_name in (port_name + ' StreamBlock 1', port_name + ' StreamBlock 2'):
+                self.logger.info('Build StreamBlock "%s"', sb_name)
+                stc_sb = StcStream(name=sb_name, parent=stc_port)
+                stc_eth = StcObject(objType='ethernet:ethernetii', parent=stc_sb)
+                stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
+
+        test_name = inspect.stack()[0][3]
+        self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
     def testBuildEmulation(self):
         """ Build simple BGP configuration. """
@@ -141,4 +156,20 @@ class StcTestOffline(StcTestBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-        pass
+    def testBackdoor(self):
+
+        if ApiType[self.config.get('STC', 'api')] != ApiType.rest:
+            self.skipTest('Skip test - non rest API')
+
+        print(self.stc.api.ls.get(self.stc.project.ref, 'children').split())
+        print(self.stc.api.ls.get(self.stc.project.ref, 'children-port').split())
+
+        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
+        ports = self.stc.api.ls.get(self.stc.project.ref, 'children-port').split()
+
+        print(self.stc.api.ls.get(ports[0]))
+        print(self.stc.api.ls.get(ports[0], 'Name'))
+        print(self.stc.api.ls.get(ports[0], 'Name', 'Active'))
+
+        print(self.stc.api.ls.config(ports[0], Name='New Name', Active=False))
+        print(self.stc.api.ls.get(ports[0], 'Name', 'Active'))

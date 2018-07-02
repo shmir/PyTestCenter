@@ -164,6 +164,10 @@ class StcObject(TgnObject):
         if status and 'passed' not in status and 'successful' not in status:
             raise TgnError('{} = {}'.format(attribute, status))
 
+    def wait(self):
+        """ Wait until sequencer is finished. """
+        self.api.wait()
+
     @classmethod
     def send_arp_ns(cls, *objects):
         """ Send ARP and NS for ports, devices or stream blocks. """

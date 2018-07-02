@@ -100,3 +100,8 @@ syntax: regexp
 ^ixnetwork/test/logs/configs_per_protocol$
 syntax: regexp
 ^\.pydevproject$
+
+.idea/
+testcenter/test/configs/*.xml
+
+.pytest_cache

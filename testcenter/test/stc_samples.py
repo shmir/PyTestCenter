@@ -13,24 +13,22 @@ import unittest
 import logging
 import time
 
-from trafficgenerator.tgn_utils import is_false
+from trafficgenerator.tgn_utils import is_false, ApiType
 
-from testcenter.api.stc_tcl import StcTclWrapper
-from testcenter.api.stc_python import StcPythonWrapper
-from testcenter.api.stc_rest import StcRestWrapper
-from testcenter.stc_app import StcApp
+from testcenter.stc_app import init_stc
 from testcenter.stc_statistics_view import StcStats
 
 
-# API type = tcl, python or rest. Default is tcl with DEBUG log messages (see bellow) because it gives best visibility.
-api = 'tcl'
-install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.80'
-lab_server = ''
+api = ApiType.tcl
+install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
+lab_server = None
+rest_server = 'localhost'
+rest_port = 8888
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '10.210.3.10/2/1'
-port2_location = '10.210.3.10/2/2'
+port1_location = '192.168.42.158/1/1'
+port2_location = '192.168.42.158/1/2'
 
 
 class StcSamples(unittest.TestCase):
@@ -40,13 +38,7 @@ class StcSamples(unittest.TestCase):
         logger = logging.getLogger('log')
         logger.setLevel('DEBUG')
         logger.addHandler(logging.StreamHandler(sys.stdout))
-        if api == 'tcl':
-            api_wrapper = StcTclWrapper(logger, install_dir)
-        elif api == 'python':
-            api_wrapper = StcPythonWrapper(logger, install_dir)
-        else:
-            api_wrapper = StcRestWrapper(logger, lab_server)
-        self.stc = StcApp(logger, api_wrapper=api_wrapper)
+        self.stc = init_stc(api, logger, install_dir=install_dir, rest_server=rest_server, rest_port=rest_port)
         self.stc.connect(lab_server)
 
     def tearDown(self):

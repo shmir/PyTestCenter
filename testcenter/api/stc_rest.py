@@ -104,3 +104,8 @@ class StcRestWrapper(object):
         """ Sends a test configuration to the Spirent TestCenter chassis. """
 
         self.ls.apply()
+
+    def wait(self):
+        """ Wait until sequencer is finished. """
+
+        self.ls.wait_until_complete()
