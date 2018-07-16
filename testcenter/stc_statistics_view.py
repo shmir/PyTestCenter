@@ -2,6 +2,8 @@
 Classes and utilities to manage STC statistics views.
 """
 
+from collections import OrderedDict
+
 from trafficgenerator.tgn_utils import is_false
 
 from testcenter.stc_object import StcObject
@@ -71,7 +73,7 @@ class StcStats(object):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
 
         :param stats: list of statistics names to read, empty list will read all statistics.
-            Relevant for system (not dynamic) result views only. 
+            Relevant for system (not dynamic) result views only.
 
         :todo: add support for user statistics.
         """
@@ -124,12 +126,12 @@ class StcStats(object):
         """
         return int(self.get_stat(obj_id, counter, obj_id_stat))
 
-    def get_all_stats(self):
-        from collections import OrderedDict
-        statistics = OrderedDict()
-        for obj_name in self.statistics['topLevelName']:
-            statistics[obj_name] = self.get_object_stats(obj_name)
-        
+    def get_all_stats(self, obj_id_stat='topLevelName'):
+        all_statistics = OrderedDict()
+        for obj_name in self.statistics[obj_id_stat]:
+            all_statistics[obj_name] = self.get_object_stats(obj_name)
+        return all_statistics
+
     def _read_custom_view(self):
 
         self.project.command('RefreshResultView', ResultDataSet=self.rds.ref)

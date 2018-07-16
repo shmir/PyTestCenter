@@ -92,12 +92,12 @@ class StcApp(TgnApp):
         self.project = StcProject(parent=self.system)
         self.project.project = self.project
 
-    def disconnect(self):
+    def disconnect(self, terminate):
         """ Disconnect from lab server (if used) and reset configuration. """
 
         self.reset_config()
         if type(self.api) == StcRestWrapper:
-            self.api.disconnect()
+            self.api.disconnect(terminate)
         if self.lab_server:
             self.api.perform('CSTestSessionDisconnect', Terminate=True)
 

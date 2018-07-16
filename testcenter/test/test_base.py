@@ -5,6 +5,7 @@ Base class for all STC package tests.
 """
 
 from os import path
+import logging
 
 from trafficgenerator.tgn_utils import ApiType
 from trafficgenerator.test.test_tgn import TgnTest
@@ -19,6 +20,8 @@ class StcTestBase(TgnTest):
     TgnTest.config_file = path.join(path.dirname(__file__), 'TestCenter.ini')
 
     def setUp(self):
+        logging.basicConfig(level=self.config.get('Logging', 'level'))
+        logging.getLogger().addHandler(logging.FileHandler(self.config.get('Logging', 'file_name')))
         super(StcTestBase, self).setUp()
         self.stc = init_stc(ApiType[self.config.get('STC', 'api')], self.logger, self.config.get('STC', 'install_dir'),
                             self.config.get('STC', 'rest_server'), self.config.get('STC', 'rest_port'))

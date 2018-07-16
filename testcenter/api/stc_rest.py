@@ -3,13 +3,14 @@
 """
 
 import getpass
+from random import randint
 
 from stcrestclient import stchttp
 
 
 class StcRestWrapper(object):
 
-    def __init__(self, logger, server, port=80, user_name=getpass.getuser(), session_name='StcRestWrapper'):
+    def __init__(self, logger, server, port=80, user_name=getpass.getuser(), session_name=None):
         """ Init STC REST client.
 
         :param server: STC REST API server address.
@@ -24,10 +25,14 @@ class StcRestWrapper(object):
         super(self.__class__, self).__init__()
         debug_print = True if logger.level == 10 else False
         self.ls = stchttp.StcHttp(server, port, debug_print=debug_print)
-        self.session_id = self.ls.new_session(user_name, session_name, kill_existing=True)
+        if session_name:
+            self.session_id = self.ls.join_session(session_name)
+        else:
+            session_name = 'session' + str(randint(0, 99))
+            self.session_id = self.ls.new_session(user_name, session_name, kill_existing=True)
 
-    def disconnect(self):
-        self.ls.end_session(self.session_id)
+    def disconnect(self, terminate):
+        self.ls.end_session(terminate)
 
     def create(self, obj_type, parent, **attributes):
         """ Creates one or more Spirent TestCenter Automation objects.

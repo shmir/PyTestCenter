@@ -51,7 +51,6 @@ class StcTestOnline(StcTestBase):
                 device.send_arp_ns()
             for sb in port.get_children('streamblock'):
                 sb.send_arp_ns()
-        pass
 
     # If this test fails, consider adding delay between ping commands.
     def testPing(self):
@@ -66,7 +65,6 @@ class StcTestOnline(StcTestBase):
             for device in port.get_children('emulateddevice'):
                 gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
                 device.ping(gateway)
-        pass
 
     def testDevices(self):
         """ Test device operations using DHCP emulation. """
@@ -112,8 +110,6 @@ class StcTestOnline(StcTestBase):
         self.stc.project.start_emulations(dhcp_clients, wait_after=8)
         for dhcp_client in dhcp_clients:
             assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
-
-        pass
 
     def testPortTraffic(self):
         """ Test traffic and counters. """
