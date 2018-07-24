@@ -3,6 +3,7 @@ TGN - Traffic Generator
 STC - Spirent TestCenter.
 
 This package implements Python OO API for STC.
+----------------------------------------------
 
 Functionality
 """""""""""""
@@ -21,10 +22,12 @@ Supported operations:
 - Disconnect
 
 The package also support Add/Remove objects so it supports the following test case:
+
 - Build configuration -> Start/Stop traffic -> Get statistics.
 But this is less documented at this version.
 
-The package works on top of multiple low level APIs:
+Low level APIs
+""""""""""""""
 
 - StcTclWrapper - a Python wrapper (using Python Tk package) over STC native Tcl API (SpirentTestCenter) .
 - StcPythonWrapper - a Python wrapper over STC native Python API (StcPython.py)
