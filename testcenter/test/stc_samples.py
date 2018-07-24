@@ -24,8 +24,8 @@ from testcenter.stc_app import StcApp
 api = ApiType.rest
 install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
 lab_server = None
-rest_server = '192.168.42.182'
-rest_port = 80
+rest_server = 'localhost'
+rest_port = 8888
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
@@ -40,14 +40,12 @@ class StcSamples(unittest.TestCase):
         logger = logging.getLogger('log')
         logger.setLevel('DEBUG')
         logger.addHandler(logging.StreamHandler(sys.stdout))
-        stc_wrapper = StcRestWrapper(logger, rest_server, rest_port, session_name='TTT - yoram-s')
-        self.stc = StcApp(logger, stc_wrapper)
-#         self.stc = init_stc(api, logger, install_dir=install_dir, rest_server=rest_server, rest_port=rest_port)
+        self.stc = init_stc(api, logger, install_dir=install_dir, rest_server=rest_server, rest_port=rest_port)
         self.stc.connect(lab_server)
 
     def tearDown(self):
         self.stc.disconnect(terminate=False)
-#         super(StcSamples, self).tearDown()
+        super(StcSamples, self).tearDown()
 
     def load_config(self):
         self.stc.load_config(stc_config_file)
