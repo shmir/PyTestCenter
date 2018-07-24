@@ -1,7 +1,4 @@
 
-TGN - Traffic Generator
-STC - Spirent TestCenter.
-
 This package implements Python OO API for STC.
 ----------------------------------------------
 
