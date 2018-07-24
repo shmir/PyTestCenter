@@ -27,8 +27,6 @@ But this is less documented at this version.
 The package works on top of multiple low level APIs:
 
 - StcTclWrapper - a Python wrapper (using Python Tk package) over STC native Tcl API (SpirentTestCenter) .
-   Instead of using Tk (and SpirentTestCenter package) the calling application can provide its own connection to Tcl
-	interpreter as long as the connection supports the 'eval' command and can perform STC Tcl API commands.
 - StcPythonWrapper - a Python wrapper over STC native Python API (StcPython.py)
 - StcRestWrapper - a Python wrapper over STC lab server REST API (using stcrestclient package).
 
