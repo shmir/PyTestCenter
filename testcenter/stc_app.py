@@ -35,7 +35,10 @@ class StcSequencerOperation(Enum):
 
 
 def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
-    """ Create STC object.
+    """ Helper function to create STC object.
+
+    This helper supports only new sessions. In order to connect to existing session on Lab server create
+    StcRestWrapper and StcApp directly.
 
     :param api: tcl/python/rest
     :type api: trafficgenerator.tgn_utils.ApiType
@@ -51,7 +54,7 @@ def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
     elif api == ApiType.python:
         stc_api_wrapper = StcPythonWrapper(logger, install_dir)
     elif api == ApiType.rest:
-        stc_api_wrapper = StcRestWrapper(logger, rest_server, rest_port, session_name='session' + str(randint(0, 99)))
+        stc_api_wrapper = StcRestWrapper(logger, rest_server, rest_port)
     else:
         raise TgnError('{} API not supported - use Tcl, python or REST'.format(api))
     return StcApp(logger, api_wrapper=stc_api_wrapper)
@@ -92,14 +95,17 @@ class StcApp(TgnApp):
         self.project = StcProject(parent=self.system)
         self.project.project = self.project
 
-    def disconnect(self, terminate):
-        """ Disconnect from lab server (if used) and reset configuration. """
+    def disconnect(self, terminate=True):
+        """ Disconnect from lab server (if used) and reset configuration.
+
+        :param terminate: True - terminate session, False - leave session on server.
+        """
 
         self.reset_config()
         if type(self.api) == StcRestWrapper:
             self.api.disconnect(terminate)
         if self.lab_server:
-            self.api.perform('CSTestSessionDisconnect', Terminate=True)
+            self.api.perform('CSTestSessionDisconnect', Terminate=terminate)
 
     def load_config(self, config_file_name):
         """ Load configuration file from tcc or xml.

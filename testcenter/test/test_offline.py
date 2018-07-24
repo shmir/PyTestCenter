@@ -158,7 +158,7 @@ class StcTestOffline(StcTestBase):
 
     def testBackdoor(self):
 
-        if ApiType[self.config.get('STC', 'api')] != ApiType.rest:
+        if ApiType[self.config.get('Server', 'api')] != ApiType.rest:
             self.skipTest('Skip test - non rest API')
 
         print(self.stc.api.ls.get(self.stc.project.ref, 'children').split())

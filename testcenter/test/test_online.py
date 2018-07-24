@@ -71,11 +71,13 @@ class StcTestOnline(StcTestBase):
         self.logger.info(StcTestOnline.testDevices.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/dhcp_sample.tcc'))
+
         self._reserve_ports()
 
         # Retrieve DHCP servers and clients from configuration file.
-        self.ports[0].get_subtree(types=['emulateddevice'], level=2)
-        self.ports[1].get_subtree(types=['emulateddevice'], level=2)
+        for port in self.ports:
+            for emulateddevice in port.get_children_by_type('emulateddevice'):
+                emulateddevice.get_children()
         dhcp_clients = self.ports[0].get_objects_with_object('emulateddevice', 'ipv4if')
         dhcp_server_device = self.ports[1].get_object_by_name('DHCP Server')
         dhcp_server = dhcp_server_device.get_child('dhcpv4serverconfig')
