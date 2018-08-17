@@ -9,24 +9,20 @@ import logging
 import pytest
 
 from trafficgenerator.tgn_utils import ApiType
-from trafficgenerator.test.test_tgn import TgnTest
+from trafficgenerator.test.test_tgn import TestTgnBase
 
 from testcenter.stc_app import init_stc
 
 
-class StcTestBase(TgnTest):
+class StcTestBase(TestTgnBase):
 
     stc = None
 
-    TgnTest.config_file = path.join(path.dirname(__file__), 'TestCenter.ini')
+    TestTgnBase.config_file = path.join(path.dirname(__file__), 'TestCenter.ini')
 
-    def setUp(self):
+    def setup(self):
 
-        # To support non pytest runners.
-        try:
-            self.api = ApiType[pytest.config.getoption('--api')]  # @UndefinedVariable
-        except Exception as _:
-            self.api = ApiType[TgnTest.config.get('Server', 'api')]
+        self.api = ApiType[pytest.config.getoption('--api')]  # @UndefinedVariable
 
         logging.basicConfig(level=self.config.get('Logging', 'level'))
         logging.getLogger().addHandler(logging.FileHandler(self.config.get('Logging', 'file_name')))
@@ -38,9 +34,9 @@ class StcTestBase(TgnTest):
         ls = None if self.config.get('Server', 'lab_server') == 'None' else self.config.get('Server', 'lab_server')
         self.stc.connect(ls)
 
-    def tearDown(self):
+    def teardown(self):
         super(StcTestBase, self).tearDown()
         self.stc.disconnect()
 
-    def testHelloWorld(self):
+    def test_hello_world(self):
         pass
