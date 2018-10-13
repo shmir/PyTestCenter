@@ -22,8 +22,6 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 install_requires = [r for r in required if r and r[0] != '#' and not r.startswith('git')]
 
-long_description = read('README.rst')
-
 setup(
     name='pytestcenter',
     version=testcenter.__version__,
@@ -33,7 +31,10 @@ setup(
     install_requires=install_requires,
     author_email='yoram@ignissoft.com',
     description='Python OO API package to automate Spirent TestCenter (STC) traffic generator',
-    long_description=long_description,
+    long_description=read('README.md'),
+    long_description_content_type='text/markdown',
+    charset='UTF-8',
+    variant='GFM',
     packages=['testcenter', 'testcenter.test', 'testcenter.api'],
     include_package_data=True,
     platforms='any',

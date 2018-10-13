@@ -105,3 +105,4 @@ syntax: regexp
 testcenter/test/configs/*.xml
 
 .pytest_cache
+.README.md.html
