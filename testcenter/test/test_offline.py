@@ -6,6 +6,7 @@ TestCenter package tests that can run in offline mode.
 
 from os import path
 import inspect
+import pytest
 
 from trafficgenerator.tgn_utils import ApiType
 
@@ -14,25 +15,27 @@ from testcenter.stc_port import StcPort
 from testcenter.stc_device import StcDevice
 from testcenter.stc_stream import StcStream
 
-from testcenter.test.test_base import StcTestBase
+from testcenter.test.test_base import TestStcBase
 
 
-class StcTestOffline(StcTestBase):
+class TestStcOffline(TestStcBase):
 
-    def testLoadConfig(self):
+    def test_load_config(self):
         """ Load existing configuration. """
-        self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
+        self.logger.info(TestStcOffline.test_load_config.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         file_name, file_ext = path.splitext(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self.stc.save_config(file_name + '-save' + file_ext)
 
-        self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'tcc.invalid'))
-        self.assertRaises(Exception, self.stc.load_config, path.join(path.dirname(__file__), 'invalid.tcc'))
+        with pytest.raises(Exception):
+            self.stc.load_config(path.join(path.dirname(__file__), 'tcc.invalid'))
+        with pytest.raises(Exception):
+            self.stc.load_config(path.join(path.dirname(__file__), 'invalid.tcc'))
 
-    def testReloadConfig(self):
+    def test_reload_config(self):
         """ Reload existing configuration. """
-        self.logger.info(StcTestOffline.testLoadConfig.__doc__.strip())
+        self.logger.info(TestStcOffline.test_reload_config.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         for port in self.stc.project.get_ports().values():
@@ -41,9 +44,9 @@ class StcTestOffline(StcTestBase):
         for port in self.stc.project.get_ports().values():
             print(port.get_name())
 
-    def testAnalyzeConfig(self):
+    def test_analyze_config(self):
         """ Analyze existing configuration. """
-        self.logger.info(StcTestOffline.testAnalyzeConfig.__doc__.strip())
+        self.logger.info(TestStcOffline.test_analyze_config.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         project = self.stc.project
@@ -76,9 +79,9 @@ class StcTestOffline(StcTestBase):
 
         pass
 
-    def testChildren(self):
+    def test_children(self):
         """ Test specific get children methods. """
-        self.logger.info(StcTestOffline.testChildren.__doc__)
+        self.logger.info(TestStcOffline.test_children.__doc__)
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         project = self.stc.project
@@ -89,9 +92,9 @@ class StcTestOffline(StcTestBase):
             assert(len(port.get_devices()) == 1)
             assert(len(port.get_stream_blocks()) == 1)
 
-    def testBuildConfig(self):
+    def test_build_config(self):
         """ Build simple config from scratch. """
-        self.logger.info(StcTestOffline.testBuildConfig.__doc__.strip())
+        self.logger.info(TestStcOffline.test_build_config.__doc__.strip())
 
         for port_name in ('Port 1', 'Port 2'):
             self.logger.info('Create Port "%s"', port_name)
@@ -124,9 +127,9 @@ class StcTestOffline(StcTestBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def testStreamUnderProject(self):
+    def test_stream_under_project(self):
         """ Build simple config with ports under project object. """
-        self.logger.info(StcTestOffline.testBuildConfig.__doc__.strip())
+        self.logger.info(TestStcOffline.test_stream_under_project.__doc__.strip())
 
         for port_name in ('Port 1', 'Port 2'):
             self.logger.info('Create Port "%s"', port_name)
@@ -141,9 +144,9 @@ class StcTestOffline(StcTestBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def testBuildEmulation(self):
+    def test_build_emulation(self):
         """ Build simple BGP configuration. """
-        self.logger.info(StcTestOffline.testBuildEmulation.__doc__.strip())
+        self.logger.info(TestStcOffline.test_build_emulation.__doc__.strip())
 
         stc_port = StcPort(name='Port 1', parent=self.stc.project)
         stc_dev = StcDevice(name='Device 1', parent=stc_port)
@@ -156,7 +159,7 @@ class StcTestOffline(StcTestBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def testBackdoor(self):
+    def test_backdoor(self):
 
         if ApiType[self.config.get('Server', 'api')] != ApiType.rest:
             self.skipTest('Skip test - non rest API')

@@ -9,7 +9,6 @@ Two STC ports connected back to back.
 
 import sys
 from os import path
-import unittest
 import logging
 import time
 
@@ -17,8 +16,6 @@ from trafficgenerator.tgn_utils import is_false, ApiType
 
 from testcenter.stc_app import init_stc
 from testcenter.stc_statistics_view import StcStats
-from testcenter.api.stc_rest import StcRestWrapper
-from testcenter.stc_app import StcApp
 
 
 api = ApiType.rest
@@ -29,30 +26,28 @@ rest_port = 8888
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '192.168.42.158/1/1'
-port2_location = '192.168.42.158/1/2'
+port1_location = '192.168.42.155/1/1'
+port2_location = '192.168.42.155/1/2'
 
 
-class StcSamples(unittest.TestCase):
+class TestStcSamples(object):
 
-    def setUp(self):
-        super(StcSamples, self).setUp()
+    def setup(self):
         logger = logging.getLogger('log')
         logger.setLevel('DEBUG')
         logger.addHandler(logging.StreamHandler(sys.stdout))
         self.stc = init_stc(api, logger, install_dir=install_dir, rest_server=rest_server, rest_port=rest_port)
         self.stc.connect(lab_server)
 
-    def tearDown(self):
+    def teardown(self):
         self.stc.disconnect(terminate=False)
-        super(StcSamples, self).tearDown()
 
-    def load_config(self):
+    def test_load_config(self):
         self.stc.load_config(stc_config_file)
         self.stc.api.apply()
 
-    def objects_access(self):
-        self.load_config()
+    def test_objects_access(self):
+        self.test_load_config()
 
         # You can read all objects by calling the general method get_children
         ports = self.stc.project.get_children('port')
@@ -78,8 +73,8 @@ class StcSamples(unittest.TestCase):
         for name, obj in ports.items():
             print('{}\t{}\t{}'.format(name, obj.obj_ref(), obj))
 
-    def get_set_attribute(self):
-        self.load_config()
+    def test_get_set_attribute(self):
+        self.test_load_config()
         device = self.stc.project.get_ports()['Port 1'].get_devices()['Device 1']
 
         # Get all attributes
@@ -103,22 +98,22 @@ class StcSamples(unittest.TestCase):
         device.set_active(False)
         assert(is_false(device.get_active()))
 
-    def reserve_ports(self):
-        self.load_config()
+    def test_reserve_ports(self):
+        self.test_load_config()
         self.ports = self.stc.project.get_ports()
         self.ports['Port 1'].reserve(port1_location)
         self.ports['Port 2'].reserve(port2_location)
 
-    def devices(self):
-        self.reserve_ports()
+    def test_devices(self):
+        self.test_reserve_ports()
         self.stc.send_arp_ns()
         print(self.stc.get_arp_cache())
         self.stc.start_devices()
         time.sleep(8)
         self.stc.stop_devices()
 
-    def traffic(self):
-        self.reserve_ports()
+    def test_traffic(self):
+        self.test_reserve_ports()
         self.stc.start_traffic()
         time.sleep(8)
         self.stc.stop_traffic()
@@ -128,7 +123,7 @@ class StcSamples(unittest.TestCase):
         print(port_stats.get_stats('TotalFrameCount'))
         print(port_stats.get_stat('Port 1', 'TotalFrameCount'))
 
-    def inventory(self):
+    def test_inventory(self):
 
         chassis = self.stc.hw.get_chassis(port1_location.split('/')[0])
         chassis.get_inventory()

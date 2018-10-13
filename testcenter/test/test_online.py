@@ -12,16 +12,16 @@ from os import path
 from testcenter.stc_statistics_view import StcStats
 from testcenter.stc_app import StcSequencerOperation
 
-from testcenter.test.test_base import StcTestBase
+from testcenter.test.test_base import TestStcBase
 
 
-class StcTestOnline(StcTestBase):
+class TestStcOnline(TestStcBase):
 
     ports = []
 
-    def testOnline(self):
+    def test_online(self):
         """ Load configuration on ports and verify that ports are online. """
-        self.logger.info(StcTestOnline.testOnline.__doc__.strip())
+        self.logger.info(TestStcOnline.test_online.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
@@ -37,9 +37,9 @@ class StcTestOnline(StcTestBase):
 
         pass
 
-    def testArp(self):
+    def test_arp(self):
         """ Test ARP commands. """
-        self.logger.info(StcTestOnline.testArp.__doc__.strip())
+        self.logger.info(TestStcOnline.test_arp.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
@@ -53,9 +53,9 @@ class StcTestOnline(StcTestBase):
                 sb.send_arp_ns()
 
     # If this test fails, consider adding delay between ping commands.
-    def testPing(self):
+    def test_ping(self):
         """ Test Ping commands. """
-        self.logger.info(StcTestOnline.testPing.__doc__.strip())
+        self.logger.info(TestStcOnline.test_ping.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
@@ -66,9 +66,9 @@ class StcTestOnline(StcTestBase):
                 gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
                 device.ping(gateway)
 
-    def testDevices(self):
+    def test_devices(self):
         """ Test device operations using DHCP emulation. """
-        self.logger.info(StcTestOnline.testDevices.__doc__.strip())
+        self.logger.info(TestStcOnline.test_devices.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/dhcp_sample.tcc'))
 
@@ -113,9 +113,9 @@ class StcTestOnline(StcTestBase):
         for dhcp_client in dhcp_clients:
             assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
 
-    def testPortTraffic(self):
+    def test_port_traffic(self):
         """ Test traffic and counters. """
-        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
+        self.logger.info(TestStcOnline.test_port_traffic.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
@@ -159,9 +159,9 @@ class StcTestOnline(StcTestBase):
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
 
-    def testSequencer(self):
+    def test_sequencer(self):
         """ Test Sequencer commands. """
-        self.logger.info(StcTestOnline.testArp.__doc__.strip())
+        self.logger.info(TestStcOnline.test_sequencer.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_sequencer.tcc'))
         self._reserve_ports()
@@ -176,9 +176,9 @@ class StcTestOnline(StcTestBase):
         analyzer_stats.read_stats()
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 8000)
 
-    def testCustomView(self):
+    def test_custom_view(self):
         """ Test custom statistics view. """
-        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
+        self.logger.info(TestStcOnline.test_custom_view.__doc__.strip())
 
         self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
         self._reserve_ports()
@@ -213,9 +213,9 @@ class StcTestOnline(StcTestBase):
 #         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
 #                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-    def testSinglePortTraffic(self):
+    def test_single_port_traffic(self):
         """ Test traffic and counters in loopback mode. """
-        self.logger.info(StcTestOnline.testPortTraffic.__doc__.strip())
+        self.logger.info(TestStcOnline.test_single_port_traffic.__doc__.strip())
 
         self.stc_config_file = path.join(path.dirname(__file__), 'configs/loopback.tcc')
         self.stc.load_config(self.stc_config_file)

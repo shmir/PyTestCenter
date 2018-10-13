@@ -6,7 +6,6 @@ This module implements classes and utility functions to manage STC application.
 
 from os import path
 import time
-from random import randint
 from enum import Enum
 
 from trafficgenerator.tgn_utils import ApiType, TgnError
@@ -126,6 +125,7 @@ class StcApp(TgnApp):
         else:
             raise ValueError('Configuration file type {} not supported.'.format(ext))
         self.project.objects = {}
+        self.project.get_children('port')
 
     def reset_config(self):
         self.api.perform('ResetConfig', config='system1')
