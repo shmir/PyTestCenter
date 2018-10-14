@@ -77,8 +77,6 @@ class TestStcOffline(TestStcBase):
         assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
         assert(len(self.stc.project.get_stream_blocks()) == 2)
 
-        pass
-
     def test_children(self):
         """ Test specific get children methods. """
         self.logger.info(TestStcOffline.test_children.__doc__)
@@ -161,7 +159,7 @@ class TestStcOffline(TestStcBase):
 
     def test_backdoor(self):
 
-        if ApiType[self.config.get('Server', 'api')] != ApiType.rest:
+        if self.api != ApiType.rest:
             self.skipTest('Skip test - non rest API')
 
         print(self.stc.api.ls.get(self.stc.project.ref, 'children').split())

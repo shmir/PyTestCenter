@@ -21,7 +21,7 @@ from testcenter.stc_statistics_view import StcStats
 api = ApiType.rest
 install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
 lab_server = None
-rest_server = 'localhost'
+rest_server = '192.168.15.23'
 rest_port = 8888
 
 stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')

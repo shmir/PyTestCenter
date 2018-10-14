@@ -46,5 +46,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
-        'Topic :: Software Development :: Testing :: Traffic Generation'],
-)
+        'Topic :: Software Development :: Testing :: Traffic Generation',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        ])
