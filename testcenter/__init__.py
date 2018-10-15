@@ -2,4 +2,4 @@
 @author yoram@ignissoft.com
 """
 
-__version__ = '1.2.5'
+__version__ = '1.2.6'
