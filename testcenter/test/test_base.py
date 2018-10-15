@@ -22,6 +22,7 @@ class TestStcBase(TestTgnBase):
 
     def setup(self):
 
+        super(TestStcBase, self).setup()
         self._get_config()
 
         logging.basicConfig(level=self.config.get('Logging', 'level'))

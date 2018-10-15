@@ -130,7 +130,7 @@ class StcApp(TgnApp):
     def reset_config(self):
         self.api.perform('ResetConfig', config='system1')
 
-    def save_config(self, config_file_name, server_folder='c:/temp'):
+    def save_config(self, config_file_name, server_folder='c:\\temp'):
         """ Save configuration file as tcc or xml.
 
         Configuration file type is extracted from the file suffix - xml or tcc.
@@ -140,7 +140,7 @@ class StcApp(TgnApp):
 
         if type(self.api) == StcRestWrapper:
             config_file_name_full_path = config_file_name
-            config_file_name = server_folder.replace('\\', '/') + '/' + path.basename(config_file_name)
+            config_file_name = server_folder + '\\' + path.basename(config_file_name)
         ext = path.splitext(config_file_name)[-1].lower()
         if ext == '.tcc':
             rc = self.api.perform('SaveToTcc', FileName=path.normpath(config_file_name))
