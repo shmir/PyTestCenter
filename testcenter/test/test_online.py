@@ -188,13 +188,13 @@ class TestStcOnline(TestStcBase):
         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
 
         gen_stats.read_stats()
-        print gen_stats.statistics
+        print(gen_stats.statistics)
 
         user_stats.read_stats()
-        print user_stats.statistics
-        print user_stats.get_stats('Port.GeneratorFrameCount')
-        print user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name')
-        print user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name')
+        print(user_stats.statistics)
+        print(user_stats.get_stats('Port.GeneratorFrameCount'))
+        print(user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name'))
+        print(user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name'))
 
 #         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
 #         analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
