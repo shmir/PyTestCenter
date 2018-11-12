@@ -20,7 +20,7 @@ from testcenter.test.test_base import TestStcBase
 
 class TestStcOffline(TestStcBase):
 
-    def test_load_config(self):
+    def test_load_config(self, api):
         """ Load existing configuration. """
         self.logger.info(TestStcOffline.test_load_config.__doc__.strip())
 
@@ -33,7 +33,7 @@ class TestStcOffline(TestStcBase):
         with pytest.raises(Exception):
             self.stc.load_config(path.join(path.dirname(__file__), 'invalid.tcc'))
 
-    def test_reload_config(self):
+    def test_reload_config(self, api):
         """ Reload existing configuration. """
         self.logger.info(TestStcOffline.test_reload_config.__doc__.strip())
 
@@ -44,7 +44,7 @@ class TestStcOffline(TestStcBase):
         for port in self.stc.project.get_ports().values():
             print(port.get_name())
 
-    def test_analyze_config(self):
+    def test_analyze_config(self, api):
         """ Analyze existing configuration. """
         self.logger.info(TestStcOffline.test_analyze_config.__doc__.strip())
 
@@ -77,7 +77,7 @@ class TestStcOffline(TestStcBase):
         assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
         assert(len(self.stc.project.get_stream_blocks()) == 2)
 
-    def test_children(self):
+    def test_children(self, api):
         """ Test specific get children methods. """
         self.logger.info(TestStcOffline.test_children.__doc__)
 
@@ -90,7 +90,7 @@ class TestStcOffline(TestStcBase):
             assert(len(port.get_devices()) == 1)
             assert(len(port.get_stream_blocks()) == 1)
 
-    def test_build_config(self):
+    def test_build_config(self, api):
         """ Build simple config from scratch. """
         self.logger.info(TestStcOffline.test_build_config.__doc__.strip())
 
@@ -125,7 +125,7 @@ class TestStcOffline(TestStcBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def test_stream_under_project(self):
+    def test_stream_under_project(self, api):
         """ Build simple config with ports under project object. """
         self.logger.info(TestStcOffline.test_stream_under_project.__doc__.strip())
 
@@ -142,7 +142,7 @@ class TestStcOffline(TestStcBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def test_build_emulation(self):
+    def test_build_emulation(self, api):
         """ Build simple BGP configuration. """
         self.logger.info(TestStcOffline.test_build_emulation.__doc__.strip())
 
@@ -157,10 +157,10 @@ class TestStcOffline(TestStcBase):
         test_name = inspect.stack()[0][3]
         self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
 
-    def test_backdoor(self):
+    def test_backdoor(self, api):
 
         if self.api != ApiType.rest:
-            self.skipTest('Skip test - non rest API')
+            pytest.skip('Skip test - non rest API')
 
         print(self.stc.api.ls.get(self.stc.project.ref, 'children').split())
         print(self.stc.api.ls.get(self.stc.project.ref, 'children-port').split())

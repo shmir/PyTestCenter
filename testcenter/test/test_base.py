@@ -8,7 +8,6 @@ from os import path
 import logging
 import pytest
 
-from trafficgenerator.tgn_utils import ApiType
 from trafficgenerator.test.test_tgn import TestTgnBase
 
 from testcenter.stc_app import init_stc
@@ -22,6 +21,7 @@ class TestStcBase(TestTgnBase):
 
     def setup(self):
 
+        super(TestStcBase, self).setup()
         self._get_config()
 
         logging.basicConfig(level=self.config.get('Logging', 'level'))
@@ -37,12 +37,11 @@ class TestStcBase(TestTgnBase):
         super(TestStcBase, self).teardown()
         self.stc.disconnect()
 
-    def test_hello_world(self):
+    def test_hello_world(self, api):
         pass
 
     def _get_config(self):
 
-        self.api = ApiType[pytest.config.getoption('--api')]  # @UndefinedVariable
         server_ip = pytest.config.getoption('--server')  # @UndefinedVariable
         self.server_ip = server_ip.split(':')[0]
         self.server_port = server_ip.split(':')[1] if len(server_ip.split(':')) == 2 else 8888

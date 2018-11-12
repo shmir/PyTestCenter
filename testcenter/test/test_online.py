@@ -19,7 +19,7 @@ class TestStcOnline(TestStcBase):
 
     ports = []
 
-    def test_online(self):
+    def test_online(self, api):
         """ Load configuration on ports and verify that ports are online. """
         self.logger.info(TestStcOnline.test_online.__doc__.strip())
 
@@ -37,7 +37,7 @@ class TestStcOnline(TestStcBase):
 
         pass
 
-    def test_arp(self):
+    def test_arp(self, api):
         """ Test ARP commands. """
         self.logger.info(TestStcOnline.test_arp.__doc__.strip())
 
@@ -53,7 +53,7 @@ class TestStcOnline(TestStcBase):
                 sb.send_arp_ns()
 
     # If this test fails, consider adding delay between ping commands.
-    def test_ping(self):
+    def test_ping(self, api):
         """ Test Ping commands. """
         self.logger.info(TestStcOnline.test_ping.__doc__.strip())
 
@@ -66,7 +66,7 @@ class TestStcOnline(TestStcBase):
                 gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
                 device.ping(gateway)
 
-    def test_devices(self):
+    def test_devices(self, api):
         """ Test device operations using DHCP emulation. """
         self.logger.info(TestStcOnline.test_devices.__doc__.strip())
 
@@ -113,7 +113,7 @@ class TestStcOnline(TestStcBase):
         for dhcp_client in dhcp_clients:
             assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
 
-    def test_port_traffic(self):
+    def test_port_traffic(self, api):
         """ Test traffic and counters. """
         self.logger.info(TestStcOnline.test_port_traffic.__doc__.strip())
 
@@ -159,7 +159,7 @@ class TestStcOnline(TestStcBase):
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
 
-    def test_sequencer(self):
+    def test_sequencer(self, api):
         """ Test Sequencer commands. """
         self.logger.info(TestStcOnline.test_sequencer.__doc__.strip())
 
@@ -176,7 +176,7 @@ class TestStcOnline(TestStcBase):
         analyzer_stats.read_stats()
         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 8000)
 
-    def test_custom_view(self):
+    def test_custom_view(self, api):
         """ Test custom statistics view. """
         self.logger.info(TestStcOnline.test_custom_view.__doc__.strip())
 
@@ -213,7 +213,7 @@ class TestStcOnline(TestStcBase):
 #         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
 #                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-    def test_single_port_traffic(self):
+    def test_single_port_traffic(self, api):
         """ Test traffic and counters in loopback mode. """
         self.logger.info(TestStcOnline.test_single_port_traffic.__doc__.strip())
 
