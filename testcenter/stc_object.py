@@ -73,7 +73,9 @@ class StcObject(TgnObject):
         :param attribute: attribute name.
         :return: attribute value.
         """
-        return self.api.get(self.obj_ref(), attribute)
+        #Check with Yoram if it necessary
+        output = self.api.get(self.obj_ref(), attribute)
+        return output
 
     def get_list_attribute(self, attribute):
         """
@@ -131,6 +133,11 @@ class StcObject(TgnObject):
     def set_attributes(self, apply_=False, **attributes):
         self.api.config(self.obj_ref(), **attributes)
         if apply_:
+            self.api.apply()
+
+    def set_attributes_helper(self, _apply, attributes):
+        self.api.config(self.obj_ref(), **attributes)
+        if _apply:
             self.api.apply()
 
     def set_active(self, active):

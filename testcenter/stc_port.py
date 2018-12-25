@@ -17,7 +17,7 @@ class StcPort(StcObject):
 
     def __init__(self, **data):
         data['objType'] = 'port'
-        super(self.__class__, self).__init__(**data)
+        super(StcPort, self).__init__(**data)
         self.generator = self.get_child('generator')
 
     def get_devices(self):

@@ -69,7 +69,7 @@ class StcApp(TgnApp):
         :param api_wrapper: api wrapper object inheriting and implementing StcApi base class.
         """
 
-        super(self.__class__, self).__init__(logger, api_wrapper)
+        super(StcApp, self).__init__(logger, api_wrapper)
 
         StcObject.logger = self.logger
         StcObject.str_2_class = TYPE_2_OBJECT
