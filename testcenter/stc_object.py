@@ -73,9 +73,7 @@ class StcObject(TgnObject):
         :param attribute: attribute name.
         :return: attribute value.
         """
-        #Check with Yoram if it necessary
-        output = self.api.get(self.obj_ref(), attribute)
-        return output
+        return self.api.get(self.obj_ref(), attribute)
 
     def get_list_attribute(self, attribute):
         """
@@ -135,7 +133,8 @@ class StcObject(TgnObject):
         if apply_:
             self.api.apply()
 
-    def set_attributes_helper(self, _apply, attributes):
+    def set_attributes_serializer(self, _apply, attributes):
+		'''' Set attributes from serialized key value dictionary. ''''
         self.api.config(self.obj_ref(), **attributes)
         if _apply:
             self.api.apply()

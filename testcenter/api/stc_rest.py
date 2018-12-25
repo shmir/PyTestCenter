@@ -65,7 +65,6 @@ class StcRestWrapper(object):
         :return: requested value(s) as returned by get command.
         """
 
-        #verify with Yoram if it necessary
         output = self.ls.get(obj_ref, attribute)
         return output if type(output) is str else ' '.join(output)
     
