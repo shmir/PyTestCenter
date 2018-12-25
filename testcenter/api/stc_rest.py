@@ -65,8 +65,9 @@ class StcRestWrapper(object):
         :return: requested value(s) as returned by get command.
         """
 
-        return self.ls.get(obj_ref, attribute)
-
+        output = self.ls.get(obj_ref, attribute)
+        return output if type(output) is str else ' '.join(output)
+    
     def getList(self, obj_ref, attribute):
         """ Returns the value of the object attributes or a python list.
 
