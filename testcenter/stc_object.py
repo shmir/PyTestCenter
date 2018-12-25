@@ -134,7 +134,8 @@ class StcObject(TgnObject):
             self.api.apply()
 
     def set_attributes_serializer(self, _apply, attributes):
-		'''' Set attributes from serialized key value dictionary. ''''
+        """ Set attributes from serialized key value dictionary. """
+        
         self.api.config(self.obj_ref(), **attributes)
         if _apply:
             self.api.apply()
