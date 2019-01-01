@@ -45,13 +45,13 @@ class StcRestWrapper(object):
 
         return self.ls.create(obj_type, under=parent.obj_ref(), **attributes)
 
-    def delete(self, obj_handle):
+    def delete(self, obj_ref):
         """ Delete Spirent TestCenter Automation object.
 
-        :param obj_handle: object handle to delete.
+        :param obj_ref: object handle to delete.
         """
 
-        self.ls.delete(obj_handle)
+        self.ls.delete(obj_ref)
 
     def perform(self, command, **arguments):
         """ Execute a command.
