@@ -14,6 +14,8 @@ from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
 from testcenter.stc_device import StcDevice
 from testcenter.stc_stream import StcStream
+from testcenter.stc_statistics_view import StcStats
+
 
 from testcenter.test.test_base import TestStcBase
 
@@ -174,3 +176,11 @@ class TestStcOffline(TestStcBase):
 
         print(self.stc.api.ls.config(ports[0], Name='New Name', Active=False))
         print(self.stc.api.ls.get(ports[0], 'Name', 'Active'))
+
+    def test_stats_no_traffic(self, api):
+        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+        assert not gen_stats.get_all_stats()
+        assert not gen_stats.get_stats()
+        assert not gen_stats.get_object_stats('Port 1')
+        assert gen_stats.get_stat('Port 1', 'GeneratorFrameCount') == '-1'
+        assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == -1

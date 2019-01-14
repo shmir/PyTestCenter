@@ -29,8 +29,6 @@ class StcStats(object):
     ...
     """
 
-    statistics = {}
-
     def __init__(self, project, view):
         """ Subscribe to view with default configuration type as defined by config_2_type.
 
@@ -74,7 +72,6 @@ class StcStats(object):
 
         :param stats: list of statistics names to read, empty list will read all statistics.
             Relevant for system (not dynamic) result views only.
-
         :todo: add support for user statistics.
         """
 
@@ -84,12 +81,25 @@ class StcStats(object):
         else:
             self._read_view(*stats)
 
+    def get_all_stats(self, obj_id_stat='topLevelName'):
+        """
+        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
+            not meaningful and it is better to use other unique identifier like stream ID.
+        :returns: all statistics values for all object IDs.
+        """
+
+        all_statistics = OrderedDict()
+        if self.statistics:
+            for obj_name in self.statistics[obj_id_stat]:
+                all_statistics[obj_name] = self.get_object_stats(obj_name)
+        return all_statistics
+
     def get_stats(self, row='topLevelName'):
         """
         :param row: requested row (== statistic name)
         :returns: all statistics values for the requested row.
         """
-        return self.statistics[row]
+        return self.statistics.get(row, {})
 
     def get_object_stats(self, obj_id, obj_id_stat='topLevelName'):
         """
@@ -113,6 +123,8 @@ class StcStats(object):
             not meaningful and it is better to use other unique identifier like stream ID.
         :returns: the value of the requested counter for the requested object ID.
         """
+        if not self.statistics:
+            return '-1'
         obj_index = self.statistics[obj_id_stat].index(obj_id)
         return self.statistics[counter][obj_index]
 
@@ -126,11 +138,9 @@ class StcStats(object):
         """
         return int(self.get_stat(obj_id, counter, obj_id_stat))
 
-    def get_all_stats(self, obj_id_stat='topLevelName'):
-        all_statistics = OrderedDict()
-        for obj_name in self.statistics[obj_id_stat]:
-            all_statistics[obj_name] = self.get_object_stats(obj_name)
-        return all_statistics
+    #
+    # Private methods.
+    #
 
     def _read_custom_view(self):
 
@@ -265,5 +275,4 @@ view_2_config_type = {
     'iptvtestresults': 'Project',
     'overflowresults': 'Analyzer',
     'cifsclientresults': 'CifsClientProtocolConfig',
-    'txportpairresults': 'Port',
-    }
+    'txportpairresults': 'Port'}
