@@ -3,4 +3,4 @@ configparser
 pytest-runner
 
 stcrestclient
-pytrafficgen==1.5.1
+pytrafficgen==1.5.2
