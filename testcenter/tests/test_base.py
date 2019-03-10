@@ -6,7 +6,6 @@ Base class for all STC package tests.
 
 from os import path
 import logging
-import pytest
 
 from trafficgenerator.test.test_tgn import TestTgnBase
 
@@ -22,7 +21,6 @@ class TestStcBase(TestTgnBase):
     def setup(self):
 
         super(TestStcBase, self).setup()
-        self._get_config()
 
         logging.basicConfig(level=self.config.get('Logging', 'level'))
         logging.getLogger().addHandler(logging.FileHandler(self.config.get('Logging', 'file_name')))
@@ -37,12 +35,5 @@ class TestStcBase(TestTgnBase):
         super(TestStcBase, self).teardown()
         self.stc.disconnect()
 
-    def test_hello_world(self, api):
+    def test_hello_world(self):
         pass
-
-    def _get_config(self):
-
-        server_ip = pytest.config.getoption('--server')  # @UndefinedVariable
-        self.server_ip = server_ip.split(':')[0]
-        self.server_port = server_ip.split(':')[1] if len(server_ip.split(':')) == 2 else 8888
-        self.ls = pytest.config.getoption('--ls')  # @UndefinedVariable

@@ -12,12 +12,24 @@ from os import path
 from testcenter.stc_statistics_view import StcStats
 from testcenter.stc_app import StcSequencerOperation
 
-from testcenter.test.test_base import TestStcBase
+from testcenter.tests.test_base import TestStcBase
 
 
 class TestStcOnline(TestStcBase):
 
     ports = []
+
+    def test_inventory(self, api):
+        """ Get inventory and test some basic info. """
+        self.logger.info(TestStcOnline.test_inventory.__doc__.strip())
+
+        chassis = self.stc.hw.get_chassis(self.port1.split('/')[0])
+        chassis.get_inventory()
+        assert len(chassis.modules) >= 1
+        for module in chassis.modules.values():
+            assert len(module.pgs) >= 1
+            for pg in module.pgs.values():
+                assert len(pg.ports) >= 1
 
     def test_online(self, api):
         """ Load configuration on ports and verify that ports are online. """
@@ -250,7 +262,7 @@ class TestStcOnline(TestStcBase):
     def _reserve_ports(self):
         project = self.stc.project
         self.ports = project.get_children('port')
-        project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'), force=True, wait_for_up=False)
-        project.get_object_by_name('Port 2').reserve(self.config.get('STC', 'port2'), force=True, wait_for_up=False)
+        project.get_object_by_name('Port 1').reserve(self.port1, force=True, wait_for_up=False)
+        project.get_object_by_name('Port 2').reserve(self.port2, force=True, wait_for_up=False)
         for port in self.ports:
             port.wait_for_states(40, 'UP')

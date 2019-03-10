@@ -35,7 +35,7 @@ setup(
     long_description_content_type='text/markdown',
     charset='UTF-8',
     variant='GFM',
-    packages=['testcenter', 'testcenter.test', 'testcenter.api'],
+    packages=['testcenter', 'testcenter.samples', 'testcenter.api'],
     include_package_data=True,
     platforms='any',
     tests_require=['pytest'],
