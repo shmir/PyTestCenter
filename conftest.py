@@ -8,8 +8,8 @@ def pytest_addoption(parser):
     parser.addoption('--api', action='store', default="tcl", help="api options: rest, tcl or python")
     parser.addoption('--server', action='store', default="localhost", help="REST server in format ip:port")
     parser.addoption('--ls', action='store', default=None, help="lab server address")
-    parser.addoption('--port1', action='store', default="10.212.8.8/6/7", help="chassis1/module1/port1")
-    parser.addoption('--port2', action='store', default="10.212.8.8/6/7", help="chassis2/module2/port2")
+    parser.addoption('--port1', action='store', default="10.212.8.8/11/5", help="chassis1/module1/port1")
+    parser.addoption('--port2', action='store', default="10.212.8.8/11/6", help="chassis2/module2/port2")
 
 
 @pytest.fixture(scope='class', autouse=True)

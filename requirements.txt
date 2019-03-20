@@ -1,9 +1,8 @@
--i https://pypi.org/simple
 certifi==2019.3.9
 chardet==3.0.4
 configparser==3.7.3
 enum34==1.1.6
-funcsigs==1.0.2 ; python_version < '3.3'
+funcsigs==1.0.2
 future==0.17.1
 idna==2.8
 mock==2.0.0
