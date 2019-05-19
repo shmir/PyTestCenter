@@ -150,13 +150,13 @@ class StcOspfLsa(StcObjWithNetworkBlock):
 class StcPimv4Group(StcObjWithNetworkBlock):
 
     def get_network_block(self):
-        return self.get_object_from_attribute('JoinedGroup-targets').network_block
+        return self.get_object_from_attribute('JoinedGroup-targets').get_object_by_type('ipv4networkblock')
 
 
 class StcIgmpGroup(StcObjWithNetworkBlock):
 
     def get_network_block(self):
-        return self.get_object_from_attribute('SubscribedGroups-targets').network_block
+        return self.get_object_from_attribute('SubscribedGroups-targets').get_object_by_type('ipv4networkblock')
 
 
 class StcIsisRouterRange(StcObjWithNetworkBlock):
