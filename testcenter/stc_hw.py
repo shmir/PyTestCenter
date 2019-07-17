@@ -104,7 +104,7 @@ class StcPhyPortGroup(StcPhyBase):
 
 class StcPhyPort(StcPhyBase):
 
-    attributes_names = ('Index',)
+    attributes_names = ('Index','name','LineSpeedStatus')
     children_types = {}
 
 

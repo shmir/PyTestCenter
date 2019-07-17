@@ -1,7 +1,9 @@
 """
 This module implements classes and utility functions to manage STC streamblocks.
 """
+from enum import Enum
 
+from testcenter.stc_frame import StcFrame
 from testcenter.stc_object import StcObject
 
 
@@ -18,6 +20,33 @@ class StcStream(StcObject):
         """
         data['objType'] = 'StreamBlock'
         super(StcStream, self).__init__(**data)
+        self.frame = StcFrame(self)
+
+
+    def clear_frame_config(self):
+        self.set_attributes(FrameConfig='')
+        self.frame = StcFrame(self)
+
+    def set_stream_control(self, **data):
+        if self.parent.transmit_mode == 'RATE_BASED':
+            self._update_stream_load_profile(**data)
+        elif self.parent.transmit_mode == 'MANUAL_BASED':
+            self._update_mse(**data)
+        elif self.parent.transmit_mode == 'PORT_BASED':
+            self.parent.generator.set_attributes(**data)
+
+    # def _update_generator(self,**data):
+    #     # genConfig = self.parent.generator.get_child('GeneratorConfig')
+    #     # genConfig.set_attributes(**data)
+    #     self.parent.generator.set_attributes(**data)
+
+    def _update_stream_load_profile(self, **data):
+        lp = self.project.get_child('AffiliationStreamBlockLoadProfile')
+        lp.set_attributes(**data)
+
+    def _update_mse(self, **data):
+        mse = self.parent.generator.get_child('GeneratorConfig').get_child('ManualSchedule').get_child('ManualScheduleEntry')
+        mse.set_attributes(**data)
 
     def _create(self):
         sb_ref = super(StcStream, self)._create()

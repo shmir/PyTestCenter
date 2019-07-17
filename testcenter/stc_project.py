@@ -6,10 +6,12 @@ by StcProject.
 """
 
 import time
+from collections import OrderedDict
 
 from trafficgenerator.tgn_tcl import build_obj_ref_list
 
 from testcenter.stc_object import StcObject
+from testcenter.stc_port import StcPort
 
 command_2_config_object = {'Dhcpv4Bind': 'dhcpv4blockconfig',
                            'Dhcpv4Release': 'dhcpv4blockconfig',
@@ -30,6 +32,32 @@ class StcProject(StcObject):
 
     def __init__(self, **data):
         super(StcProject, self).__init__(objType='project', **data)
+        self.ports = OrderedDict()
+
+    def reserve_ports(self, ports_locations, force=False, clear=True):
+        """ Reserve ports and reset factory defaults.
+
+        :param ports_locations: list of ports ports_locations <ip, card, port> to reserve
+        :param force: True - take forcefully, False - fail if port is reserved by other user
+        :param clear: True - clear port configuration and statistics, False - leave port as is
+        :return: ports dictionary (port uri, port object)
+        """
+        p_list = []
+        for i, port_location in enumerate(ports_locations):
+            port = self.add_port(i,port_location)
+            p_list.append(port.ref)
+            #if clear:
+                #port.clear()
+            self.api.perform('AttachPorts', PortList=port.ref, AutoConnect=True, RevokeOwner=force)
+        #TODO debug reserve p_list
+        self.api.apply()
+        return self.ports
+
+    def add_port(self, p_name, location=None):
+        self.ports[p_name] = StcPort(parent=self, name=p_name)
+        if location:
+            self.ports[p_name].location = location
+        return self.ports[p_name]
 
     def get_ports(self):
         """
@@ -37,7 +65,6 @@ class StcProject(StcObject):
         """
 
         return {o.obj_name(): o for o in self.get_objects_or_children_by_type('Port')}
-
     #
     # Port command.
     #

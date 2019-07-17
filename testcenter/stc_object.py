@@ -175,6 +175,10 @@ class StcObject(TgnObject):
         """ Wait until sequencer is finished. """
         self.api.wait()
 
+    def write(self):
+        self.api.apply()
+
+
     @classmethod
     def send_arp_ns(cls, *objects):
         """ Send ARP and NS for ports, devices or stream blocks. """

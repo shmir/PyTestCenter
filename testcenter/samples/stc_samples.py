@@ -18,17 +18,19 @@ from testcenter.stc_app import init_stc
 from testcenter.stc_statistics_view import StcStats
 
 
-api = ApiType.rest
-install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.71'
+api = ApiType.python
+install_dir = 'C:/Program Files (x86)/Spirent Communications/Spirent TestCenter 4.97'
 lab_server = None
-rest_server = '192.168.15.23'
+rest_server = '10.5.80.45'
 rest_port = 8888
 
-stc_config_file = path.join(path.dirname(__file__), 'configs/test_config.tcc')
+stc_config_file = "C:/Users/olegz/Desktop/test_config.tcc"
+#path.join(path.dirname(__file__), 'configs/test_config.tcc')
 
-port1_location = '192.168.42.155/1/1'
-port2_location = '192.168.42.155/1/2'
-
+port1_location = '10.5.238.190/1/1'
+port2_location = '10.5.238.190/1/5'
+port1 = 'Port //1/1'
+port2 = 'Port //1/2'
 
 class TestStcSamples(object):
 
@@ -75,7 +77,7 @@ class TestStcSamples(object):
 
     def test_get_set_attribute(self):
         self.test_load_config()
-        device = self.stc.project.get_ports()['Port 1'].get_devices()['Device 1']
+        device = self.stc.project.get_ports()[port1].get_devices()['Device 1']
 
         # Get all attributes
         print(device.get_attributes())
@@ -101,8 +103,8 @@ class TestStcSamples(object):
     def test_reserve_ports(self):
         self.test_load_config()
         self.ports = self.stc.project.get_ports()
-        self.ports['Port 1'].reserve(port1_location)
-        self.ports['Port 2'].reserve(port2_location)
+        self.ports[port1].reserve(port1_location)
+        self.ports[port2].reserve(port2_location)
 
     def test_devices(self):
         self.test_reserve_ports()
@@ -119,9 +121,9 @@ class TestStcSamples(object):
         self.stc.stop_traffic()
         port_stats = StcStats(self.stc.project, 'generatorportresults')
         port_stats.read_stats()
-        print(port_stats.get_object_stats('Port 1'))
+        print(port_stats.get_object_stats(port1))
         print(port_stats.get_stats('TotalFrameCount'))
-        print(port_stats.get_stat('Port 1', 'TotalFrameCount'))
+        print(port_stats.get_stat(port1, 'TotalFrameCount'))
 
     def test_inventory(self):
 
