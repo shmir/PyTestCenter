@@ -12,4 +12,4 @@ pytrafficgen==1.5.5
 requests==2.21.0
 six==1.12.0
 stcrestclient==1.8.1
-urllib3==1.24.1
+urllib3==1.24.2
