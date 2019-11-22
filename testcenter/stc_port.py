@@ -145,7 +145,7 @@ class StcPort(StcObject):
         """
         :returns: port name without the 'offilne' tag added by STC.
         """
-        return re.sub(' \(offline\)$', '', self.get_attribute('Name'))
+        return re.sub(r' \(offline\)$', '', self.get_attribute('Name'))
 
     # Special implementation since we want emulateddevices under their port while in STC they are
     # under project.

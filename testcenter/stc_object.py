@@ -16,7 +16,7 @@ from trafficgenerator.tgn_object import TgnObject
 def extract_stc_obj_type_from_obj_ref(obj_ref):
     # Extract object type from object reference. Note that there are rare cases where
     # object reference has no sequential number suffix like 'automationoptions'.
-    m = re.search('(.*\D+)\d+', obj_ref)
+    m = re.search(r'(.*\D+)\d+', obj_ref)
     return m.group(1) if m else obj_ref
 
 
@@ -126,7 +126,7 @@ class StcObject(TgnObject):
 
     def get_all_child_types(self):
         children = self.get_attribute('children').split()
-        return list(set([m.group(1) for c in children for m in [re.search('(.*\D+)\d+', c)]]))
+        return list(set([m.group(1) for c in children for m in [re.search(r'(.*\D+)\d+', c)]]))
 
     def set_attributes(self, apply_=False, **attributes):
         self.api.config(self.obj_ref(), **attributes)

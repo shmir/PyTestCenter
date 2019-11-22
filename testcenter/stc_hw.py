@@ -93,7 +93,6 @@ class StcPhyModule(StcPhyBase):
         supported_speeds = self.command('spirent.core.GetSupportedSpeedsCommand', PhyTestModule=self.obj_ref())
         self.attributes['SupportedSpeeds'] = re.findall(r'([0-9.]*[M|G]):', supported_speeds['SpeedInfoList'])
         self.attributes['IsDualMedia'] = 'dual media' in self.attributes['Description'].lower()
-        print self.attributes['IsDualMedia']
 
 
 class StcPhyPortGroup(StcPhyBase):
