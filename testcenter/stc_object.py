@@ -109,7 +109,9 @@ class StcObject(TgnObject):
         """
 
         if not attributes:
-            return self.api.get(self.obj_ref())
+            # todo: patch - will work with REST only, breaks Tcl
+            # Tcl: return self.api.get(self.obj_ref())
+            attributes = self.api.get(self.obj_ref()).split()
         values = {}
         for attribute in attributes:
             values[attribute] = self.get_attribute(attribute)
