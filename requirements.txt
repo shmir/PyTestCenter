@@ -8,7 +8,7 @@ idna==2.8
 mock==2.0.0
 pbr==5.1.3
 pytest-runner==4.4
-pytrafficgen==1.5.2
+pytrafficgen==1.6.0
 requests==2.21.0
 six==1.12.0
 stcrestclient==1.8.1
