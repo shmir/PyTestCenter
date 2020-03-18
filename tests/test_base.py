@@ -7,7 +7,7 @@ Base class for all STC package tests.
 from os import path
 import logging
 
-from trafficgenerator.test.test_tgn import TestTgnBase
+from trafficgenerator.test_tgn import TestTgnBase
 
 from testcenter.stc_app import init_stc
 
