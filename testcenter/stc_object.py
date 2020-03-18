@@ -56,9 +56,9 @@ class StcObject(TgnObject):
         attributes.pop('objType')
         attributes.pop('parent')
         if 'name' in self._data:
-            return self.api.create(self.obj_type(), self.obj_parent(), **attributes)
+            return self.api.create(self.type, self.parent, **attributes)
         else:
-            stc_obj = self.api.create(self.obj_type(), self.obj_parent(), **attributes)
+            stc_obj = self.api.create(self.type, self.parent, **attributes)
             self._data['name'] = self._get_name(self.api.get(stc_obj, 'name'), stc_obj)
             return stc_obj
 
@@ -131,7 +131,7 @@ class StcObject(TgnObject):
         return list(set([m.group(1) for c in children for m in [re.search(r'(.*\D+)\d+', c)]]))
 
     def set_attributes(self, apply_=False, **attributes):
-        self.api.config(self.obj_ref(), **attributes)
+        self.api.config(self.ref, **attributes)
         if apply_:
             self.api.apply()
 

@@ -17,7 +17,7 @@ from testcenter.stc_stream import StcStream
 from testcenter.stc_statistics_view import StcStats
 
 
-from testcenter.tests.test_base import TestStcBase
+from .test_base import TestStcBase
 
 
 class TestStcOffline(TestStcBase):

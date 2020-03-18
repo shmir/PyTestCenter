@@ -12,7 +12,7 @@ from os import path
 from testcenter.stc_statistics_view import StcStats
 from testcenter.stc_app import StcSequencerOperation
 
-from testcenter.tests.test_base import TestStcBase
+from .test_base import TestStcBase
 
 
 class TestStcOnline(TestStcBase):

@@ -43,7 +43,7 @@ class StcRestWrapper(object):
         :return: STC object reference.
         """
 
-        return self.ls.create(obj_type, under=parent.obj_ref(), **attributes)
+        return self.ls.create(obj_type, under=parent.ref, **attributes)
 
     def delete(self, obj_ref):
         """ Delete Spirent TestCenter Automation object.
@@ -93,7 +93,7 @@ class StcRestWrapper(object):
         :param attributes: dictionary of {attributes: values} to configure.
         """
 
-        self.ls.config(obj_ref, **attributes)
+        self.ls.config(obj_ref, attributes)
 
     def subscribe(self, **arguments):
         """ Subscribe to statistics view.
