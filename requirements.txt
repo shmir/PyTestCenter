@@ -1,7 +1,5 @@
 
 future
-configparser
-enum34; python_version<"3.4"
 stcrestclient==1.8.1
 
-pytrafficgen==1.6.2
+pytrafficgen==3.0.0

@@ -5,8 +5,6 @@ from __future__ import print_function
 from setuptools import setup
 import io
 
-import testcenter
-
 
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
@@ -24,7 +22,7 @@ install_requires = [r for r in required if r and r[0] != '#' and not r.startswit
 
 setup(
     name='pytestcenter',
-    version=testcenter.__version__,
+    version='3.0.0',
     url='https://github.com/shmir/PyTestCenter/',
     license='Apache Software License',
     author='Yoram Shamir',
