@@ -1,31 +1,27 @@
 
+import logging
+from pathlib import Path
+
 import pytest
+from _pytest.config.argparsing import Parser
 
 from trafficgenerator.tgn_utils import ApiType
+from trafficgenerator.tgn_conftest import tgn_pytest_addoption, pytest_generate_tests, logger, api, server, server_properties
+from testcenter.stc_app import init_stc
 
 
-def pytest_addoption(parser):
-    parser.addoption('--api', action='store', default="tcl", help="api options: rest, tcl or python")
-    parser.addoption('--server', action='store', default="localhost", help="REST server in format ip:port")
-    parser.addoption('--ls', action='store', default=None, help="lab server address")
-    parser.addoption('--port1', action='store', default="", help="chassis1/module1/port1")
-    parser.addoption('--port2', action='store', default="", help="chassis2/module2/port2")
+def pytest_addoption(parser: Parser) -> None:
+    """ Add options to allow the user to determine which APIs and servers to test. """
+    tgn_pytest_addoption(parser, Path(__file__).parent.joinpath('test_config.py').as_posix())
 
 
-@pytest.fixture(scope='class', autouse=True)
-def api(request):
-    request.cls.api = ApiType[request.param]
-    server_ip = request.config.getoption('--server')  # @UndefinedVariable
-    request.cls.server_ip = server_ip.split(':')[0]
-    request.cls.server_port = server_ip.split(':')[1] if len(server_ip.split(':')) == 2 else 8888
-    request.cls.ls = request.config.getoption('--ls')
-    request.cls.port1 = request.config.getoption('--port1')
-    request.cls.port2 = request.config.getoption('--port2')
-
-
-def pytest_generate_tests(metafunc):
-    if metafunc.config.getoption('--api') == 'all':
-        apis = ['tcl', 'rest']
-    else:
-        apis = [metafunc.config.getoption('--api')]
-    metafunc.parametrize('api', apis, indirect=True)
+@pytest.fixture()
+def stc(logger: logging.Logger, api: ApiType, server_properties: dict):
+    """ Yields connected STC object. """
+    install_dir = server_properties['install_dir']
+    reset_server, rest_port = server_properties['server'].split(':')
+    stc = init_stc(api, logger, install_dir, reset_server, rest_port)
+    lab_server = server_properties.get('lab_server')
+    stc.connect(lab_server)
+    yield stc
+    stc.disconnect()

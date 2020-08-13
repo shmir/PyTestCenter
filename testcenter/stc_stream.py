@@ -1,26 +1,29 @@
 """
 This module implements classes and utility functions to manage STC streamblocks.
+
+:author: yoram@ignissoft.com
 """
 
-from testcenter.stc_object import StcObject
+from typing import Optional
+
+from testcenter import StcObject
 
 
 class StcStream(StcObject):
     """ Represent STC stream block. """
 
-    def __init__(self, **data):
+    def __init__(self, parent: Optional[StcObject], **data: str) -> None:
         """ Create new streamblock on STC.
 
         Remove automatically created Ethernet and IPv4 configurations under StreamBlock.
 
         :param parent: port object.
-        :return: streamblock object.
         """
         data['objType'] = 'StreamBlock'
-        super(StcStream, self).__init__(**data)
+        super().__init__(parent, **data)
 
     def _create(self):
-        sb_ref = super(StcStream, self)._create()
+        sb_ref = super()._create()
         # Remove automatically created Ethernet and IPv4 configurations under StreamBlock.
         self.api.config(sb_ref, FrameConfig='')
         return sb_ref

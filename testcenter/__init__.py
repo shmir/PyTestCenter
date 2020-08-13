@@ -1,0 +1,55 @@
+
+from testcenter.stc_object import StcObject
+from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
+                                   StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost, StcIgmpQuerier,
+                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
+                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel)
+from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
+from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
+from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
+from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
+
+
+TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
+                 'bfdipv4controlplaneindependentsession': StcBfdSession,
+                 'bfdipv6controlplaneindependentsession': StcBfdSession,
+                 'bfdrouterconfig': StcBfdRouter,
+                 'bgprouterconfig': StcBgpRouter,
+                 'bgpipv4routeconfig': StcBgpRoute,
+                 'bgpipv6routeconfig': StcBgpRoute,
+                 'dhcpv4serverconfig': StcServer,
+                 'dhcpv4blockconfig': StcClient,
+                 'emulateddevice': StcDevice,
+                 'externallsablock': StcOspfLsa,
+                 'igmphostconfig': StcIgmpHost,
+                 'igmprouterconfig': StcIgmpQuerier,
+                 'igmpgroupmembership': StcIgmpGroup,
+                 'ipv4group': StcIpv4Group,
+                 'ipv6group': StcIpv6Group,
+                 'ipv4isisroutesconfig': StcIsisRouterRange,
+                 'ipv6isisroutesconfig': StcIsisRouterRange,
+                 'isisrouterconfig': StcIsisRouter,
+                 'generator': StcGenerator,
+                 'groupcollection': StcGroupCollection,
+                 'ospfv2routerconfig': StcOspfv2Router,
+                 'ospfv3asexternallsablock': StcOspfLsa,
+                 'ospfv3interareaprefixlsablk': StcOspfLsa,
+                 'ospfv3intraareaprefixlsablk': StcOspfLsa,
+                 'ospfv3naaslsablock': StcOspfLsa,
+                 'oseswitchconfig': StcOseSwitch,
+                 'pimrouterconfig': StcPimRouter,
+                 'pimv4groupblk': StcPimv4Group,
+                 'port': StcPort,
+                 'physicalchassis': StcPhyChassis,
+                 'physicalchassismanager': StcHw,
+                 'physicalport': StcPhyPort,
+                 'physicalportgroup': StcPhyPortGroup,
+                 'physicaltestmodule': StcPhyModule,
+                 'routerlsa': StcOspfLsa,
+                 'rsvpegresstunnelparams': StcRsvpTunnel,
+                 'rsvpingresstunnelparams': StcRsvpTunnel,
+                 'rsvprouterconfig': StcRsvpRouter,
+                 'streamblock': StcStream,
+                 'summarylsablock': StcOspfLsa,
+                 'trafficgroup': StcTrafficGroup,
+                 }
