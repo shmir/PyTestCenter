@@ -7,16 +7,12 @@ Base class for all STC package tests.
 from os import path
 import logging
 
-from trafficgenerator.test_tgn import TestTgnBase
-
 from testcenter.stc_app import init_stc
 
 
-class TestStcBase(TestTgnBase):
+class TestStcBase:
 
     stc = None
-
-    TestTgnBase.config_file = path.join(path.dirname(__file__), 'TestCenter.ini')
 
     def setup(self):
 
@@ -34,6 +30,3 @@ class TestStcBase(TestTgnBase):
     def teardown(self):
         super(TestStcBase, self).teardown()
         self.stc.disconnect()
-
-    def test_hello_world(self):
-        pass

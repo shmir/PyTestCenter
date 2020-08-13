@@ -4,25 +4,17 @@ This module implements classes and utility functions to manage STC application.
 :author: yoram@ignissoft.com
 """
 
-from os import path
 import time
 from enum import Enum
+from os import path
 
-from trafficgenerator.tgn_utils import ApiType, TgnError
 from trafficgenerator.tgn_app import TgnApp
+from trafficgenerator.tgn_utils import ApiType, TgnError
 
-from testcenter.api.stc_tcl import StcTclWrapper
+from testcenter import TYPE_2_OBJECT, StcObject, StcProject
 from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
-from testcenter.stc_object import StcObject
-from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
-                                   StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost, StcIgmpQuerier,
-                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
-                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel)
-from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
-from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
-from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
-from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
+from testcenter.api.stc_tcl import StcTclWrapper
 
 
 class StcSequencerOperation(Enum):
@@ -90,9 +82,9 @@ class StcApp(TgnApp):
             self.api.perform('CSTestSessionConnect', Host=self.lab_server, CreateNewTestSession=True)
 
         # Every object creation/retrieval must come AFTER we connect to lab server (if needed).
-        self.hw = self.system.get_child('PhysicalChassisManager')
         self.project = StcProject(parent=self.system)
-        self.project.project = self.project
+        StcObject.project = self.project
+        self.hw = self.system.get_child('PhysicalChassisManager')
 
     def disconnect(self, terminate=True):
         """ Disconnect from lab server (if used) and reset configuration.
@@ -211,48 +203,3 @@ class StcApp(TgnApp):
             self.project.command(command.value)
         else:
             self.project.wait()
-
-
-TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
-                 'bfdipv4controlplaneindependentsession': StcBfdSession,
-                 'bfdipv6controlplaneindependentsession': StcBfdSession,
-                 'bfdrouterconfig': StcBfdRouter,
-                 'bgprouterconfig': StcBgpRouter,
-                 'bgpipv4routeconfig': StcBgpRoute,
-                 'bgpipv6routeconfig': StcBgpRoute,
-                 'dhcpv4serverconfig': StcServer,
-                 'dhcpv4blockconfig': StcClient,
-                 'emulateddevice': StcDevice,
-                 'externallsablock': StcOspfLsa,
-                 'igmphostconfig': StcIgmpHost,
-                 'igmprouterconfig': StcIgmpQuerier,
-                 'igmpgroupmembership': StcIgmpGroup,
-                 'ipv4group': StcIpv4Group,
-                 'ipv6group': StcIpv6Group,
-                 'ipv4isisroutesconfig': StcIsisRouterRange,
-                 'ipv6isisroutesconfig': StcIsisRouterRange,
-                 'isisrouterconfig': StcIsisRouter,
-                 'generator': StcGenerator,
-                 'groupcollection': StcGroupCollection,
-                 'ospfv2routerconfig': StcOspfv2Router,
-                 'ospfv3asexternallsablock': StcOspfLsa,
-                 'ospfv3interareaprefixlsablk': StcOspfLsa,
-                 'ospfv3intraareaprefixlsablk': StcOspfLsa,
-                 'ospfv3naaslsablock': StcOspfLsa,
-                 'oseswitchconfig': StcOseSwitch,
-                 'pimrouterconfig': StcPimRouter,
-                 'pimv4groupblk': StcPimv4Group,
-                 'port': StcPort,
-                 'physicalchassis': StcPhyChassis,
-                 'physicalchassismanager': StcHw,
-                 'physicalport': StcPhyPort,
-                 'physicalportgroup': StcPhyPortGroup,
-                 'physicaltestmodule': StcPhyModule,
-                 'routerlsa': StcOspfLsa,
-                 'rsvpegresstunnelparams': StcRsvpTunnel,
-                 'rsvpingresstunnelparams': StcRsvpTunnel,
-                 'rsvprouterconfig': StcRsvpRouter,
-                 'streamblock': StcStream,
-                 'summarylsablock': StcOspfLsa,
-                 'trafficgroup': StcTrafficGroup,
-                 }

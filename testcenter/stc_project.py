@@ -3,13 +3,16 @@ This module implements classes and utility functions to manage STC project.
 
 Any command that can act on list of objects (ports, devices, emulations etc.) should be implemented
 by StcProject.
+
+:author: yoram@ignissoft.com
 """
 
 import time
+from typing import Dict
 
 from trafficgenerator.tgn_tcl import build_obj_ref_list
 
-from testcenter.stc_object import StcObject
+from testcenter import StcObject, StcPort
 
 command_2_config_object = {'Dhcpv4Bind': 'dhcpv4blockconfig',
                            'Dhcpv4Release': 'dhcpv4blockconfig',
@@ -22,21 +25,22 @@ command_2_config_object = {'Dhcpv4Bind': 'dhcpv4blockconfig',
                            }
 
 
-# StcProject serves as manager for its children - ports and devices.
 class StcProject(StcObject):
-    """ Represents STC project object. """
+    """ Represents STC project object.
+
+    StcProject serves as manager for its children - ports and devices.
+    """
 
     wait_for_ports = 4
 
-    def __init__(self, **data):
-        super(StcProject, self).__init__(objType='project', **data)
+    def __init__(self, parent, **data):
+        super().__init__(parent=parent, objType='project', **data)
 
-    def get_ports(self):
-        """
-        :return: dictionary {name: object} of all port.
-        """
+    def get_ports(self) -> Dict[str, StcPort]:
+        """ Returns all vports. """
+        return {o.name: o for o in self.get_objects_or_children_by_type('Port')}
+    ports = property(get_ports)
 
-        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('Port')}
 
     #
     # Port command.

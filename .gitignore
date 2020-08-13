@@ -104,3 +104,5 @@ testcenter/test/configs/*.xml
 
 .pytest_cache
 .README.md.html
+
+tests/configs/temp

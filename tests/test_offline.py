@@ -4,183 +4,180 @@ TestCenter package tests that can run in offline mode.
 @author yoram@ignissoft.com
 """
 
-from os import path
 import inspect
+import logging
+from pathlib import Path
+
 import pytest
 
-from trafficgenerator.tgn_utils import ApiType
-
-from testcenter.stc_object import StcObject
-from testcenter.stc_port import StcPort
-from testcenter.stc_device import StcDevice
-from testcenter.stc_stream import StcStream
+from testcenter.api.stc_rest import StcRestWrapper
+from testcenter.stc_app import StcApp
 from testcenter.stc_statistics_view import StcStats
+from testcenter import StcObject, StcPort, StcDevice, StcStream
 
 
-from .test_base import TestStcBase
+def test_hello_world(stc: StcApp) -> None:
+    pass
 
 
-class TestStcOffline(TestStcBase):
+def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
+    """ Load existing configuration. """
+    logger.info(test_load_config.__doc__.strip())
 
-    def test_load_config(self, api):
-        """ Load existing configuration. """
-        self.logger.info(TestStcOffline.test_load_config.__doc__.strip())
+    configs_dir = Path(__file__).parent.joinpath('configs')
+    config_file = configs_dir.joinpath('test_config.xml')
+    stc.load_config(config_file.as_posix())
+    temp_dir = configs_dir.joinpath('temp')
+    config_file_save = temp_dir.joinpath(f'{config_file.stem}-save{config_file.suffix}')
+    stc.save_config(config_file_save)
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        file_name, file_ext = path.splitext(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self.stc.save_config(file_name + '-save' + file_ext)
+    with pytest.raises(Exception):
+        stc.load_config(configs_dir.joinpath('tcc.invalid'))
+    with pytest.raises(Exception):
+        stc.load_config(configs_dir.joinpath('invalid.tcc'))
 
-        with pytest.raises(Exception):
-            self.stc.load_config(path.join(path.dirname(__file__), 'tcc.invalid'))
-        with pytest.raises(Exception):
-            self.stc.load_config(path.join(path.dirname(__file__), 'invalid.tcc'))
 
-    def test_reload_config(self, api):
-        """ Reload existing configuration. """
-        self.logger.info(TestStcOffline.test_reload_config.__doc__.strip())
+def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
+    """ Analyze existing configuration. """
+    logger.info(test_analyze_config.__doc__.strip())
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        for port in self.stc.project.get_ports().values():
-            print(port.get_name())
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        for port in self.stc.project.get_ports().values():
-            print(port.get_name())
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    project = stc.project
 
-    def test_analyze_config(self, api):
-        """ Analyze existing configuration. """
-        self.logger.info(TestStcOffline.test_analyze_config.__doc__.strip())
+    project.get_children('port')
+    port1_obj = project.get_object_by_name('Port 1')
+    port2_obj = project.get_object_by_name('Port 2')
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        project = self.stc.project
+    print(f'Port1 object reference = {port1_obj.ref}')
+    print(f'Port1 name = {port1_obj.name}')
+    print(f'Ports = {project.get_objects_by_type("port")}')
+    print(f'Port 1 state = {port1_obj.get_attribute("Location")}')
+    print(f'Port 1 attributes = {port1_obj.get_attributes()}')
+    print(f'Port 1 streamblocks = {port1_obj.get_children("streamblock")}')
+    print(f'Port 2 streamblocks = {port2_obj.get_children("streamblock")}')
 
-        project.get_children('port')
-        port1_obj = project.get_object_by_name('Port 1')
+    stc_ports = project.get_children('port')
+    assert len(stc_ports) == 2
 
-        print('Port1 object reference = ', port1_obj.obj_ref())
-        print('Port1 name = ', port1_obj.obj_name())
-        print('Ports = ', project.get_objects_by_type('port'))
-        print('Port 1 state = ', port1_obj.get_attribute('Location'))
-        print('Port 1 attributes = ', port1_obj.get_attributes())
-        print('Port 1 streamblocks = ', port1_obj.get_children('streamblock'))
-        print('Port 2 streamblocks = ', port1_obj.get_children('streamblock'))
+    assert len(stc_ports[0].get_children('emulateddevice')) == 1
+    assert len(stc_ports[1].get_children('emulateddevice')) == 1
 
-        stc_ports = project.get_children('port')
-        assert(len(stc_ports) == 2)
+    assert len(stc.project.get_devices()) == 2
+    assert len(stc.project.get_devices(stc_ports[0])) == 1
+    assert len(stc.project.get_devices(stc_ports[1])) == 1
 
-        assert(len(stc_ports[0].get_children('emulateddevice')) == 1)
-        assert(len(stc_ports[1].get_children('emulateddevice')) == 1)
+    assert len(stc.project.get_children('GroupCollection')) == 1
+    assert len(stc.project.get_object_by_name('TG 1').get_children('TrafficGroup')) == 1
+    assert len(stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2
+    assert len(stc.project.get_stream_blocks()) == 2
 
-        assert(len(self.stc.project.get_devices()) == 2)
-        assert(len(self.stc.project.get_devices(stc_ports[0])) == 1)
-        assert(len(self.stc.project.get_devices(stc_ports[1])) == 1)
 
-        assert(len(self.stc.project.get_children('GroupCollection')) == 1)
-        assert(len(self.stc.project.get_object_by_name('TG 1').get_children('TrafficGroup')) == 1)
-        assert(len(self.stc.project.get_object_by_name('TG 1').get_object_by_name('SG 1').get_stream_blocks()) == 2)
-        assert(len(self.stc.project.get_stream_blocks()) == 2)
+def test_children(logger: logging.Logger, stc: StcApp) -> None:
+    """ Test specific get children methods. """
+    logger.info(test_children.__doc__)
 
-    def test_children(self, api):
-        """ Test specific get children methods. """
-        self.logger.info(TestStcOffline.test_children.__doc__)
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        project = self.stc.project
+    assert len(stc.project.ports) == 2
+    for port in stc.project.ports.values():
+        assert len(port.devices) == 1
+        assert len(port.stream_blocks) == 1
 
-        ports = project.get_ports()
-        assert(len(ports) == 2)
-        for port in ports.values():
-            assert(len(port.get_devices()) == 1)
-            assert(len(port.get_stream_blocks()) == 1)
 
-    def test_build_config(self, api):
-        """ Build simple config from scratch. """
-        self.logger.info(TestStcOffline.test_build_config.__doc__.strip())
+def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
+    """ Build simple config from scratch. """
+    logger.info(test_build_config.__doc__.strip())
 
-        for port_name in ('Port 1', 'Port 2'):
-            self.logger.info('Create Port "%s"', port_name)
-            stc_port = StcPort(name=port_name, parent=self.stc.project)
+    for port_name in ('Port 1', 'Port 2'):
+        logger.info('Create Port "%s"', port_name)
+        stc_port = StcPort(name=port_name, parent=stc.project)
 
-            for dev_name in (port_name + ' Device 1', port_name + ' Device 2'):
-                self.logger.info('Build Device "%s"', dev_name)
-                stc_dev = StcDevice(name=dev_name, parent=stc_port)
-                stc_eth = StcObject(objType='EthIIIf', parent=stc_dev)
-                stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')
-                stc_ip = StcObject(objType='Ipv4If', parent=stc_dev)
-                stc_ip.set_attributes(Address='1.2.3.4', PrefixLength=16)
+        for dev_name in (port_name + ' Device 1', port_name + ' Device 2'):
+            logger.info('Build Device "%s"', dev_name)
+            stc_dev = StcDevice(name=dev_name, parent=stc_port)
+            stc_eth = StcObject(objType='EthIIIf', parent=stc_dev)
+            stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')
+            stc_ip = StcObject(objType='Ipv4If', parent=stc_dev)
+            stc_ip.set_attributes(Address='1.2.3.4', PrefixLength=16)
 
-            for sb_name in (port_name + ' StreamBlock 1', port_name + ' StreamBlock 2'):
-                self.logger.info('Build StreamBlock "%s"', sb_name)
-                stc_sb = StcStream(name=sb_name, parent=stc_port)
-                stc_eth = StcObject(objType='ethernet:ethernetii', parent=stc_sb)
-                stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
+        for sb_name in (port_name + ' StreamBlock 1', port_name + ' StreamBlock 2'):
+            logger.info('Build StreamBlock "%s"', sb_name)
+            stc_sb = StcStream(name=sb_name, parent=stc_port)
+            stc_eth = StcObject(objType='ethernet:ethernetii', parent=stc_sb)
+            stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
 
-        stc_ports = self.stc.project.get_children('port')
-        assert(len(stc_ports) == 2)
-        for stc_port in stc_ports:
-            assert(len(stc_port.get_children('generator')) == 1)
-            assert(len(stc_port.get_children('generator', 'analyzer')) == 2)
-            assert(len(stc_port.get_children('emulateddevice')) == 2)
-            assert(len(stc_port.get_children('emulateddevice', 'generator', 'analyzer')) == 4)
-        for stc_port in stc_ports:
-            assert(len(stc_port.get_children('streamblock')) == 2)
+    stc_ports = stc.project.get_children('port')
+    assert(len(stc_ports) == 2)
+    for stc_port in stc_ports:
+        assert(len(stc_port.get_children('generator')) == 1)
+        assert(len(stc_port.get_children('generator', 'analyzer')) == 2)
+        assert(len(stc_port.get_children('emulateddevice')) == 2)
+        assert(len(stc_port.get_children('emulateddevice', 'generator', 'analyzer')) == 4)
+    for stc_port in stc_ports:
+        assert(len(stc_port.get_children('streamblock')) == 2)
 
-        test_name = inspect.stack()[0][3]
-        self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
+    test_name = inspect.stack()[0][3]
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
 
-    def test_stream_under_project(self, api):
-        """ Build simple config with ports under project object. """
-        self.logger.info(TestStcOffline.test_stream_under_project.__doc__.strip())
 
-        for port_name in ('Port 1', 'Port 2'):
-            self.logger.info('Create Port "%s"', port_name)
-            stc_port = StcPort(name=port_name, parent=self.stc.project)
+def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
+    """ Build simple config with ports under project object. """
+    logger.info(test_stream_under_project.__doc__.strip())
 
-            for sb_name in (port_name + ' StreamBlock 1', port_name + ' StreamBlock 2'):
-                self.logger.info('Build StreamBlock "%s"', sb_name)
-                stc_sb = StcStream(name=sb_name, parent=stc_port)
-                stc_eth = StcObject(objType='ethernet:ethernetii', parent=stc_sb)
-                stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
+    for port_name in ('Port 1', 'Port 2'):
+        logger.info(f'Create Port "{port_name}"')
+        stc_port = StcPort(name=port_name, parent=stc.project)
 
-        test_name = inspect.stack()[0][3]
-        self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
+        for sb_name in (port_name + ' StreamBlock 1', port_name + ' StreamBlock 2'):
+            logger.info(f'Build StreamBlock "{sb_name}"')
+            stc_sb = StcStream(name=sb_name, parent=stc_port)
+            stc_eth = StcObject(objType='ethernet:ethernetii', parent=stc_sb)
+            stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
 
-    def test_build_emulation(self, api):
-        """ Build simple BGP configuration. """
-        self.logger.info(TestStcOffline.test_build_emulation.__doc__.strip())
+    test_name = inspect.stack()[0][3]
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
 
-        stc_port = StcPort(name='Port 1', parent=self.stc.project)
-        stc_dev = StcDevice(name='Device 1', parent=stc_port)
-        stc_eth = StcObject(objType='EthIIIf', parent=stc_dev)
-        stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')
-        stc_ip = StcObject(objType='Ipv4If', parent=stc_dev)
-        stc_ip.set_attributes(Address='1.2.3.4', PrefixLength=16)
-        StcObject(objType='BgpRouterConfig', parent=stc_dev)
 
-        test_name = inspect.stack()[0][3]
-        self.stc.save_config(path.join(path.dirname(__file__), 'configs', test_name + '.tcc'))
+def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
+    """ Build simple BGP configuration. """
+    logger.info(test_build_emulation.__doc__.strip())
 
-    def test_backdoor(self, api):
+    stc_port = StcPort(name='Port 1', parent=stc.project)
+    stc_dev = StcDevice(name='Device 1', parent=stc_port)
+    stc_eth = StcObject(objType='EthIIIf', parent=stc_dev)
+    stc_eth.set_attributes(SourceMac='00:11:22:33:44:55')
+    stc_ip = StcObject(objType='Ipv4If', parent=stc_dev)
+    stc_ip.set_attributes(Address='1.2.3.4', PrefixLength=16)
+    StcObject(objType='BgpRouterConfig', parent=stc_dev)
 
-        if self.api != ApiType.rest:
-            pytest.skip('Skip test - non rest API')
+    test_name = inspect.stack()[0][3]
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
 
-        print(self.stc.api.ls.get(self.stc.project.ref, 'children').split())
-        print(self.stc.api.ls.get(self.stc.project.ref, 'children-port').split())
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        ports = self.stc.api.ls.get(self.stc.project.ref, 'children-port').split()
+def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:
 
-        print(self.stc.api.ls.get(ports[0]))
-        print(self.stc.api.ls.get(ports[0], 'Name'))
-        print(self.stc.api.ls.get(ports[0], 'Name', 'Active'))
+    if type(stc.api) is not StcRestWrapper:
+        pytest.skip('Skip test - non rest API')
 
-        print(self.stc.api.ls.config(ports[0], Name='New Name', Active=False))
-        print(self.stc.api.ls.get(ports[0], 'Name', 'Active'))
+    print(stc.api.ls.get(stc.project.ref, 'children').split())
+    print(stc.api.ls.get(stc.project.ref, 'children-port').split())
 
-    def test_stats_no_traffic(self, api):
-        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
-        assert not gen_stats.get_all_stats()
-        assert not gen_stats.get_stats()
-        assert not gen_stats.get_object_stats('Port 1')
-        assert gen_stats.get_stat('Port 1', 'GeneratorFrameCount') == '-1'
-        assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == -1
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    ports = stc.api.ls.get(stc.project.ref, 'children-port').split()
+
+    print(stc.api.ls.get(ports[0]))
+    print(stc.api.ls.get(ports[0], 'Name'))
+    print(stc.api.ls.get(ports[0], 'Name', 'Active'))
+
+    print(stc.api.ls.config(ports[0], Name='New Name', Active=False))
+    print(stc.api.ls.get(ports[0], 'Name', 'Active'))
+
+
+def test_stats_no_traffic(logger: logging.Logger, stc: StcApp) -> None:
+    """ Get statistics without traffic. """
+    gen_stats = StcStats(stc.project, 'GeneratorPortResults')
+    assert not gen_stats.get_all_stats()
+    assert not gen_stats.get_stats()
+    assert not gen_stats.get_object_stats('Port 1')
+    assert gen_stats.get_stat('Port 1', 'GeneratorFrameCount') == '-1'
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == -1

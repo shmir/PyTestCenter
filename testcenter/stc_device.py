@@ -1,6 +1,10 @@
 """
 This module implements classes and utility functions to manage STC emulated device.
+
+:author: yoram@ignissoft.com
 """
+
+from typing import Optional
 
 from trafficgenerator.tgn_utils import is_ipv4, is_ipv6
 from testcenter.stc_object import StcObject
@@ -9,23 +13,22 @@ from testcenter.stc_object import StcObject
 class StcDevice(StcObject):
     """ Represents STC emulated device. """
 
-    # Create device under port (in STC objects tree emulateddevice is under project).
-    def __init__(self, **data):
-        """
+    def __init__(self, parent: Optional[StcObject], **data: str) -> None:
+        """ Create device under port (in STC objects tree emulateddevice is under project).
+
         :param parent: when creating - port, when reading - project.
         """
 
         # Make sure parent is project.
-        parent = data.pop('parent', None)
-        data['parent'] = parent.project
+        data['parent'] = StcObject.project
 
         # Create StcDevice object.
         data['objType'] = 'emulateddevice'
-        super(StcDevice, self).__init__(**data)
+        super().__init__(**data)
 
         # If we create new device we should place it under the requested parent.
         if 'objRef' not in data:
-            self.set_attributes(AffiliatedPort=parent.obj_ref())
+            self.set_attributes(AffiliatedPort=parent.ref)
             port = parent
         else:
             port = parent.get_object_by_ref(self.get_attribute('AffiliatedPort'))

@@ -6,33 +6,34 @@ This module implements classes and utility functions to manage STC port.
 
 import re
 import time
+from typing import Dict, Optional
 
 from trafficgenerator.tgn_utils import is_local_host, TgnError
 
-from testcenter.stc_object import StcObject
+from testcenter import StcObject
+from testcenter.stc_device import StcDevice
+from testcenter.stc_stream import StcStream
 
 
 class StcPort(StcObject):
     """ Represent STC port. """
 
-    def __init__(self, **data):
+    def __init__(self, parent: Optional[StcObject], **data: str) -> None:
         data['objType'] = 'port'
-        super(StcPort, self).__init__(**data)
+        super().__init__(parent, **data)
         self.generator = self.get_child('generator')
+        self.location = None
+        self.activephy = None
 
-    def get_devices(self):
-        """
-        :return: dictionary {name: object} of all emulated devices.
-        """
+    def get_devices(self) -> Dict[str, StcDevice]:
+        """ Returns all devices. """
+        return {o.name: o for o in self.get_objects_or_children_by_type('EmulatedDevice')}
+    devices = property(get_devices)
 
-        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('EmulatedDevice')}
-
-    def get_stream_blocks(self):
-        """
-        :return: dictionary {name: object} of all streams.
-        """
-
-        return {o.obj_name(): o for o in self.get_objects_or_children_by_type('StreamBlock')}
+    def get_stream_blocks(self) -> Dict[str, StcStream]:
+        """ Returns all stream blocks. """
+        return {o.name: o for o in self.get_objects_or_children_by_type('StreamBlock')}
+    stream_blocks = property(get_stream_blocks)
 
     def reserve(self, location=None, force=False, wait_for_up=True, timeout=40):
         """ Reserve physical port.

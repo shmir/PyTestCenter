@@ -4,38 +4,46 @@ Base classes and utilities to manage Spirent Test Center (STC).
 :author: yoram@ignissoft.com
 """
 
-import time
+from __future__ import annotations
 import re
+import time
 from collections import OrderedDict
+from typing import Optional
 
-from trafficgenerator.tgn_utils import TgnError
-from trafficgenerator.tgn_tcl import build_obj_ref_list
 from trafficgenerator.tgn_object import TgnObject
+from trafficgenerator.tgn_tcl import build_obj_ref_list
+from trafficgenerator.tgn_utils import TgnError
+
+import testcenter
+from testcenter.api.stc_rest import StcRestWrapper
 
 
-def extract_stc_obj_type_from_obj_ref(obj_ref):
-    # Extract object type from object reference. Note that there are rare cases where
-    # object reference has no sequential number suffix like 'automationoptions'.
+def extract_stc_obj_type_from_obj_ref(obj_ref: str) -> str:
+    """ Extract object type from object reference.
+
+    :param obj_ref: object reference.
+    """
+    # There are rare cases where object reference has no sequential number suffix like 'automationoptions'.
     m = re.search(r'(.*\D+)\d+', obj_ref)
     return m.group(1) if m else obj_ref
 
 
 class StcObject(TgnObject):
+    """ Base class for all STC objects. """
 
-    # Class level variables
     str_2_class = {}
 
-    def __init__(self, **data):
-        if data['parent']:
-            self.project = data['parent'].project
+    project: Optional[testcenter.StcProject] = None
+
+    def __init__(self, parent: Optional[StcObject], **data: str) -> None:
         if 'objRef' in data:
             data['objType'] = extract_stc_obj_type_from_obj_ref(data['objRef'])
-            if 'parent' not in data:
+            if not parent and data['objType'] != 'system':
                 self._data['objRef'] = data['objRef']
                 data['parent'] = self.get_object_from_attribute('parent')
         if type(self) == StcObject:
             self.__class__ = self.get_obj_class(data['objType'])
-        super(StcObject, self).__init__(**data)
+        super().__init__(parent, **data)
 
     def get_obj_class(self, obj_type):
         """
@@ -109,9 +117,10 @@ class StcObject(TgnObject):
         """
 
         if not attributes:
-            # todo: patch - will work with REST only, breaks Tcl
-            # Tcl: return self.api.get(self.obj_ref())
-            attributes = self.api.get(self.obj_ref()).split()
+            if type(self.api) is StcRestWrapper:
+                attributes = self.api.get(self.ref).split()
+            else:
+                return self.api.get(self.ref)
         values = {}
         for attribute in attributes:
             values[attribute] = self.get_attribute(attribute)
