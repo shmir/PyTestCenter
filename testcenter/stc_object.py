@@ -81,7 +81,7 @@ class StcObject(TgnObject):
         :param attribute: attribute name.
         :return: attribute value.
         """
-        return self.api.get(self.obj_ref(), attribute)
+        return self.api.get(self.ref, attribute)
 
     def get_list_attribute(self, attribute):
         """

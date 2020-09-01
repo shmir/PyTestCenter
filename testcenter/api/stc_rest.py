@@ -8,7 +8,7 @@ from random import randint
 from stcrestclient import stchttp
 
 
-class StcRestWrapper(object):
+class StcRestWrapper:
 
     def __init__(self, logger, server, port=80, user_name=getpass.getuser(), session_name=None):
         """ Init STC REST client.
@@ -22,7 +22,6 @@ class StcRestWrapper(object):
         This creates a clean REST script that can be used later for debug.
         """
 
-        super(self.__class__, self).__init__()
         debug_print = True if logger.level == 10 else False
         self.ls = stchttp.StcHttp(server, port, debug_print=debug_print)
         if session_name:

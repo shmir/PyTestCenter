@@ -42,12 +42,10 @@ def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
 
     if api == ApiType.tcl:
         stc_api_wrapper = StcTclWrapper(logger, install_dir)
-    elif api == ApiType.python:
-        stc_api_wrapper = StcPythonWrapper(logger, install_dir)
     elif api == ApiType.rest:
         stc_api_wrapper = StcRestWrapper(logger, rest_server, rest_port)
     else:
-        raise TgnError('{} API not supported - use Tcl, python or REST'.format(api))
+        raise TgnError(f'{api} API not supported - use Tcl or REST')
     return StcApp(logger, api_wrapper=stc_api_wrapper)
 
 
@@ -61,7 +59,7 @@ class StcApp(TgnApp):
         :param api_wrapper: api wrapper object inheriting and implementing StcApi base class.
         """
 
-        super(StcApp, self).__init__(logger, api_wrapper)
+        super().__init__(logger, api_wrapper)
 
         StcObject.logger = self.logger
         StcObject.str_2_class = TYPE_2_OBJECT
