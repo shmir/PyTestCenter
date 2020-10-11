@@ -6,7 +6,8 @@ import pytest
 from _pytest.config.argparsing import Parser
 
 from trafficgenerator.tgn_utils import ApiType
-from trafficgenerator.tgn_conftest import tgn_pytest_addoption, pytest_generate_tests, logger, api, server, server_properties
+from trafficgenerator.tgn_conftest import (tgn_pytest_addoption, pytest_generate_tests, logger, api, server,
+                                           server_properties)
 from testcenter.stc_app import init_stc
 
 

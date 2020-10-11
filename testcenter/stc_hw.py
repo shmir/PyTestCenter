@@ -4,6 +4,7 @@ This module implements classes and utility functions to manage STC chassis.
 :author: yoram@ignissoft.com
 """
 
+from __future__ import annotations
 import re
 from collections import OrderedDict
 
@@ -11,9 +12,9 @@ from testcenter.stc_object import StcObject
 
 
 class StcHw(StcObject):
-    """ Represent STC port. """
+    """ Represent STC hardware. """
 
-    def get_chassis(self, hostname):
+    def get_chassis(self, hostname: str) -> StcPhyChassis:
         for chassis in self.get_children('PhysicalChassis'):
             if chassis.get_attribute('Hostname') == hostname:
                 return chassis

@@ -4,9 +4,12 @@ This module implements classes and utility functions to manage STC application.
 :author: yoram@ignissoft.com
 """
 
+from __future__ import annotations
+import logging
 import time
 from enum import Enum
 from os import path
+from typing import Optional
 
 from trafficgenerator.tgn_app import TgnApp
 from trafficgenerator.tgn_utils import ApiType, TgnError
@@ -25,19 +28,18 @@ class StcSequencerOperation(Enum):
     wait = 'waituntilcomplete'
 
 
-def init_stc(api, logger, install_dir=None, rest_server=None, rest_port=80):
+def init_stc(api: ApiType, logger: logging.Logger, install_dir: str = Optional[None],
+             rest_server: Optional[None] = None, rest_port: Optional[int] = 80) -> StcApp:
     """ Helper function to create STC object.
 
     This helper supports only new sessions. In order to connect to existing session on Lab server create
     StcRestWrapper and StcApp directly.
 
     :param api: tcl/python/rest
-    :type api: trafficgenerator.tgn_utils.ApiType
     :param logger: python logger object
     :param install_dir: STC installation directory
     :param rest_server: rest server address (either stcweb or lab server)
     :param rest_port: rest server port (either stcweb or lab server)
-    :return: STC object
     """
 
     if api == ApiType.tcl:
