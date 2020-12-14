@@ -3,7 +3,6 @@ This module implements classes and utility functions to manage STC application.
 
 :author: yoram@ignissoft.com
 """
-
 from __future__ import annotations
 import logging
 import time
@@ -151,8 +150,9 @@ class StcApp(TgnApp):
     # All commands assume that all ports are reserved and port objects exist under project.
     #
 
-    def send_arp_ns(self):
-        StcObject.send_arp_ns(*self.project.get_objects_or_children_by_type('port'))
+    def send_arp_ns(self) -> None:
+        """ Run ARP on all ports. """
+        StcObject.send_arp_ns(*self.project.ports.values())
 
     def get_arp_cache(self):
         return StcObject.get_arp_cache(*self.project.get_objects_or_children_by_type('port'))
@@ -161,17 +161,18 @@ class StcApp(TgnApp):
     # Devices commands.
     #
 
-    def start_devices(self):
+    def start_devices(self) -> None:
         """ Start all devices.
 
         It is the test responsibility to wait for devices to reach required state.
         """
         self._command_devices('DeviceStart')
 
-    def stop_devices(self):
+    def stop_devices(self) -> None:
+        """ Stop all devices. """
         self._command_devices('DeviceStop')
 
-    def _command_devices(self, command):
+    def _command_devices(self, command) -> None:
         self.project.command_devices(command, 4)
         self.project.test_command_rc('Status')
         time.sleep(4)
@@ -180,24 +181,26 @@ class StcApp(TgnApp):
     # Traffic commands.
     #
 
-    def start_traffic(self, blocking=False):
+    def start_traffic(self, blocking: Optional[bool] = False) -> None:
+        """ Start traffic on all ports. """
         self.project.start_ports(blocking)
 
-    def stop_traffic(self):
+    def stop_traffic(self) -> None:
+        """ Stop traffic on all ports. """
         self.project.stop_ports()
 
-    def wait_traffic(self):
+    def wait_traffic(self) -> None:
+        """ Wait for traffic to end on all ports. """
         self.project.wait_traffic()
 
     #
     # Sequencer commands.
     #
 
-    def sequencer_command(self, command):
+    def sequencer_command(self, command: StcSequencerOperation) -> None:
         """ Perform sequencer command.
 
         :param command: sequencer command.
-        :type command: testcenter.stc_app.StcSequencerOperation
         """
         if command != StcSequencerOperation.wait:
             self.project.command(command.value)

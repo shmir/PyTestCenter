@@ -3,7 +3,6 @@ Base classes and utilities to manage Spirent Test Center (STC).
 
 :author: yoram@ignissoft.com
 """
-
 from __future__ import annotations
 import re
 import time
@@ -187,7 +186,7 @@ class StcObject(TgnObject):
         self.api.wait()
 
     @classmethod
-    def send_arp_ns(cls, *objects):
+    def send_arp_ns(cls, *objects) -> None:
         """ Send ARP and NS for ports, devices or stream blocks. """
         objects[0].api.perform('ArpNdStart', HandleList=build_obj_ref_list(objects))
 

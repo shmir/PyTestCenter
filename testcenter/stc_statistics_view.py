@@ -9,7 +9,7 @@ from trafficgenerator.tgn_utils import is_false
 from testcenter.stc_object import StcObject
 
 
-class StcStats(object):
+class StcStats:
     """ Represents statistics view.
 
     The statistics dictionary represents a table:
@@ -29,16 +29,13 @@ class StcStats(object):
     ...
     """
 
-    def __init__(self, project, view):
+    def __init__(self, view: str) -> None:
         """ Subscribe to view with default configuration type as defined by config_2_type.
 
-        :param project: parent project object for all statistics.
         :param view: statistics view to subscribe to. If view is None it is the test responsibility to subscribe with
             specific config_type.
         """
-
         super(StcStats, self).__init__()
-        self.project = project
         if view:
             self.subscribe(view)
         self.statistics = {}
@@ -49,23 +46,22 @@ class StcStats(object):
         :parama view: statistics view to subscribe to.
         :parama config_type: configuration type to subscribe to.
         """
-
         if view.lower() in view_2_config_type:
             if not config_type:
                 config_type = view_2_config_type[view.lower()]
-            rds = self.project.api.subscribe(Parent=self.project.obj_ref(), ResultParent=self.project.obj_ref(),
-                                             ConfigType=config_type, ResultType=view)
-            self.rds = StcObject(objType='ResultDataSet', parent=self.project, objRef=rds)
+            rds = StcObject.project.api.subscribe(Parent=StcObject.project.obj_ref(),
+                                                  ResultParent=StcObject.project.ref,
+                                                  ConfigType=config_type, ResultType=view)
+            self.rds = StcObject(objType='ResultDataSet', parent=StcObject.project, objRef=rds)
         else:
-            self.project.get_children('DynamicResultView')
-            drv = self.project.get_object_by_name(view)
-            rc = self.project.command('SubscribeDynamicResultView', DynamicResultView=drv.ref)
-            self.rds = StcObject(objType='DynamicResultView', parent=self.project, objRef=rc['DynamicResultView'])
+            StcObject.project.get_children('DynamicResultView')
+            drv = StcObject.project.get_object_by_name(view)
+            rc = StcObject.project.command('SubscribeDynamicResultView', DynamicResultView=drv.ref)
+            self.rds = StcObject(objType='DynamicResultView', parent=StcObject.project, objRef=rc['DynamicResultView'])
 
     def unsubscribe(self):
         """ UnSubscribe from statistics view. """
-
-        self.project.api.unsubscribe(self.rds.obj_ref())
+        StcObject.project.api.unsubscribe(self.rds.obj_ref())
 
     def read_stats(self, *stats):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
@@ -74,7 +70,6 @@ class StcStats(object):
             Relevant for system (not dynamic) result views only.
         :todo: add support for user statistics.
         """
-
         self.statistics = {}
         if self.rds.type == 'dynamicresultview':
             self._read_custom_view()
@@ -87,7 +82,6 @@ class StcStats(object):
             not meaningful and it is better to use other unique identifier like stream ID.
         :returns: all statistics values for all object IDs.
         """
-
         all_statistics = OrderedDict()
         if self.statistics:
             for obj_name in self.statistics[obj_id_stat]:
@@ -144,8 +138,8 @@ class StcStats(object):
 
     def _read_custom_view(self):
 
-        self.project.command('RefreshResultView', ResultDataSet=self.rds.ref)
-        self.project.command('UpdateDynamicResultViewCommand', DynamicResultView=self.rds.ref)
+        StcObject.project.command('RefreshResultView', ResultDataSet=self.rds.ref)
+        StcObject.project.command('UpdateDynamicResultViewCommand', DynamicResultView=self.rds.ref)
         presentationResultQuery = self.rds.get_child('PresentationResultQuery')
         selectedProperties = presentationResultQuery.get_list_attribute('SelectProperties')
         self.objs_stats = []
@@ -155,7 +149,7 @@ class StcStats(object):
         self.statistics = dict(zip(selectedProperties, zip(*self.objs_stats)))
 
     def _get_result_data(self, rvd, num_columns):
-        self.project.command('ExpandResultViewDataCommand', ResultViewData=rvd.ref)
+        StcObject.project.command('ExpandResultViewDataCommand', ResultViewData=rvd.ref)
         for child_rvd in rvd.get_children('ResultViewData'):
             if is_false(child_rvd.get_attribute('IsDummy')):
                 self.objs_stats.append(child_rvd.get_list_attribute('ResultData')[:num_columns])
@@ -164,14 +158,14 @@ class StcStats(object):
     def _read_view(self, *stats):
 
         objs_stats = []
-        self.project.command('RefreshResultView', ResultDataSet=self.rds.obj_ref())
+        StcObject.project.command('RefreshResultView', ResultDataSet=self.rds.obj_ref())
         for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
             self.rds.set_attributes(PageNumber=page_number)
             for results in self.rds.get_objects_from_attribute('ResultHandleList'):
                 parent = results.get_object_from_attribute('parent')
                 parents = parent.obj_ref()
                 name = ''
-                while parent != self.project:
+                while parent != StcObject.project:
                     if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
                         name = parent.get_name()
                     parent = parent.get_object_from_attribute('parent')
@@ -237,7 +231,6 @@ view_2_config_type = {
     'sonetresults': 'Port',
     'isisrouterresults': 'IsisRouterConfig',
     'ancpaccessnoderesults': 'AncpAccessNodeConfig',
-    'eoamlossmeasurementresponserxresults': 'EoamMaintenancePointConfig',
     'igmpportresults': 'IgmpPortConfig',
     'txstreamblockresults': 'StreamBlock',
     'analyzerportresults': 'Analyzer',

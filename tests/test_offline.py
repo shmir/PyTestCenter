@@ -17,6 +17,7 @@ from testcenter import StcObject, StcPort, StcDevice, StcStream
 
 
 def test_hello_world(stc: StcApp) -> None:
+    """ Just make sure the setup is up and running. """
     pass
 
 

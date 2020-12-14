@@ -37,10 +37,9 @@ class StcProject(StcObject):
         super().__init__(parent=parent, objType='project', **data)
 
     def get_ports(self) -> Dict[str, StcPort]:
-        """ Returns all vports. """
+        """ Returns all ports. """
         return {o.name: o for o in self.get_objects_or_children_by_type('Port')}
     ports = property(get_ports)
-
 
     #
     # Port command.
@@ -71,7 +70,6 @@ class StcProject(StcObject):
 
         :param ports: list of ports to wait for, if empty wait for all ports.
         """
-
         for port in self._get_ports(*ports):
             while port.is_running():
                 time.sleep(1)

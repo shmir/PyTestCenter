@@ -6,263 +6,276 @@ Two STC ports connected back to back.
 
 @author yoram@ignissoft.com
 """
+import logging
+from pathlib import Path
+from typing import List
 
-from os import path
-
+from testcenter.stc_app import StcApp
 from testcenter.stc_statistics_view import StcStats
 from testcenter.stc_app import StcSequencerOperation
 
-from .test_base import TestStcBase
+
+def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Get inventory and test some basic info. """
+    logger.info(test_inventory.__doc__.strip())
+
+    chassis = stc.hw.get_chassis(locations[0].split('/')[0])
+    chassis.get_inventory()
+    assert len(chassis.modules) >= 1
+    for module in chassis.modules.values():
+        assert len(module.pgs) >= 1
+        for pg in module.pgs.values():
+            assert len(pg.ports) >= 1
 
 
-class TestStcOnline(TestStcBase):
+def test_online(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Load configuration on ports and verify that ports are online. """
+    logger.info(test_online.__doc__.strip())
 
-    ports = []
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-    def test_inventory(self, api):
-        """ Get inventory and test some basic info. """
-        self.logger.info(TestStcOnline.test_inventory.__doc__.strip())
+    for port in stc.project.ports.values():
+        assert port.is_online()
 
-        chassis = self.stc.hw.get_chassis(self.port1.split('/')[0])
-        chassis.get_inventory()
-        assert len(chassis.modules) >= 1
-        for module in chassis.modules.values():
-            assert len(module.pgs) >= 1
-            for pg in module.pgs.values():
-                assert len(pg.ports) >= 1
+    for port in stc.project.ports.values():
+        port.release()
 
-    def test_online(self, api):
-        """ Load configuration on ports and verify that ports are online. """
-        self.logger.info(TestStcOnline.test_online.__doc__.strip())
+    stc.project.get_object_by_name('Port 1').reserve(wait_for_up=False)
+    stc.project.get_object_by_name('Port 2').reserve(wait_for_up=False)
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self._reserve_ports()
 
-        for port in self.ports:
-            assert(port.is_online())
+def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test ARP commands. """
+    logger.info(test_arp.__doc__.strip())
 
-        for port in self.ports:
-            port.release()
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-        self.stc.project.get_object_by_name('Port 1').reserve(wait_for_up=False)
-        self.stc.project.get_object_by_name('Port 2').reserve(wait_for_up=False)
+    stc.send_arp_ns()
+    for port in stc.project.ports.values():
+        port.send_arp_ns()
+        for device in port.get_children('emulateddevice'):
+            device.send_arp_ns()
+        for sb in port.get_children('streamblock'):
+            sb.send_arp_ns()
 
-        pass
 
-    def test_arp(self, api):
-        """ Test ARP commands. """
-        self.logger.info(TestStcOnline.test_arp.__doc__.strip())
+# If this test fails, consider adding delay between ping commands.
+def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test Ping commands. """
+    logger.info(test_ping.__doc__.strip())
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self._reserve_ports()
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-        self.stc.send_arp_ns()
-        for port in self.ports:
-            port.send_arp_ns()
-            for device in port.get_children('emulateddevice'):
-                device.send_arp_ns()
-            for sb in port.get_children('streamblock'):
-                sb.send_arp_ns()
+    stc.send_arp_ns()
+    for port in stc.project.ports.values():
+        for device in port.get_children('emulateddevice'):
+            gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
+            device.ping(gateway)
 
-    # If this test fails, consider adding delay between ping commands.
-    def test_ping(self, api):
-        """ Test Ping commands. """
-        self.logger.info(TestStcOnline.test_ping.__doc__.strip())
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self._reserve_ports()
+def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test device operations using DHCP emulation. """
+    logger.info(test_devices.__doc__.strip())
 
-        self.stc.send_arp_ns()
-        for port in self.ports:
-            for device in port.get_children('emulateddevice'):
-                gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
-                device.ping(gateway)
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('dhcp_sample.tcc').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-    def test_devices(self, api):
-        """ Test device operations using DHCP emulation. """
-        self.logger.info(TestStcOnline.test_devices.__doc__.strip())
+    # Retrieve DHCP servers and clients from configuration file.
+    for port in stc.project.ports.values():
+        for emulated_device in port.devices.values():
+            emulated_device.get_children()
+    dhcp_clients = stc.project.ports['Port 1'].get_objects_with_object('emulateddevice', 'ipv4if')
+    dhcp_server_device = stc.project.ports['Port 2'].get_object_by_name('DHCP Server')
+    dhcp_server = dhcp_server_device.get_child('dhcpv4serverconfig')
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/dhcp_sample.tcc'))
+    # Start server and clients by starting the devices.
+    dhcp_server_device.start()
+    assert dhcp_server.get_attribute('ServerState') == 'UP'
+    for dhcp_client_device in dhcp_clients:
+        dhcp_client_device.start(wait_after=16)
+        dhcp_client = dhcp_client_device.get_child('dhcpv4blockconfig')
+        assert dhcp_client.get_attribute('BlockState') == 'BOUND'
 
-        self._reserve_ports()
+    # Stop server by stopping the server itself.
+    dhcp_server.command('Dhcpv4StopServer')
+    assert dhcp_server.get_attribute('ServerState') == 'NONE'
+    for dhcp_client_device in dhcp_clients:
+        dhcp_client_device.stop()
+        dhcp_client = dhcp_client_device.get_child('dhcpv4blockconfig')
+        assert dhcp_client.get_attribute('BlockState') == 'IDLE'
 
-        # Retrieve DHCP servers and clients from configuration file.
-        for port in self.ports:
-            for emulateddevice in port.get_children_by_type('emulateddevice'):
-                emulateddevice.get_children()
-        dhcp_clients = self.ports[0].get_objects_with_object('emulateddevice', 'ipv4if')
-        dhcp_server_device = self.ports[1].get_object_by_name('DHCP Server')
-        dhcp_server = dhcp_server_device.get_child('dhcpv4serverconfig')
+    stc.start_devices()
+    assert dhcp_server.get_attribute('ServerState') == 'UP'
 
-        # Start server and clients by starting the devices.
-        dhcp_server_device.start()
-        assert(dhcp_server.get_attribute('ServerState') == 'UP')
-        for dhcp_client_device in dhcp_clients:
-            dhcp_client_device.start(wait_after=16)
-            dhcp_client = dhcp_client_device.get_child('dhcpv4blockconfig')
-            assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
+    stc.stop_devices()
+    assert dhcp_server.get_attribute('ServerState') == 'NONE'
 
-        # Stop server by stopping the server itself.
-        dhcp_server.command('Dhcpv4StopServer')
-        assert(dhcp_server.get_attribute('ServerState') == 'NONE')
-        for dhcp_client_device in dhcp_clients:
-            dhcp_client_device.stop()
-            dhcp_client = dhcp_client_device.get_child('dhcpv4blockconfig')
-            assert(dhcp_client.get_attribute('BlockState') == 'IDLE')
+    dhcp_server_device.command_emulations('Dhcpv4StartServer')
+    assert dhcp_server.get_attribute('ServerState') == 'UP'
 
-        self.stc.start_devices()
-        assert(dhcp_server.get_attribute('ServerState') == 'UP')
+    # Test get_emulations and start_emulations.
+    dhcp_clients = stc.project.get_emulations('dhcpv4blockconfig')
+    stc.project.start_emulations(dhcp_clients, wait_after=8)
+    for dhcp_client in dhcp_clients:
+        assert dhcp_client.get_attribute('BlockState') == 'BOUND'
 
-        self.stc.stop_devices()
-        assert(dhcp_server.get_attribute('ServerState') == 'NONE')
 
-        dhcp_server_device.command_emulations('Dhcpv4StartServer')
-        assert(dhcp_server.get_attribute('ServerState') == 'UP')
+def test_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test traffic and counters. """
+    logger.info(test_port_traffic.__doc__.strip())
 
-        # Test get_emulations and start_emulations.
-        dhcp_clients = self.stc.project.get_emulations('dhcpv4blockconfig')
-        self.stc.project.start_emulations(dhcp_clients, wait_after=8)
-        for dhcp_client in dhcp_clients:
-            assert(dhcp_client.get_attribute('BlockState') == 'BOUND')
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-    def test_port_traffic(self, api):
-        """ Test traffic and counters. """
-        self.logger.info(TestStcOnline.test_port_traffic.__doc__.strip())
+    gen_stats = StcStats('GeneratorPortResults')
+    analyzer_stats = StcStats('analyzerportresults')
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self._reserve_ports()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
-        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
+    stc.project.ports['Port 1'].start()
+    stc.project.ports['Port 1'].stop()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-        assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-               analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+    stc.project.ports['Port 1'].clear_results()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') != 0
+    stc.project.ports['Port 2'].clear_results()
+    analyzer_stats.read_stats()
+    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
 
-        self.ports[0].start()
-        self.ports[0].stop()
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-               analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+    stc.start_traffic(blocking=True)
+    stc.stop_traffic()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert (gen_stats.get_counter('Port 2', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
 
-        self.ports[0].clear_results()
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-        assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') != 0)
-        self.ports[1].clear_results()
-        analyzer_stats.read_stats()
-        assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
+    stc.clear_results()
+    gen_stats.read_stats('GeneratorFrameCount')
+    analyzer_stats.read_stats('SigFrameCount')
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
 
-        self.stc.start_traffic(blocking=True)
-        self.stc.stop_traffic()
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 2', 'GeneratorFrameCount') ==
-               analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
 
-        self.stc.clear_results()
-        gen_stats.read_stats('GeneratorFrameCount')
-        analyzer_stats.read_stats('SigFrameCount')
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-        assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
+def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test Sequencer commands. """
+    logger.info(test_sequencer.__doc__.strip())
 
-    def test_sequencer(self, api):
-        """ Test Sequencer commands. """
-        self.logger.info(TestStcOnline.test_sequencer.__doc__.strip())
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_sequencer.tcc').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_sequencer.tcc'))
-        self._reserve_ports()
+    stc.sequencer_command(StcSequencerOperation.start)
+    stc.sequencer_command(StcSequencerOperation.wait)
 
-        self.stc.sequencer_command(StcSequencerOperation.start)
-        self.stc.sequencer_command(StcSequencerOperation.wait)
+    gen_stats = StcStats('GeneratorPortResults')
+    analyzer_stats = StcStats('analyzerportresults')
 
-        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
-        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') >= 7900
 
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 8000)
 
-    def test_custom_view(self, api):
-        """ Test custom statistics view. """
-        self.logger.info(TestStcOnline.test_custom_view.__doc__.strip())
+def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test custom statistics view.
 
-        self.stc.load_config(path.join(path.dirname(__file__), 'configs/test_config.tcc'))
-        self._reserve_ports()
-        self.ports[0].start(blocking=True)
+    Need to create proper configuration.
+    """
+    logger.info(test_custom_view.__doc__.strip())
 
-        user_stats = StcStats(self.stc.project, 'UserDynamicResultView')
-        gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_custom_views.tcc').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
 
-        gen_stats.read_stats()
-        print(gen_stats.statistics)
+    stc.project.ports['Port 1'].start(blocking=True)
 
-        user_stats.read_stats()
-        print(user_stats.statistics)
-        print(user_stats.get_stats('Port.GeneratorFrameCount'))
-        print(user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name'))
-        print(user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name'))
+    user_stats = StcStats('UserDynamicResultView')
+    gen_stats = StcStats('GeneratorPortResults')
 
-#         gen_stats = StcStats(self.stc.project, 'GeneratorPortResults')
-#         analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
-#
-#         gen_stats.read_stats()
-#         analyzer_stats.read_stats()
-#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-#         assert(analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0)
-#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-#                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
-#
-#         self.ports[0].start()
-#         self.ports[0].stop()
-#         gen_stats.read_stats()
-#         analyzer_stats.read_stats()
-#         assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-#                analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+    gen_stats.read_stats()
+    print(gen_stats.statistics)
 
-    def test_single_port_traffic(self, api):
-        """ Test traffic and counters in loopback mode. """
-        self.logger.info(TestStcOnline.test_single_port_traffic.__doc__.strip())
+    user_stats.read_stats()
+    print(user_stats.statistics)
+    print(user_stats.get_stats('Port.GeneratorFrameCount'))
+    print(user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name'))
+    print(user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name'))
 
-        self.stc_config_file = path.join(path.dirname(__file__), 'configs/loopback.tcc')
-        self.stc.load_config(self.stc_config_file)
-        self.ports = self.stc.project.get_children('port')
-        self.stc.project.get_object_by_name('Port 1').reserve(self.config.get('STC', 'port1'))
+    gen_stats = StcStats('GeneratorPortResults')
+    analyzer_stats = StcStats('analyzerportresults')
 
-        gen_stats = StcStats(self.stc.project, 'generatorportresults')
-        analyzer_stats = StcStats(self.stc.project, 'analyzerportresults')
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-        assert(analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0)
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-               analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
+    stc.project.ports['Port 1'].start()
+    stc.project.ports['Port 1'].stop()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
-        self.ports[0].start()
-        self.ports[0].stop()
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') != 0)
-        assert(analyzer_stats.get_counter('Port 1', 'SigFrameCount') != 0)
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-               analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
 
-        self.ports[0].clear_results()
-        gen_stats.read_stats()
-        analyzer_stats.read_stats()
-        assert(gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0)
-        assert(analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0)
+def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test traffic and counters in loopback mode.
 
-    def _reserve_ports(self):
-        project = self.stc.project
-        self.ports = project.get_children('port')
-        project.get_object_by_name('Port 1').reserve(self.port1, force=True, wait_for_up=False)
-        project.get_object_by_name('Port 2').reserve(self.port2, force=True, wait_for_up=False)
-        for port in self.ports:
+    This test cannot run on virtual ports.
+    """
+    logger.info(test_single_port_traffic.__doc__.strip())
+
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('loopback.tcc').as_posix())
+    reserve_ports(stc, locations[0:1], wait_for_up=True)
+
+    gen_stats = StcStats('generatorportresults')
+    analyzer_stats = StcStats('analyzerportresults')
+
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
+
+    stc.project.ports['Port 1'].start()
+    stc.project.ports['Port 1'].stop()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') != 0
+    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') != 0
+    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
+            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
+
+    stc.project.ports['Port 1'].clear_results()
+    gen_stats.read_stats()
+    analyzer_stats.read_stats()
+    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
+    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0
+
+
+def reserve_ports(stc: StcApp, locations: List[str], wait_for_up: bool = True) -> None:
+    """ Reserver ports.
+
+    :param stc: STC server.
+    :param locations: Ports locations as chassis/card/port.
+    :param wait_for_up: True - wait for ports to come up (timeout after 80 seconds), False - return immediately.
+    """
+    ports = stc.project.ports.values()
+    for port, location in list(zip(ports, locations)):
+        port.reserve(location, force=False, wait_for_up=False)
+    if wait_for_up:
+        for port in ports:
             port.wait_for_states(40, 'UP')

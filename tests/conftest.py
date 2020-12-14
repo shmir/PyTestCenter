@@ -1,6 +1,7 @@
 
 import logging
 from pathlib import Path
+from typing import List
 
 import pytest
 from _pytest.config.argparsing import Parser
@@ -26,3 +27,9 @@ def stc(logger: logging.Logger, api: ApiType, server_properties: dict):
     stc.connect(lab_server)
     yield stc
     stc.disconnect()
+
+
+@pytest.fixture(scope='session')
+def locations(server_properties: dict) -> List[str]:
+    """ Yields ports locations. """
+    return server_properties['locations']

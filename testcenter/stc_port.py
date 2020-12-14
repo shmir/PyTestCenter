@@ -3,7 +3,6 @@ This module implements classes and utility functions to manage STC port.
 
 :author: yoram@ignissoft.com
 """
-
 import re
 import time
 from typing import Dict, Optional
@@ -59,46 +58,35 @@ class StcPort(StcObject):
             self.activephy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
             self.activephy.get_attributes()
             if wait_for_up:
-                self.wait_for_states(timeout, 'UP', 'DOWN', 'ADMIN_DOWN')
+                self.wait_for_states(timeout, 'UP')
 
-    def wait_for_states(self, timeout=40, *states):
+    def wait_for_states(self, timeout: Optional[int] = 40, *states: str) -> None:
         """ Wait until port reaches requested state(s).
 
-        :param timeout: how long (seconds) to wait for port to come up.
-        :param states: list of requested states.
+        :param timeout: How long (seconds) to wait for port to come up.
+        :param states: List of requested states.
         """
-
         for _ in range(timeout):
-            if self.activephy.get_attribute('LinkStatus') in states:
+            link_state = self.activephy.get_attribute('LinkStatus')
+            if link_state in states:
                 return
             time.sleep(1)
-        raise TgnError('Failed to reserve port, port is {} after {} seconds'.
-                       format(self.activephy.get_attribute('LinkStatus'), timeout))
+        raise TgnError(f'Port failed to reach state {states}, port state is {link_state} after {timeout} seconds')
 
-    def release(self):
+    def release(self) -> None:
         """ Release the physical port reserved for the port. """
-
         if not is_local_host(self.location):
             self.api.perform('ReleasePort', portList=self.obj_ref())
 
-    def is_online(self):
-        """
-        :returns: Port link status.
-                  True - port is up.
-                  False - port is offline.
-        """
-
+    def is_online(self) -> bool:
+        """ Returns port link status. """
         return self.activephy.get_attribute('LinkStatus').lower() == 'up'
 
-    def is_running(self):
-        """
-        :returns: Returns running state of the port.
-                  True -- port is running.
-                  False -- port is not running.
-        """
+    def is_running(self) -> bool:
+        """ Returns running state of the port. """
         return self.generator.get_attribute('state') == 'RUNNING'
 
-    def send_arp_ns(self):
+    def send_arp_ns(self) -> None:
         """ Send ARP/ND for the port. """
         StcObject.send_arp_ns(self)
 

@@ -21,7 +21,6 @@ class StcRestWrapper:
         Add logger to log STC REST commands only.
         This creates a clean REST script that can be used later for debug.
         """
-
         debug_print = True if logger.level == 10 else False
         self.ls = stchttp.StcHttp(server, port, debug_print=debug_print)
         if session_name:
@@ -41,7 +40,6 @@ class StcRestWrapper:
         :param attributes: additional attributes.
         :return: STC object reference.
         """
-
         return self.ls.create(obj_type, under=parent.ref, **attributes)
 
     def delete(self, obj_ref):
@@ -49,7 +47,6 @@ class StcRestWrapper:
 
         :param obj_ref: object handle to delete.
         """
-
         self.ls.delete(obj_ref)
 
     def perform(self, command, **arguments):
@@ -71,7 +68,6 @@ class StcRestWrapper:
         :param attribute: requested attribute. If empty - return values of all object attributes.
         :return: requested value(s) as returned by get command.
         """
-
         output = self.ls.get(obj_ref, attribute)
         return output if type(output) is str else ' '.join(output)
     
@@ -82,7 +78,6 @@ class StcRestWrapper:
         :param attribute: requested attribute.
         :return: requested value as returned by get command.
         """
-
         return self.ls.get(obj_ref, attribute).split()
 
     def config(self, obj_ref, **attributes):
@@ -91,7 +86,6 @@ class StcRestWrapper:
         :param obj_ref: requested object reference.
         :param attributes: dictionary of {attributes: values} to configure.
         """
-
         self.ls.config(obj_ref, attributes)
 
     def subscribe(self, **arguments):
@@ -102,7 +96,6 @@ class StcRestWrapper:
             + additional arguments.
         :return: ResultDataSet handler
         """
-
         return self.perform('ResultsSubscribe', **arguments)['ReturnedDataSet']
 
     def unsubscribe(self, result_data_set):
@@ -110,15 +103,12 @@ class StcRestWrapper:
 
         :param result_data_set: ResultDataSet handler
         """
-
         self.perform('ResultDataSetUnsubscribe', ResultDataSet=result_data_set)
 
     def apply(self):
         """ Sends a test configuration to the Spirent TestCenter chassis. """
-
         self.ls.apply()
 
     def wait(self):
         """ Wait until sequencer is finished. """
-
         self.ls.wait_until_complete()
