@@ -136,6 +136,10 @@ class StcIgmpQuerier(StcClient):
     pass
 
 
+class StcMldHost(StcClient):
+    pass
+
+
 class StcObjWithNetworkBlock(StcObject):
 
     def get_network_block(self):
@@ -162,6 +166,10 @@ class StcIgmpGroup(StcObjWithNetworkBlock):
         return self.get_object_from_attribute('SubscribedGroups-targets').get_object_by_type('ipv4networkblock')
 
 
+class StcMldGroupMembership(StcObjWithNetworkBlock):
+    pass
+
+
 class StcIsisRouterRange(StcObjWithNetworkBlock):
     pass
 
@@ -174,3 +182,7 @@ class StcRsvpTunnel(StcObjWithNetworkBlock):
 
     def get_network_block(self):
         return self.get_objects_or_children_by_type('ipv4networkblock', 'ipv6networkblock')[0]
+
+
+class StcLdpPrefixLsp(StcObjWithNetworkBlock):
+    pass

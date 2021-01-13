@@ -1,10 +1,11 @@
 
 from testcenter.stc_object import StcObject
-from testcenter.stc_device import (StcDevice, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
+from testcenter.stc_device import (StcDevice, StcEmulation, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
                                    StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost, StcIgmpQuerier,
                                    StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
-                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel)
-from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer
+                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel, StcLdpPrefixLsp, StcMldHost,
+                                   StcMldGroupMembership)
+from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer, StcLag
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
@@ -25,12 +26,15 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'igmprouterconfig': StcIgmpQuerier,
                  'igmpgroupmembership': StcIgmpGroup,
                  'ipv4group': StcIpv4Group,
+                 'ipv4prefixlsp': StcLdpPrefixLsp,
                  'ipv6group': StcIpv6Group,
                  'ipv4isisroutesconfig': StcIsisRouterRange,
                  'ipv6isisroutesconfig': StcIsisRouterRange,
                  'isisrouterconfig': StcIsisRouter,
                  'generator': StcGenerator,
                  'groupcollection': StcGroupCollection,
+                 'mldhostconfig': StcMldHost,
+                 'mldgroupmembership': StcMldGroupMembership,
                  'ospfv2routerconfig': StcOspfv2Router,
                  'ospfv3asexternallsablock': StcOspfLsa,
                  'ospfv3interareaprefixlsablk': StcOspfLsa,
