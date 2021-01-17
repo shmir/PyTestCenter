@@ -176,7 +176,7 @@ def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:
 
 def test_stats_no_traffic(logger: logging.Logger, stc: StcApp) -> None:
     """ Get statistics without traffic. """
-    gen_stats = StcStats(stc.project, 'GeneratorPortResults')
+    gen_stats = StcStats('GeneratorPortResults')
     assert not gen_stats.get_all_stats()
     assert not gen_stats.get_stats()
     assert not gen_stats.get_object_stats('Port 1')

@@ -1,6 +1,6 @@
 
 chassis_511 = '192.168.65.24'
-server_511 = '192.168.42.61:8888'
+server_511 = 'localhost:8888'
 
 server_properties = {'windows_511': {'server': server_511,
                                      'locations': [f'{chassis_511}/1/1', f'{chassis_511}/1/2'],

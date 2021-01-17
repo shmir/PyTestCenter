@@ -2,4 +2,4 @@
 future
 stcrestclient==1.8.1
 
-pytrafficgen>3.0.3,<=3.0.4
+pytrafficgen>3.0.3,<=3.1.0

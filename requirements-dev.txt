@@ -9,6 +9,7 @@ tox
 setuptools
 setuptools-scm
 wheel
+twine
 
 # Documentation
 sphinx
