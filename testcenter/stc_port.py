@@ -34,7 +34,7 @@ class StcPort(StcObject):
         return {o.name: o for o in self.get_objects_or_children_by_type('StreamBlock')}
     stream_blocks = property(get_stream_blocks)
 
-    def reserve(self, location=None, force=False, wait_for_up=True, timeout=40):
+    def reserve(self, location=None, force=False, wait_for_up=True, timeout=40) -> None:
         """ Reserve physical port.
 
         :param location: port location in the form ip/slot/port.
@@ -45,7 +45,6 @@ class StcPort(StcObject):
         :todo: seems like reserve takes forever even if port is already owned by the user.
             should test for ownership and take it forcefully only if really needed?
         """
-
         if location:
             self.location = location
             self.set_attributes(location=self.location)

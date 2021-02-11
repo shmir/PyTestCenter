@@ -1,10 +1,11 @@
 """
 Classes and utilities to manage STC statistics views.
 """
-
 from collections import OrderedDict
+from typing import Dict, Optional
 
 from trafficgenerator.tgn_utils import is_false
+from trafficgenerator.tgn_object import TgnObjectsDict
 
 from testcenter.stc_object import StcObject
 
@@ -36,15 +37,16 @@ class StcStats:
             specific config_type.
         """
         super(StcStats, self).__init__()
+        self.rds = None
+        self.statistics = {}
         if view:
             self.subscribe(view)
-        self.statistics = {}
 
     def subscribe(self, view, config_type=None):
         """ Subscribe to statistics view.
 
-        :parama view: statistics view to subscribe to.
-        :parama config_type: configuration type to subscribe to.
+        :param view: statistics view to subscribe to.
+        :param config_type: configuration type to subscribe to.
         """
         if view.lower() in view_2_config_type:
             if not config_type:
@@ -63,12 +65,13 @@ class StcStats:
         """ UnSubscribe from statistics view. """
         StcObject.project.api.unsubscribe(self.rds.obj_ref())
 
-    def read_stats(self, *stats):
+    def read_stats(self, *stats: str):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
+
+        :TODO: add support for user statistics.
 
         :param stats: list of statistics names to read, empty list will read all statistics.
             Relevant for system (not dynamic) result views only.
-        :todo: add support for user statistics.
         """
         self.statistics = {}
         if self.rds.type == 'dynamicresultview':
@@ -76,33 +79,34 @@ class StcStats:
         else:
             self._read_view(*stats)
 
-    def get_all_stats(self, obj_id_stat='topLevelName'):
+    def get_all_stats(self, obj_id_stat: Optional[str] = 'topLevelName') -> TgnObjectsDict:
         """
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
         :returns: all statistics values for all object IDs.
         """
-        all_statistics = OrderedDict()
+        all_statistics = TgnObjectsDict()
         if self.statistics:
             for obj_name in self.statistics[obj_id_stat]:
-                all_statistics[obj_name] = self.get_object_stats(obj_name)
+                all_statistics[StcObject.project.get_object_by_name(obj_name)] = self.get_object_stats(obj_name)
         return all_statistics
 
-    def get_stats(self, row='topLevelName'):
+    def get_stats(self, row: Optional[str] = 'topLevelName'):
         """
+        :TODO: Return a table of <object, value>, not just a list of values.
+
         :param row: requested row (== statistic name)
         :returns: all statistics values for the requested row.
         """
         return self.statistics.get(row, {})
 
-    def get_object_stats(self, obj_id, obj_id_stat='topLevelName'):
+    def get_object_stats(self, obj_id: str, obj_id_stat: Optional[str] = 'topLevelName') -> Dict[str, str]:
         """
         :param obj_id: requested object ID.
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
         :returns: all statistics values for the requested object ID.
         """
-
         obj_statistics = {}
         for counter in self.statistics.keys():
             if self.statistics[counter]:

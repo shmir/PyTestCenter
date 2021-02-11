@@ -128,6 +128,10 @@ class StcRsvpRouter(StcRouter):
     pass
 
 
+class StcLdpRouter(StcRouter):
+    pass
+
+
 class StcIgmpHost(StcClient):
     pass
 

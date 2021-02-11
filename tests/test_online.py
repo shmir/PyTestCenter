@@ -267,7 +267,7 @@ def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: Lis
 
 
 def reserve_ports(stc: StcApp, locations: List[str], wait_for_up: bool = True) -> None:
-    """ Reserver ports.
+    """ Reserve ports.
 
     :param stc: STC server.
     :param locations: Ports locations as chassis/card/port.

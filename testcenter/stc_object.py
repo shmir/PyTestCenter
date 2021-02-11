@@ -34,12 +34,12 @@ class StcObject(TgnObject):
 
     project: Optional[testcenter.StcProject] = None
 
-    def __init__(self, parent: Optional[StcObject], **data: str) -> None:
+    def __init__(self, parent: StcObject, **data: str) -> None:
         if 'objRef' in data:
             data['objType'] = extract_stc_obj_type_from_obj_ref(data['objRef'])
             if not parent and data['objType'] != 'system':
                 self._data['objRef'] = data['objRef']
-                data['parent'] = self.get_object_from_attribute('parent')
+                parent = self.get_object_from_attribute('parent')
         if type(self) == StcObject:
             self.__class__ = self.get_obj_class(data['objType'])
         super().__init__(parent, **data)

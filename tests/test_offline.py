@@ -3,7 +3,6 @@ TestCenter package tests that can run in offline mode.
 
 @author yoram@ignissoft.com
 """
-
 import inspect
 import logging
 from pathlib import Path

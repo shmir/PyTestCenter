@@ -9,7 +9,7 @@ from _pytest.config.argparsing import Parser
 from trafficgenerator.tgn_utils import ApiType
 from trafficgenerator.tgn_conftest import (tgn_pytest_addoption, pytest_generate_tests, logger, api, server,
                                            server_properties)
-from testcenter.stc_app import init_stc
+from testcenter.stc_app import init_stc, StcApp
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -18,7 +18,7 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 @pytest.fixture()
-def stc(logger: logging.Logger, api: ApiType, server_properties: dict):
+def stc(logger: logging.Logger, api: ApiType, server_properties: dict) -> StcApp:
     """ Yields connected STC object. """
     install_dir = server_properties['install_dir']
     reset_server, rest_port = server_properties['server'].split(':')

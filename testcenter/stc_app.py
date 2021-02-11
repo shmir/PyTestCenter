@@ -8,13 +8,12 @@ import logging
 import time
 from enum import Enum
 from os import path
-from typing import Optional
+from typing import Optional, Union
 
 from trafficgenerator.tgn_app import TgnApp
 from trafficgenerator.tgn_utils import ApiType, TgnError
 
 from testcenter import TYPE_2_OBJECT, StcObject, StcProject
-from testcenter.api.stc_python import StcPythonWrapper
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.api.stc_tcl import StcTclWrapper
 
@@ -27,8 +26,8 @@ class StcSequencerOperation(Enum):
     wait = 'waituntilcomplete'
 
 
-def init_stc(api: ApiType, logger: logging.Logger, install_dir: str = Optional[None],
-             rest_server: Optional[None] = None, rest_port: Optional[int] = 80) -> StcApp:
+def init_stc(api: ApiType, logger: logging.Logger, install_dir: Optional[str] = None,
+             rest_server: Optional[str] = None, rest_port: Optional[int] = 80) -> StcApp:
     """ Helper function to create STC object.
 
     This helper supports only new sessions. In order to connect to existing session on Lab server create
@@ -40,7 +39,6 @@ def init_stc(api: ApiType, logger: logging.Logger, install_dir: str = Optional[N
     :param rest_server: rest server address (either stcweb or lab server)
     :param rest_port: rest server port (either stcweb or lab server)
     """
-
     if api == ApiType.tcl:
         stc_api_wrapper = StcTclWrapper(logger, install_dir)
     elif api == ApiType.rest:
@@ -53,7 +51,7 @@ def init_stc(api: ApiType, logger: logging.Logger, install_dir: str = Optional[N
 class StcApp(TgnApp):
     """ TestCenter driver. Equivalent to TestCenter Application. """
 
-    def __init__(self, logger, api_wrapper):
+    def __init__(self, logger: logging.Logger, api_wrapper: Union[StcRestWrapper, StcTclWrapper]) -> None:
         """ Set all kinds of application level objects - logger, api, etc.
 
         :param logger: python logger (e.g. logging.getLogger('log'))
@@ -65,17 +63,18 @@ class StcApp(TgnApp):
         StcObject.logger = self.logger
         StcObject.str_2_class = TYPE_2_OBJECT
 
-        self.system = StcObject(objType='system', objRef='system1', parent=None)
+        self.system = StcObject(parent=None, objType='system', objRef='system1')
         self.system.api = self.api
         self.system.logger = self.logger
-        self.system.project = None
+        self.lab_server = None
+        self.project = None
+        self.hw = None
 
     def connect(self, lab_server=None):
         """ Create object and (optionally) connect to lab server.
 
         :param lab_server: optional lab server address.
         """
-
         self.lab_server = lab_server
         if self.lab_server:
             self.api.perform('CSTestSessionConnect', Host=self.lab_server, CreateNewTestSession=True)
@@ -90,7 +89,6 @@ class StcApp(TgnApp):
 
         :param terminate: True - terminate session, False - leave session on server.
         """
-
         self.reset_config()
         if type(self.api) == StcRestWrapper:
             self.api.disconnect(terminate)

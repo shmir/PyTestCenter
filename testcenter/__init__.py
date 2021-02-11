@@ -1,10 +1,10 @@
 
 from testcenter.stc_object import StcObject
-from testcenter.stc_device import (StcDevice, StcEmulation, StcServer, StcClient, StcBgpRouter, StcBgpRoute, StcPimRouter,
-                                   StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost, StcIgmpQuerier,
-                                   StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter, StcIsisRouterRange,
-                                   StcBfdSession, StcRsvpRouter, StcRsvpTunnel, StcLdpPrefixLsp, StcMldHost,
-                                   StcMldGroupMembership)
+from testcenter.stc_device import (StcDevice, StcEmulation, StcServer, StcClient, StcBgpRouter, StcBgpRoute,
+                                   StcPimRouter, StcPimv4Group, StcOspfv2Router, StcOspfLsa, StcIgmpHost,
+                                   StcIgmpQuerier, StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter,
+                                   StcIsisRouterRange, StcBfdSession, StcRsvpRouter, StcRsvpTunnel, StcLdpPrefixLsp,
+                                   StcMldHost, StcMldGroupMembership, StcLdpRouter)
 from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer, StcLag
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
@@ -33,6 +33,7 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'isisrouterconfig': StcIsisRouter,
                  'generator': StcGenerator,
                  'groupcollection': StcGroupCollection,
+                 'ldprouterconfig': StcLdpRouter,
                  'mldhostconfig': StcMldHost,
                  'mldgroupmembership': StcMldGroupMembership,
                  'ospfv2routerconfig': StcOspfv2Router,
