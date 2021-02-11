@@ -12,7 +12,7 @@ def main():
 
     with open('requirements.txt') as f:
         install_requires = f.read().splitlines()
-    with open('README.rst') as f:
+    with open('README.md') as f:
         long_description = f.read()
 
     setup(
