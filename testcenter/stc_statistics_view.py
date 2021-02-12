@@ -68,8 +68,6 @@ class StcStats:
     def read_stats(self, *stats: str):
         """ Reads the statistics view from STC and saves it in statistics dictionary.
 
-        :TODO: add support for user statistics.
-
         :param stats: list of statistics names to read, empty list will read all statistics.
             Relevant for system (not dynamic) result views only.
         """
@@ -101,11 +99,11 @@ class StcStats:
         return self.statistics.get(row, {})
 
     def get_object_stats(self, obj_id: str, obj_id_stat: Optional[str] = 'topLevelName') -> Dict[str, str]:
-        """
+        """ Get all statistics values for the requested object ID.
+
         :param obj_id: requested object ID.
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
-        :returns: all statistics values for the requested object ID.
         """
         obj_statistics = {}
         for counter in self.statistics.keys():
@@ -126,13 +124,13 @@ class StcStats:
         obj_index = self.statistics[obj_id_stat].index(obj_id)
         return self.statistics[counter][obj_index]
 
-    def get_counter(self, obj_id, counter, obj_id_stat='topLevelName'):
-        """
+    def get_counter(self, obj_id, counter, obj_id_stat='topLevelName') -> int:
+        """ Get the int value of the requested counter for the requested object ID.
+
         :param obj_id: requested object ID.
         :param counter: requested statistics (note that some statistics are not counters).
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
-        :returns: the int value of the requested counter for the requested object ID.
         """
         return int(self.get_stat(obj_id, counter, obj_id_stat))
 

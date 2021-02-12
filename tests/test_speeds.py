@@ -1,9 +1,6 @@
 """
-Base class for all STC package tests.
-
-@author yoram@ignissoft.com
+Sandbox to test that we can extract port speed from all spirent modules.
 """
-
 import unittest
 import itertools
 import re
@@ -37,14 +34,14 @@ class StcSpeeds(unittest.TestCase):
 
     def testRegExp(self):
         # Take a look at https://regex101.com/ to see how the reg exp work on above samples.
-        self.speeds_pattern = re.compile('([\dGM]*[\/].*? )|(\d+[GM])')
-        self.num_pattern = re.compile('\d+[\.]?\d*')
-        for descriptin, expected in descriptions.items():
-            assert(set(self._extract_speeds(descriptin)) == set(expected))
+        self.speeds_pattern = re.compile(r'([\dGM]*[/].*? )|(\d+[GM])')
+        self.num_pattern = re.compile(r'\d+[.]?\d*')
+        for description, expected in descriptions.items():
+            assert(set(self._extract_speeds(description)) == set(expected))
 
-    def _extract_speeds(self, descriptin):
+    def _extract_speeds(self, description):
         speeds = []
-        groups = self.speeds_pattern.findall(descriptin)
+        groups = self.speeds_pattern.findall(description)
         speeds_strings_list = list(filter(None, list(itertools.chain.from_iterable(groups))))
         for speeds_string in speeds_strings_list:
             for speed_string in speeds_string.strip().split('/'):

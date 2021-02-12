@@ -105,7 +105,6 @@ class StcTclWrapper(TgnTclWrapper):
             + additional arguments.
         :return: ResultDataSet handler
         """
-
         return self.stc_command('subscribe', get_args_pairs(arguments))
 
     def unsubscribe(self, result_data_set):
@@ -113,7 +112,6 @@ class StcTclWrapper(TgnTclWrapper):
 
         :param result_data_set: ResultDataSet handler
         """
-
         self.stc_command('unsubscribe', result_data_set)
 
     def wait(self):

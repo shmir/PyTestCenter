@@ -6,6 +6,7 @@ Two STC ports connected back to back.
 
 @author yoram@ignissoft.com
 """
+import json
 import logging
 from pathlib import Path
 from typing import List
@@ -195,39 +196,21 @@ def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) 
     """
     logger.info(test_custom_view.__doc__.strip())
 
-    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_custom_views.tcc').as_posix())
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
     reserve_ports(stc, locations, wait_for_up=True)
 
     stc.project.ports['Port 1'].start(blocking=True)
 
-    user_stats = StcStats('UserDynamicResultView')
     gen_stats = StcStats('GeneratorPortResults')
-
     gen_stats.read_stats()
-    print(gen_stats.statistics)
+    print(gen_stats.get_all_stats().dumps(indent=2))
 
+    user_stats = StcStats('MyCustomView')
     user_stats.read_stats()
-    print(user_stats.statistics)
+    print(json.dumps(user_stats.statistics, indent=2))
     print(user_stats.get_stats('Port.GeneratorFrameCount'))
     print(user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name'))
     print(user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name'))
-
-    gen_stats = StcStats('GeneratorPortResults')
-    analyzer_stats = StcStats('analyzerportresults')
-
-    gen_stats.read_stats()
-    analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
-
-    stc.project.ports['Port 1'].start()
-    stc.project.ports['Port 1'].stop()
-    gen_stats.read_stats()
-    analyzer_stats.read_stats()
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
 
 
 def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
