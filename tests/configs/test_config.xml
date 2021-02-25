@@ -3079,22 +3079,23 @@ Analyzer.DataSetId = @DataSetId  ) "
      Active="TRUE"
      LocalActive="TRUE"
      Name="Perspective 1">
-      <PerspectiveNode id="6838" 
+      <PerspectiveNode id="6935" 
        Guid="8CF0ABC3-9F7C-46bd-A22E-00D88A8376D3"
        Data="&lt;NodeData Name=&quot;resultFrame.1&quot;
 FrameId=&quot;8CF0ABC3-9F7C-46bd-A22E-00D88A8376D3&quot;
 Active=&quot;true&quot; RowCount=&quot;1&quot; ColumnCount=&quot;2&quot; /&gt;"
        ContentData="&lt;ContentData&gt;&lt;NodeContentData
-FrameName=&quot;frame://core/DynamicResultView/ResultQuery:(1, 0, 0)&quot;
-ResultDataSetId=&quot;9961d82a-f690-4529-b1bf-b7d5dea7123c&quot;
+FrameName=&quot;frame://l2l3/TxStreamResults/ResultQuery:(1, 0, 0)&quot;
+ResultDataSetId=&quot;Stream Results\Detailed Stream Results&quot;
 Column=&quot;0&quot; Row=&quot;0&quot; DockPanelNumber=&quot;1&quot;
 /&gt;&lt;/ContentData&gt;&#xD;&#xA;"
        Active="TRUE"
        LocalActive="TRUE"
-       Name="PerspectiveNode 21">
-        <Relation type="PerspectiveChild" target="11301"/>
+       Name="PerspectiveNode 25">
+        <Relation type="PerspectiveChild" target="10625"/>
+        <Relation type="PerspectiveChild" target="11465"/>
       </PerspectiveNode>
-      <PerspectiveNode id="6840" 
+      <PerspectiveNode id="6937" 
        Guid="1F412EE6-760C-4937-9644-ACFA463EA44E"
        Data="&lt;NodeData Name=&quot;resultFrame.2&quot;
 FrameId=&quot;1F412EE6-760C-4937-9644-ACFA463EA44E&quot;
@@ -3102,8 +3103,9 @@ Active=&quot;false&quot; RowCount=&quot;1&quot; ColumnCount=&quot;2&quot; /&gt;"
        ContentData="&lt;ContentData /&gt;&#xD;&#xA;"
        Active="TRUE"
        LocalActive="TRUE"
-       Name="PerspectiveNode 22">
-        <Relation type="PerspectiveChild" target="11301"/>
+       Name="PerspectiveNode 26">
+        <Relation type="PerspectiveChild" target="10625"/>
+        <Relation type="PerspectiveChild" target="11465"/>
       </PerspectiveNode>
     </Perspective>
     <DynamicResultView id="10782" 
@@ -4277,11 +4279,13 @@ Channel,SyncE,Dhcpv4,Dhcpv6,IgmpMld,AppPerf,Cifs,Http,RawTcp,Sip,Video,XMPPvJ,CS
        FrameConfig="&lt;frame&gt;&lt;config&gt;&lt;pdus&gt;&lt;pdu
 name=&quot;ipv4_4872&quot;
 pdu=&quot;ipv4:IPv4&quot;&gt;&lt;totalLength&gt;20&lt;/totalLength&gt;&lt;ttl&gt;255&lt;/ttl&gt;&lt;checksum&gt;46632&lt;/checksum&gt;&lt;sourceAddr&gt;1.1.1.1&lt;/sourceAddr&gt;&lt;destAddr&gt;1.1.1.2&lt;/destAddr&gt;&lt;prefixLength&gt;24&lt;/prefixLength&gt;&lt;destPrefixLength&gt;24&lt;/destPrefixLength&gt;&lt;gateway&gt;1.1.1.2&lt;/gateway&gt;&lt;tosDiffserv
-name=&quot;anon_11446&quot;&gt;&lt;tos
-name=&quot;anon_11447&quot;&gt;&lt;precedence&gt;6&lt;/precedence&gt;&lt;dBit&gt;0&lt;/dBit&gt;&lt;tBit&gt;0&lt;/tBit&gt;&lt;rBit&gt;0&lt;/rBit&gt;&lt;mBit&gt;0&lt;/mBit&gt;&lt;reserved&gt;0&lt;/reserved&gt;&lt;/tos&gt;&lt;/tosDiffserv&gt;&lt;/pdu&gt;&lt;/pdus&gt;&lt;/config&gt;&lt;/frame&gt;"
+name=&quot;anon_11613&quot;&gt;&lt;tos
+name=&quot;anon_11614&quot;&gt;&lt;precedence&gt;6&lt;/precedence&gt;&lt;dBit&gt;0&lt;/dBit&gt;&lt;tBit&gt;0&lt;/tBit&gt;&lt;rBit&gt;0&lt;/rBit&gt;&lt;mBit&gt;0&lt;/mBit&gt;&lt;reserved&gt;0&lt;/reserved&gt;&lt;/tos&gt;&lt;/tosDiffserv&gt;&lt;/pdu&gt;&lt;/pdus&gt;&lt;/config&gt;&lt;/frame&gt;"
        Active="TRUE"
        LocalActive="TRUE"
        Name="Bound SB">
+        <Relation type="ResultChild" target="11673"/>
+        <Relation type="ResultChild" target="11675"/>
         <Relation type="SrcBinding" target="11284"/>
         <Relation type="DstBinding" target="11287"/>
         <Relation type="AffiliationFrameLengthDistribution" target="10590"/>
@@ -6712,11 +6716,13 @@ name=&quot;eth1&quot; pdu=&quot;ethernet:EthernetII&quot;&gt;&lt;preamble
 minByteLength=&quot;8&quot;
 &gt;fb555555555555d5&lt;/preamble&gt;&lt;/pdu&gt;&lt;pdu name=&quot;ip_1&quot;
 pdu=&quot;ipv4:IPv4&quot;&gt;&lt;tosDiffserv
-name=&quot;anon_11436&quot;&gt;&lt;tos
-name=&quot;anon_11437&quot;&gt;&lt;/tos&gt;&lt;/tosDiffserv&gt;&lt;/pdu&gt;&lt;/pdus&gt;&lt;/config&gt;&lt;/frame&gt;"
+name=&quot;anon_11608&quot;&gt;&lt;tos
+name=&quot;anon_11609&quot;&gt;&lt;/tos&gt;&lt;/tosDiffserv&gt;&lt;/pdu&gt;&lt;/pdus&gt;&lt;/config&gt;&lt;/frame&gt;"
        Active="TRUE"
        LocalActive="TRUE"
        Name="Raw SB">
+        <Relation type="ResultChild" target="11674"/>
+        <Relation type="ResultChild" target="11676"/>
         <Relation type="AffiliationFrameLengthDistribution" target="10590"/>
         <Relation type="AffiliationStreamBlockLoadProfile" target="11290"/>
       </StreamBlock>
@@ -8384,10 +8390,1243 @@ FALSE"
      LocalActive="TRUE"
      Name="OamFlexeGlobalConfig 4">
     </OamFlexeGlobalConfig>
-    <DynamicResultView id="11301" 
+    <ResultDataSet id="11465" 
+     PrimaryClass="TxStreamResults"
+     InternalXmlFormatString=""
+     ResultFilterMode="1"
+     ResultViewDataOutput="FALSE"
+     PageNumber="1"
+     RecordsPerPage="25"
+     NotifyInterval="1000"
+     Identifier="Stream Results\Detailed Stream Results"
+     Persistent="TRUE"
+     CreatorId=""
+     IsDeprecated="FALSE"
+     Path="Stream Results"
+     ResultViewOwner="SYSTEM"
+     Description="object://l2l3/TxStreamResults"
+     CustomDisplayName=""
+     CustomDisplayPath="Streams"
+     Active="TRUE"
+     LocalActive="TRUE"
+     Name="Detailed Stream Results">
+      <Relation type="ResultChild" target="11673"/>
+      <Relation type="ResultChild" target="11674"/>
+      <Relation type="ResultChild" target="11675"/>
+      <Relation type="ResultChild" target="11676"/>
+      <RealTimeResultGroupDefinition id="11466" 
+       GroupName="All Groups"
+       GroupId="core://allgroups/"
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="StreamInfo"
+       CountQuery=""
+       SqlString=""
+       UseCustomSqlString="FALSE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 11">
+      </RealTimeResultGroupDefinition>
+      <RealTimeResultGroupDefinition id="11467" 
+       GroupName="Basic Counters"
+       GroupId="object://customgroup/a7d38eca-b341-4d2f-9c5b-400e46180add/Basic
+Counters"
+       ColumnClassName="Port RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults TxStreamResults RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults TxStreamResults RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults TxStreamResults RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+TxStreamResults"
+       ColumnPropertyName="Name PortUiName AggregatedRxPortCount
+PortStrayFrames FrameCount FrameCount BitRate BitRate BitCount BitCount
+L1BitCount L1BitCount L1BitRate L1BitRate FrameRate FrameRate SigFrameCount
+SigFrameRate ShortTermAvgLatency AvgLatency MinLatency MaxLatency
+ShortTermAvgJitter AvgJitter MinJitter MaxJitter ShortTermAvgInterarrivalTime
+AvgInterarrivalTime MinInterarrivalTime MaxInterarrivalTime
+ExpectedRxFrameCount"
+       CountQuery="select count(*) from (select TxStreamId from
+TxRxEotStreamResults group by DataSetId, TxStreamId)"
+       SqlString="select TxPortName as &apos;Tx Port&apos;,
+group_concat(distinct ActualRxPortName) as &apos;Rx Port&apos;,
+TxStreamBlockName as &apos;Stream Block&apos;, TxStreamId as &apos;Stream
+Id&apos;, TxStreamIndex as &apos;Stream Index&apos;, (case when
+MIN(coalesce(IsExpectedPort,1)) = 0 then &apos;YES&apos; else &apos;NO&apos;
+end) as &apos;Port Stray Frames&apos;, TxFrameCount as &apos;Tx Count
+(Frames)&apos;, coalesce(sum(FrameCount), 0) as &apos;Rx Count (Frames)&apos;,
+coalesce(sum(SigFrameCount), 0) as &apos;Sig Count (Frames)&apos;,
+(TxOctetCount * 8) as &apos;Tx Count (bits)&apos;, coalesce(sum(OctetCount *
+8), 0) as &apos;Rx Count (bits)&apos;, TxL1BitCount as &apos;Tx L1 Count
+(bits)&apos;, coalesce(sum(L1BitCount), 0) as &apos;Rx L1 Count (bits)&apos;,
+coalesce(round(sum(TotalLatency) / 100.0 / sum(SigFrameCount), 3),
+&apos;&apos;) as &apos;Avg Latency (us)&apos;, coalesce(min(MinLatency), 0.0)
+as &apos;Min Latency (us)&apos;, coalesce(max(MaxLatency), 0.0) as &apos;Max
+Latency (us)&apos;, (case when (sum(TotalJitter) &lt; 0.001 and
+coalesce(avg(AvgJitter), 0) &gt; 0) then round(avg(AvgJitter), 3) when
+((InJitterModeRfc3393 and ModInSeqFrameCount &lt; 1) or (not
+InJitterModeRfc3393 and ModSigFrameCount &lt; 1)) then &apos;&apos; when
+(InJitterModeRfc3393) then coalesce(round(sum(TotalJitter) / 100.0 /
+sum(ModInSeqFrameCount), 3), &apos;&apos;) else coalesce(round(sum(TotalJitter)
+/ 100.0 / sum(ModSigFrameCount), 3), &apos;&apos;) end) as &apos;Avg Jitter
+(us)&apos;, coalesce(min(MinJitter), 0.0) as &apos;Min Jitter (us)&apos;,
+coalesce(max(MaxJitter), 0.0) as &apos;Max Jitter (us)&apos;,
+coalesce(round(sum(TotalInterarrivalTime) / 100.0 / sum(ModFrameCount), 3),
+&apos;&apos;) as &apos;Avg Inter-arrival Time (us)&apos;,
+coalesce(min(MinInterarrivalTime), 0.0) as &apos;Min Inter-arrival Time
+(us)&apos;, coalesce(max(MaxInterarrivalTime), 0.0) as &apos;Max Inter-arrival
+Time (us)&apos;, TxCellCount as &apos;Tx Count (Cells)&apos;,
+coalesce(sum(CellCount), 0) as &apos;Rx Count (Cells)&apos; from
+TxRxEotStreamResults where isExpectedPort=1 group by DataSetId, TxStreamId"
+       UseCustomSqlString="TRUE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 12">
+      </RealTimeResultGroupDefinition>
+      <ResultQuery id="11468" 
+       ConfigClassId="streamblock"
+       ResultClassId="rxstreamsummaryresults"
+       ResultRootList="2"
+       PropertyIdArray="rxbasicresults.framecount rxbasicresults.sigframecount
+rxbasicresults.fcserrorframecount rxbasicresults.minlatency
+rxbasicresults.maxlatency rxbasicresults.droppedframecount
+rxbasicresults.droppedframepercent rxbasicresults.inorderframecount
+rxbasicresults.reorderedframecount rxbasicresults.duplicateframecount
+rxbasicresults.lateframecount rxbasicresults.prbsbiterrorcount
+rxbasicresults.prbsfilloctetcount rxbasicresults.ipv4checksumerrorcount
+rxbasicresults.tcpudpchecksumerrorcount rxbasicresults.framerate
+rxbasicresults.sigframerate rxbasicresults.fcserrorframerate
+rxbasicresults.droppedframerate rxbasicresults.droppedframepercentrate
+rxbasicresults.inorderframerate rxbasicresults.reorderedframerate
+rxbasicresults.duplicateframerate rxbasicresults.lateframerate
+rxbasicresults.prbsbiterrorrate rxbasicresults.prbsfilloctetrate
+rxbasicresults.ipv4checksumerrorrate rxbasicresults.tcpudpchecksumerrorrate
+rxbasicresults.bitrate rxbasicresults.shorttermavglatency
+rxbasicresults.avglatency rxbasicresults.prbsbiterrorratio
+rxbasicresults.l1bitcount rxbasicresults.l1bitrate
+rxbasicresults.prbserrorframecount rxbasicresults.prbserrorframerate
+rxstreamsummaryresults.aggregatedrxportcount rxbasicresults.portstrayframes
+rxbasicresults.bitcount rxbasicresults.shorttermavgjitter
+rxbasicresults.avgjitter rxbasicresults.minjitter rxbasicresults.maxjitter
+rxbasicresults.shorttermavginterarrivaltime rxbasicresults.avginterarrivaltime
+rxbasicresults.mininterarrivaltime rxbasicresults.maxinterarrivaltime
+rxbasicresults.inseqframecount rxbasicresults.outseqframecount
+rxbasicresults.inseqframerate rxbasicresults.outseqframerate
+rxbasicresults.histbin1count rxbasicresults.histbin2count
+rxbasicresults.histbin3count rxbasicresults.histbin4count
+rxbasicresults.histbin5count rxbasicresults.histbin6count
+rxbasicresults.histbin7count rxbasicresults.histbin8count
+rxbasicresults.histbin9count rxbasicresults.histbin10count
+rxbasicresults.histbin11count rxbasicresults.histbin12count
+rxbasicresults.histbin13count rxbasicresults.histbin14count
+rxbasicresults.histbin15count rxbasicresults.histbin16count"
+       PropertyHandleArray=""
+       ResultOptions="Basic"
+       ArchivingOption="NONE"
+       InternalCookie=""
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ResultQuery 6">
+        <Relation type="ResultFilters" target="6851"/>
+      </ResultQuery>
+      <ResultQuery id="11469" 
+       ConfigClassId="streamblock"
+       ResultClassId="txstreamresults"
+       ResultRootList="2"
+       PropertyIdArray="txbasicresults.framecount txbasicresults.framerate
+txbasicresults.bitrate txstreamresults.expectedrxframecount
+txbasicresults.l1bitcount txbasicresults.l1bitrate txstreamresults.streaminfo
+txbasicresults.bitcount"
+       PropertyHandleArray=""
+       ResultOptions="Basic"
+       ArchivingOption="NONE"
+       InternalCookie=""
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ResultQuery 7">
+      </ResultQuery>
+      <RealTimeResultColumnDefinition id="11470" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="StreamInfo"
+       ColumnDescription=""
+       ColumnWidth="74"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 119">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11471" 
+       ColumnClassName="Port"
+       ColumnPropertyName="Name"
+       ColumnDescription=""
+       ColumnWidth="85"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 120">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11472" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PortUiName"
+       ColumnDescription=""
+       ColumnWidth="65"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 121">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11473" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="AggregatedRxPortCount"
+       ColumnDescription=""
+       ColumnWidth="85"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 122">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11474" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PortStrayFrames"
+       ColumnDescription=""
+       ColumnWidth="75"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 123">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11475" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="FrameCount"
+       ColumnDescription=""
+       ColumnWidth="97"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 124">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11476" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="FrameCount"
+       ColumnDescription=""
+       ColumnWidth="97"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 125">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11477" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="BitRate"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="5"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 126">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11478" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="BitRate"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="5"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 127">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11479" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="BitCount"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="1"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 128">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11480" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="BitCount"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="1"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 129">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11481" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="L1BitCount"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="1"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 130">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11482" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="L1BitCount"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="1"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 131">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11483" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="L1BitRate"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="5"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 132">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11484" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="L1BitRate"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="5"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 133">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11485" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="FrameRate"
+       ColumnDescription=""
+       ColumnWidth="90"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 134">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11486" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="FrameRate"
+       ColumnDescription=""
+       ColumnWidth="91"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 247">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11487" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="SigFrameCount"
+       ColumnDescription=""
+       ColumnWidth="116"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 248">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11488" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="SigFrameRate"
+       ColumnDescription=""
+       ColumnWidth="109"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 249">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11489" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="ShortTermAvgLatency"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="9"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 250">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11490" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="AvgLatency"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="9"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 247">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11491" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MinLatency"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="9"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 248">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11492" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MaxLatency"
+       ColumnDescription=""
+       ColumnWidth="103"
+       ColumnUnits="9"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 249">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11493" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="ShortTermAvgJitter"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 250">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11494" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="AvgJitter"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 135">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11495" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MinJitter"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 136">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11496" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MaxJitter"
+       ColumnDescription=""
+       ColumnWidth="103"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 137">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11497" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="ShortTermAvgInterarrivalTime"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 138">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11498" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="AvgInterarrivalTime"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 139">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11499" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MinInterarrivalTime"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 140">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11500" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="MaxInterarrivalTime"
+       ColumnDescription=""
+       ColumnWidth="103"
+       ColumnUnits="22"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 141">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11501" 
+       ColumnClassName="TxStreamResults"
+       ColumnPropertyName="ExpectedRxFrameCount"
+       ColumnDescription=""
+       ColumnWidth="85"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 143">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11502" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="Ipv4ChecksumErrorCount"
+       ColumnDescription=""
+       ColumnWidth="171"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 144">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11503" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="TcpUdpChecksumErrorCount"
+       ColumnDescription=""
+       ColumnWidth="194"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 145">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11504" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsBitErrorCount"
+       ColumnDescription=""
+       ColumnWidth="121"
+       ColumnUnits="1"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 146">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11505" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsFillOctetCount"
+       ColumnDescription=""
+       ColumnWidth="123"
+       ColumnUnits="12"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 148">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11506" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsBitErrorRatio"
+       ColumnDescription=""
+       ColumnWidth="100"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 149">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11507" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="FcsErrorFrameCount"
+       ColumnDescription=""
+       ColumnWidth="148"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 150">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11508" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="Ipv4ChecksumErrorRate"
+       ColumnDescription=""
+       ColumnWidth="164"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 151">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11509" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="TcpUdpChecksumErrorRate"
+       ColumnDescription=""
+       ColumnWidth="187"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 152">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11510" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsBitErrorRate"
+       ColumnDescription=""
+       ColumnWidth="130"
+       ColumnUnits="5"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 153">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11511" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsFillOctetRate"
+       ColumnDescription=""
+       ColumnWidth="117"
+       ColumnUnits="18"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 154">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11512" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="FcsErrorFrameRate"
+       ColumnDescription=""
+       ColumnWidth="141"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 155">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11513" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsErrorFrameCount"
+       ColumnDescription=""
+       ColumnWidth="0"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 156">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11514" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="PrbsErrorFrameRate"
+       ColumnDescription=""
+       ColumnWidth="0"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 157">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11515" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="InSeqFrameCount"
+       ColumnDescription=""
+       ColumnWidth="147"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 158">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11516" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="OutSeqFrameCount"
+       ColumnDescription=""
+       ColumnWidth="170"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 159">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11517" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="InSeqFrameRate"
+       ColumnDescription=""
+       ColumnWidth="140"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 160">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11518" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="OutSeqFrameRate"
+       ColumnDescription=""
+       ColumnWidth="161"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 161">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11519" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DroppedFrameCount"
+       ColumnDescription=""
+       ColumnWidth="127"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 162">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11520" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DroppedFramePercent"
+       ColumnDescription=""
+       ColumnWidth="125"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 163">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11521" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="InOrderFrameCount"
+       ColumnDescription=""
+       ColumnWidth="126"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 164">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11522" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="ReorderedFrameCount"
+       ColumnDescription=""
+       ColumnWidth="136"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 165">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11523" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DuplicateFrameCount"
+       ColumnDescription=""
+       ColumnWidth="131"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 166">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11524" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="LateFrameCount"
+       ColumnDescription=""
+       ColumnWidth="106"
+       ColumnUnits="16"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 167">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11525" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DroppedFrameRate"
+       ColumnDescription=""
+       ColumnWidth="121"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 168">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11526" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DroppedFramePercentRate"
+       ColumnDescription=""
+       ColumnWidth="85"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 169">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11527" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="InOrderFrameRate"
+       ColumnDescription=""
+       ColumnWidth="119"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 170">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11528" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="ReorderedFrameRate"
+       ColumnDescription=""
+       ColumnWidth="130"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 171">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11529" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="DuplicateFrameRate"
+       ColumnDescription=""
+       ColumnWidth="124"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 172">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11530" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="LateFrameRate"
+       ColumnDescription=""
+       ColumnWidth="99"
+       ColumnUnits="17"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 173">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11531" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin1Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 174">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11532" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin2Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 175">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11533" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin3Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 176">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultGroupDefinition id="11534" 
+       GroupName="Errors"
+       GroupId="object://customgroup/1334ba8f-a144-4069-8cb7-11633334149f/Errors"
+       ColumnClassName="Port RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults"
+       ColumnPropertyName="Name PortUiName FrameCount FrameCount
+Ipv4ChecksumErrorCount TcpUdpChecksumErrorCount PrbsBitErrorCount
+PrbsFillOctetCount PrbsBitErrorRatio FcsErrorFrameCount Ipv4ChecksumErrorRate
+TcpUdpChecksumErrorRate PrbsBitErrorRate PrbsFillOctetRate FcsErrorFrameRate
+PrbsErrorFrameCount PrbsErrorFrameRate"
+       CountQuery="select count(*) from (select TxStreamId from
+TxRxEotStreamResults group by DataSetId, TxStreamId)"
+       SqlString="select TxPortName as &apos;Tx Port&apos;,
+group_concat(distinct ActualRxPortName) as &apos;Rx Port&apos;,
+TxStreamBlockName as &apos;Stream Block&apos;, TxStreamId as &apos;Stream
+Id&apos;, TxStreamIndex as &apos;Stream Index&apos;, TxFrameCount as &apos;Tx
+Count (Frames)&apos;,  coalesce(sum(FrameCount), 0) as &apos;Rx Count
+(Frames)&apos;, coalesce(sum(Ipv4ChecksumErrorCount), 0) as &apos;Rx IPv4
+Checksum Error Count&apos;, coalesce(sum(TcpUdpChecksumErrorCount), 0) as
+&apos;Rx TCP/UDP Checksum Error Count&apos;, coalesce(sum(PrbsBitErrorCount),
+0) as &apos;PRBS Bit Error Count&apos;, coalesce(sum(PrbsFillOctetCount), 0) as
+&apos;PRBS Fill Octet Count&apos;, coalesce(round(cast(sum(PrbsBitErrorCount)
+as double)/(sum(PrbsFillOctetCount)*8), 3), 0.0) as &apos;PRBS Bit Error
+Ratio&apos;, coalesce(sum(FcsErrorFrameCount), 0) as &apos;Rx FCS Error Count
+(Frames)&apos;, coalesce(sum(PrbsErrorFrameCount), 0) as &apos;PRBS Error Frame
+Count&apos; from TxRxEotStreamResults where isExpectedPort=1 group by
+DataSetId, TxStreamId"
+       UseCustomSqlString="TRUE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 13">
+      </RealTimeResultGroupDefinition>
+      <RealTimeResultGroupDefinition id="11535" 
+       GroupName="Basic Sequencing"
+       GroupId="object://customgroup/e652f0ae-e04e-4f5b-922e-f6a0a21e9347/Basic
+Sequencing"
+       ColumnClassName="Port RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults"
+       ColumnPropertyName="Name PortUiName FrameCount FrameCount
+InSeqFrameCount OutSeqFrameCount InSeqFrameRate OutSeqFrameRate"
+       CountQuery="select count(*) from (select TxStreamId from
+TxRxEotStreamResults group by DataSetId, TxStreamId)"
+       SqlString="select TxPortName as &apos;Tx Port&apos;,
+group_concat(distinct ActualRxPortName) as &apos;Rx Port&apos;,
+TxStreamBlockName as &apos;Stream Block&apos;, TxStreamId as &apos;Stream
+Id&apos;, TxStreamIndex as &apos;Stream Index&apos;, TxFrameCount as &apos;Tx
+Count (Frames)&apos;, coalesce(sum(FrameCount), 0) as &apos;Rx Count
+(Frames)&apos;, coalesce(sum(SeqRunLength), 0) as &apos;Sequence Run
+Length&apos;, coalesce(sum(InSeqFrameCount), 0) as &apos;In Seq Count
+(Frames)&apos;, coalesce(sum(OutSeqFrameCount), 0) as &apos;Out of Seq Count
+(Frames)&apos; from TxRxEotStreamResults where isExpectedPort=1 group by
+DataSetId, TxStreamId"
+       UseCustomSqlString="TRUE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 14">
+      </RealTimeResultGroupDefinition>
+      <RealTimeResultGroupDefinition id="11536" 
+       GroupName="Advanced Sequencing"
+       GroupId="object://customgroup/3d3639f4-a55b-4466-8e16-2e7c6a70afa7/Advanced
+Sequencing"
+       ColumnClassName="Port RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults"
+       ColumnPropertyName="Name PortUiName FrameCount FrameCount
+DroppedFrameCount DroppedFramePercent InOrderFrameCount ReorderedFrameCount
+DuplicateFrameCount LateFrameCount DroppedFrameRate DroppedFramePercentRate
+InOrderFrameRate ReorderedFrameRate DuplicateFrameRate LateFrameRate"
+       CountQuery="select count(*) from (select TxStreamId from
+TxRxEotStreamResults group by DataSetId, TxStreamId)"
+       SqlString="select TxPortName as &apos;Tx Port&apos;,
+group_concat(distinct ActualRxPortName) as &apos;Rx Port&apos;,
+TxStreamBlockName as &apos;Stream Block&apos;, TxStreamId as  &apos;Stream
+Id&apos;, TxStreamIndex as &apos;Stream Index&apos;, TxFrameCount as &apos;Tx
+Count (Frames)&apos;, coalesce(sum(FrameCount), 0) as &apos;Rx Count
+(Frames)&apos;, ExpectedRxFrameCount as &apos;Expected Rx Count (Frames)&apos;,
+(case when (ExpectedRxFrameCount - coalesce(sum(FrameCount), 0)) &lt; 0 then
+&apos;&apos; else ExpectedRxFrameCount - coalesce(sum(FrameCount),0) end) as
+&apos;Tx-Rx (Frames)&apos;, (case when (ExpectedRxFrameCount -
+coalesce(sum(FrameCount), 0)) &lt; 0 then &apos;&apos; else
+round(cast(ExpectedRxFrameCount - coalesce(sum(FrameCount), 0) as double) *
+100.0 / ExpectedRxFrameCount, 5) end) as &apos;Tx-Rx (%)&apos;,
+coalesce(sum(DroppedFrameCount), 0) as &apos;Dropped Frame Count&apos;,
+round(cast(coalesce(sum(DroppedFrameCount), 0) as double) * 100.0 /
+ExpectedRxFrameCount, 5) as &apos;Dropped Frame (%)&apos;,
+coalesce(sum(InOrderFrameCount), 0) as &apos;In-order Frame Count&apos;,
+coalesce(sum(ReorderedFrameCount), 0) as &apos;Reordered Frame Count&apos;,
+coalesce(sum(DuplicateFrameCount), 0) as &apos;Duplicate Count (Frames)&apos;,
+coalesce(sum(LateFrameCount), 0) as &apos;Late Count (Frames)&apos; from
+TxRxEotStreamResults where isExpectedPort=1 group by DataSetId, TxStreamId"
+       UseCustomSqlString="TRUE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 15">
+      </RealTimeResultGroupDefinition>
+      <RealTimeResultGroupDefinition id="11537" 
+       GroupName="Histograms"
+       GroupId="object://customgroup/a3fa4141-b6c7-4c1b-935b-df51d6118259/Histograms"
+       ColumnClassName="Port RxStreamSummaryResults TxStreamResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults RxStreamSummaryResults
+RxStreamSummaryResults RxStreamSummaryResults"
+       ColumnPropertyName="Name PortUiName FrameCount FrameCount HistBin1Count
+HistBin2Count HistBin3Count HistBin4Count HistBin5Count HistBin6Count
+HistBin7Count HistBin8Count HistBin9Count HistBin10Count HistBin11Count
+HistBin12Count HistBin13Count HistBin14Count HistBin15Count HistBin16Count"
+       CountQuery="select count(*) from (select TxStreamId from
+TxRxEotStreamResults group by DataSetId, TxStreamId)"
+       SqlString="select TxPortName as &apos;Tx Port&apos;,
+group_concat(distinct ActualRxPortName) as &apos;Rx Port&apos;,
+TxStreamBlockName as &apos;Stream Block&apos;, TxStreamId as &apos;Stream
+Id&apos;, TxStreamIndex as &apos;Stream Index&apos;, TxFrameCount as &apos;Tx
+Count (Frames)&apos;, coalesce(sum(FrameCount), 0) as &apos;Rx Count
+(Frames)&apos;, coalesce(sum(HistBin1Count), 0) as &apos;Bucket 1&apos;,
+coalesce(sum(HistBin2Count), 0) as &apos;Bucket 2&apos;,
+coalesce(sum(HistBin3Count), 0) as &apos;Bucket 3&apos;,
+coalesce(sum(HistBin4Count), 0) as &apos;Bucket 4&apos;,
+coalesce(sum(HistBin5Count), 0) as &apos;Bucket 5&apos;,
+coalesce(sum(HistBin6Count), 0) as &apos;Bucket 6&apos;,
+coalesce(sum(HistBin7Count), 0) as &apos;Bucket 7&apos;,
+coalesce(sum(HistBin8Count), 0) as &apos;Bucket 8&apos;,
+coalesce(sum(HistBin9Count), 0) as &apos;Bucket 9&apos;,
+coalesce(sum(HistBin10Count), 0) as &apos;Bucket 10&apos;,
+coalesce(sum(HistBin11Count), 0) as &apos;Bucket 11&apos;,
+coalesce(sum(HistBin12Count), 0) as &apos;Bucket 12&apos;,
+coalesce(sum(HistBin13Count), 0) as &apos;Bucket 13&apos;,
+coalesce(sum(HistBin14Count), 0) as &apos;Bucket 14&apos;,
+coalesce(sum(HistBin15Count), 0) as &apos;Bucket 15&apos;,
+coalesce(sum(HistBin16Count), 0) as &apos;Bucket 16&apos; from
+TxRxEotStreamResults where isExpectedPort=1 group by DataSetId, TxStreamId"
+       UseCustomSqlString="TRUE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultGroupDefinition 16">
+      </RealTimeResultGroupDefinition>
+      <RealTimeResultColumnDefinition id="11538" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin4Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 177">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11539" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin5Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 178">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11540" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin6Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 179">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11541" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin7Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 180">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11542" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin8Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 181">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11543" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin9Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 182">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11544" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin10Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 183">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11545" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin11Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 184">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11546" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin12Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 184">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11547" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin13Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 185">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11548" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin14Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 186">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11549" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin15Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 878">
+      </RealTimeResultColumnDefinition>
+      <RealTimeResultColumnDefinition id="11550" 
+       ColumnClassName="RxStreamSummaryResults"
+       ColumnPropertyName="HistBin16Count"
+       ColumnDescription=""
+       ColumnWidth="70"
+       ColumnUnits="0"
+       ColumnPrecision="2"
+       ColumnSortType="NONE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="RealTimeResultColumnDefinition 879">
+      </RealTimeResultColumnDefinition>
+    </ResultDataSet>
+    <RxPortResultFilter id="6851" 
+     RxPortList=""
+     Active="TRUE"
+     LocalActive="TRUE"
+     Name="RxPortResultFilter 2">
+    </RxPortResultFilter>
+    <DynamicResultView id="6899" 
      ResultSourceClass="Port"
      SaveToConfig="TRUE"
-     Identifier="9961d82a-f690-4529-b1bf-b7d5dea7123c"
+     Identifier="3853040e-5abe-42d8-8a05-09a176359318"
      Persistent="TRUE"
      CreatorId=""
      IsDeprecated="FALSE"
@@ -8398,8 +9637,114 @@ FALSE"
      CustomDisplayPath=""
      Active="TRUE"
      LocalActive="TRUE"
-     Name="MyCustomView">
-      <PresentationResultQuery id="11302" 
+     Name="PortStreamBlockCustomView">
+      <PresentationResultQuery id="6901" 
+       SelectProperties="Port.Name StreamBlock.Name Port.GeneratorFrameCount
+Port.RxTotalBitCount StreamBlock.TxFrameCount StreamBlock.RxFrameCount"
+       FromObjects="10787 11034"
+       WhereConditions=""
+       GroupByProperties=""
+       LimitOffset="0"
+       LimitSize="50"
+       SortBy=""
+       ArchivingOption="NONE"
+       ResultState="IDLE"
+       ArchivingInterval="10"
+       DatabaseFileName=""
+       DisableAutoGrouping="FALSE"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="PresentationResultQuery 12">
+      </PresentationResultQuery>
+      <ColumnDisplayProperties id="6902" 
+       ColumnPropertyId="Port.Name"
+       ColumnCaption="Port Name"
+       ColumnWidth="0"
+       ColumnUnits="0"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 23">
+      </ColumnDisplayProperties>
+      <ColumnDisplayProperties id="6903" 
+       ColumnPropertyId="StreamBlock.Name"
+       ColumnCaption="StreamBlock Name"
+       ColumnWidth="0"
+       ColumnUnits="0"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 25">
+      </ColumnDisplayProperties>
+      <ColumnDisplayProperties id="6904" 
+       ColumnPropertyId="Port.GeneratorFrameCount"
+       ColumnCaption="Generator Count"
+       ColumnWidth="0"
+       ColumnUnits="16"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 26">
+      </ColumnDisplayProperties>
+      <ColumnDisplayProperties id="6905" 
+       ColumnPropertyId="Port.RxTotalBitCount"
+       ColumnCaption="Total Rx Count"
+       ColumnWidth="0"
+       ColumnUnits="1"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 27">
+      </ColumnDisplayProperties>
+      <ColumnDisplayProperties id="6906" 
+       ColumnPropertyId="StreamBlock.TxFrameCount"
+       ColumnCaption="Tx Count"
+       ColumnWidth="0"
+       ColumnUnits="16"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 28">
+      </ColumnDisplayProperties>
+      <ColumnDisplayProperties id="6907" 
+       ColumnPropertyId="StreamBlock.RxFrameCount"
+       ColumnCaption="Rx Count"
+       ColumnWidth="0"
+       ColumnUnits="16"
+       ColumnPrecision="255"
+       ColumnGroups=""
+       ColumnSortIndex="0"
+       Active="TRUE"
+       LocalActive="TRUE"
+       Name="ColumnDisplayProperties 29">
+      </ColumnDisplayProperties>
+    </DynamicResultView>
+    <DynamicResultView id="6912" 
+     ResultSourceClass="Port"
+     SaveToConfig="TRUE"
+     Identifier="7bb4622a-b72e-45d7-977a-e1e371486fba"
+     Persistent="TRUE"
+     CreatorId=""
+     IsDeprecated="FALSE"
+     Path=""
+     ResultViewOwner="USER"
+     Description="object://core/DynamicResultView"
+     CustomDisplayName=""
+     CustomDisplayPath=""
+     Active="TRUE"
+     LocalActive="TRUE"
+     Name="PortCustomView">
+      <PresentationResultQuery id="6914" 
        SelectProperties="Port.Name Port.GeneratorFrameCount
 Port.RxTotalFrameCount"
        FromObjects="10787 11034"
@@ -8409,7 +9754,7 @@ Port.RxTotalFrameCount"
        LimitSize="50"
        SortBy=""
        ArchivingOption="NONE"
-       ResultState="AVAILABLE"
+       ResultState="IDLE"
        ArchivingInterval="10"
        DatabaseFileName=""
        DisableAutoGrouping="FALSE"
@@ -8417,7 +9762,7 @@ Port.RxTotalFrameCount"
        LocalActive="TRUE"
        Name="PresentationResultQuery 7">
       </PresentationResultQuery>
-      <ColumnDisplayProperties id="11303" 
+      <ColumnDisplayProperties id="6915" 
        ColumnPropertyId="Port.GeneratorFrameCount"
        ColumnCaption="Generator Count"
        ColumnWidth="0"
@@ -8429,7 +9774,7 @@ Port.RxTotalFrameCount"
        LocalActive="TRUE"
        Name="ColumnDisplayProperties 13">
       </ColumnDisplayProperties>
-      <ColumnDisplayProperties id="11304" 
+      <ColumnDisplayProperties id="6916" 
        ColumnPropertyId="Port.RxTotalFrameCount"
        ColumnCaption="Total Rx Count"
        ColumnWidth="0"
@@ -8441,7 +9786,7 @@ Port.RxTotalFrameCount"
        LocalActive="TRUE"
        Name="ColumnDisplayProperties 14">
       </ColumnDisplayProperties>
-      <ColumnDisplayProperties id="6829" 
+      <ColumnDisplayProperties id="6917" 
        ColumnPropertyId="Port.Name"
        ColumnCaption="Port Name"
        ColumnWidth="0"

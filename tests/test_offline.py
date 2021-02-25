@@ -177,7 +177,7 @@ def test_stats_no_traffic(logger: logging.Logger, stc: StcApp) -> None:
     """ Get statistics without traffic. """
     gen_stats = StcStats('GeneratorPortResults')
     assert not gen_stats.get_all_stats()
-    assert not gen_stats.get_stats()
+    assert not gen_stats.get_column_stats()
     assert not gen_stats.get_object_stats('Port 1')
     assert gen_stats.get_stat('Port 1', 'GeneratorFrameCount') == '-1'
     assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == -1

@@ -36,13 +36,12 @@ class StcStats:
         :param view: statistics view to subscribe to. If view is None it is the test responsibility to subscribe with
             specific config_type.
         """
-        super(StcStats, self).__init__()
         self.rds = None
-        self.statistics = {}
+        self.statistics = TgnObjectsDict()
         if view:
             self.subscribe(view)
 
-    def subscribe(self, view, config_type=None):
+    def subscribe(self, view: str, config_type: Optional[str] = None) -> None:
         """ Subscribe to statistics view.
 
         :param view: statistics view to subscribe to.
@@ -61,78 +60,34 @@ class StcStats:
             rc = StcObject.project.command('SubscribeDynamicResultView', DynamicResultView=drv.ref)
             self.rds = StcObject(objType='DynamicResultView', parent=StcObject.project, objRef=rc['DynamicResultView'])
 
-    def unsubscribe(self):
+    def unsubscribe(self) -> None:
         """ UnSubscribe from statistics view. """
         StcObject.project.api.unsubscribe(self.rds.obj_ref())
 
-    def read_stats(self, *stats: str):
+    def read_stats(self, obj_id_stat: Optional[str] = 'topLevelName') -> TgnObjectsDict:
         """ Reads the statistics view from STC and saves it in statistics dictionary.
 
-        :param stats: list of statistics names to read, empty list will read all statistics.
-            Relevant for system (not dynamic) result views only.
+        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
+            not meaningful and it is better to use other unique identifier like stream ID.
         """
-        self.statistics = {}
+        self.statistics = TgnObjectsDict()
         if self.rds.type == 'dynamicresultview':
             self._read_custom_view()
         else:
-            self._read_view(*stats)
+            self._read_view(obj_id_stat)
+        return self.statistics
 
-    def get_all_stats(self, obj_id_stat: Optional[str] = 'topLevelName') -> TgnObjectsDict:
-        """
-        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
-            not meaningful and it is better to use other unique identifier like stream ID.
-        :returns: all statistics values for all object IDs.
-        """
-        all_statistics = TgnObjectsDict()
-        if self.statistics:
-            for obj_name in self.statistics[obj_id_stat]:
-                all_statistics[StcObject.project.get_object_by_name(obj_name)] = self.get_object_stats(obj_name)
-        return all_statistics
+    def get_column_stats(self, name: str) -> TgnObjectsDict:
+        """ Returns all statistics values for the requested statistics.
 
-    def get_stats(self, row: Optional[str] = 'topLevelName'):
-        """
-        :TODO: Return a table of <object, value>, not just a list of values.
+        N/A for custom views.
 
-        :param row: requested row (== statistic name)
-        :returns: all statistics values for the requested row.
+        :param name: requested statistic name.
         """
-        return self.statistics.get(row, {})
-
-    def get_object_stats(self, obj_id: str, obj_id_stat: Optional[str] = 'topLevelName') -> Dict[str, str]:
-        """ Get all statistics values for the requested object ID.
-
-        :param obj_id: requested object ID.
-        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
-            not meaningful and it is better to use other unique identifier like stream ID.
-        """
-        obj_statistics = {}
-        for counter in self.statistics.keys():
-            if self.statistics[counter]:
-                obj_statistics[counter] = self.get_stat(obj_id, counter, obj_id_stat)
-        return obj_statistics
-
-    def get_stat(self, obj_id, counter, obj_id_stat='topLevelName'):
-        """
-        :param obj_id: requested object id.
-        :param counter: requested statistics (note that some statistics are not counters).
-        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
-            not meaningful and it is better to use other unique identifier like stream ID.
-        :returns: the value of the requested counter for the requested object ID.
-        """
-        if not self.statistics:
-            return '-1'
-        obj_index = self.statistics[obj_id_stat].index(obj_id)
-        return self.statistics[counter][obj_index]
-
-    def get_counter(self, obj_id, counter, obj_id_stat='topLevelName') -> int:
-        """ Get the int value of the requested counter for the requested object ID.
-
-        :param obj_id: requested object ID.
-        :param counter: requested statistics (note that some statistics are not counters).
-        :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
-            not meaningful and it is better to use other unique identifier like stream ID.
-        """
-        return int(self.get_stat(obj_id, counter, obj_id_stat))
+        column_statistics = TgnObjectsDict()
+        for obj, obj_values in self.statistics.items():
+            column_statistics[obj] = obj_values[name]
+        return column_statistics
 
     #
     # Private methods.
@@ -157,30 +112,31 @@ class StcStats:
                 self.objs_stats.append(child_rvd.get_list_attribute('ResultData')[:num_columns])
             self._get_result_data(child_rvd, num_columns)
 
-    def _read_view(self, *stats):
+    def _read_view(self, obj_id_stat: Optional[str] = 'topLevelName') -> None:
 
-        objs_stats = []
         StcObject.project.command('RefreshResultView', ResultDataSet=self.rds.obj_ref())
         for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
             self.rds.set_attributes(PageNumber=page_number)
             for results in self.rds.get_objects_from_attribute('ResultHandleList'):
                 parent = results.get_object_from_attribute('parent')
-                parents = parent.obj_ref()
+                parents = parent.ref
                 name = ''
                 while parent != StcObject.project:
                     if not name and parent.obj_type().lower() in ('port', 'emulateddevice', 'streamblock'):
                         name = parent.get_name()
                     parent = parent.get_object_from_attribute('parent')
-                    parents = parent.obj_ref() + '/' + parents
-                obj_stats = ({'object': results.obj_ref(), 'parents': parents, 'topLevelName': name})
-                obj_stats.update(results.get_attributes(*stats))
+                    parents = parent.ref + '/' + parents
+                obj_stats = ({'object': results.ref, 'parents': parents, 'topLevelName': name})
+                obj_stats.update(results.get_attributes())
                 obj_stats.pop('parent', None)
                 obj_stats.pop('Name', None)
                 obj_stats.pop('resultchild-Sources', None)
-                objs_stats.append(obj_stats.values())
-                keys = obj_stats.keys()
-        if objs_stats:
-            self.statistics = dict(zip(keys, zip(*objs_stats)))
+                for stat in obj_stats:
+                    try:
+                        obj_stats[stat] = int(obj_stats[stat])
+                    except ValueError as _:
+                        pass
+                self.statistics[StcObject.project.get_object_by_name(obj_stats[obj_id_stat])] = obj_stats
 
 
 view_2_config_type = {

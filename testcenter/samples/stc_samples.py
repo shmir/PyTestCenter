@@ -110,7 +110,7 @@ def manage_traffic():
     print(json.dumps(port_stats.get_object_stats('Port 1'), indent=2))
 
     # Or a list of all values of a specific counters for all objects.
-    print(port_stats.get_stats('TotalFrameCount'))
+    print(port_stats.get_column_stats('TotalFrameCount'))
 
     # Or a single value of of a single counter os a single object.
     print(port_stats.get_stat('Port 1', 'TotalFrameCount'))

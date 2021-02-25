@@ -133,42 +133,38 @@ def test_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str])
 
     gen_stats = StcStats('GeneratorPortResults')
     analyzer_stats = StcStats('analyzerportresults')
+    sb_stats = StcStats('TxStreamBlockResults')
 
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+    print(gen_stats.statistics.dumps(indent=2))
+    print(gen_stats.get_column_stats('GeneratorFrameCount').dumps(indent=2))
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == 0
+    assert analyzer_stats.statistics['Port 2']['SigFrameCount'] == 0
+
+    sb_stats.read_stats()
+    print(sb_stats.statistics.dumps(indent=2))
 
     stc.project.ports['Port 1'].start()
     stc.project.ports['Port 1'].stop()
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 2', 'SigFrameCount'))
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == analyzer_stats.statistics['Port 2']['SigFrameCount']
 
     stc.project.ports['Port 1'].clear_results()
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') != 0
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == 0
+    assert analyzer_stats.statistics['Port 2']['SigFrameCount'] != 0
     stc.project.ports['Port 2'].clear_results()
     analyzer_stats.read_stats()
-    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
+    assert analyzer_stats.statistics['Port 2']['SigFrameCount'] == 0
 
     stc.start_traffic(blocking=True)
     stc.stop_traffic()
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert (gen_stats.get_counter('Port 2', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
-
-    stc.clear_results()
-    gen_stats.read_stats('GeneratorFrameCount')
-    analyzer_stats.read_stats('SigFrameCount')
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 2', 'SigFrameCount') == 0
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == analyzer_stats.statistics['Port 2']['SigFrameCount']
 
 
 def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
@@ -203,14 +199,11 @@ def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) 
 
     gen_stats = StcStats('GeneratorPortResults')
     gen_stats.read_stats()
-    print(gen_stats.get_all_stats().dumps(indent=2))
+    print(gen_stats.statistics.dumps(indent=2))
 
-    user_stats = StcStats('MyCustomView')
+    user_stats = StcStats('PortStreamBlockCustomView')
     user_stats.read_stats()
     print(json.dumps(user_stats.statistics, indent=2))
-    print(user_stats.get_stats('Port.GeneratorFrameCount'))
-    print(user_stats.get_object_stats('Port 1', obj_id_stat='Port.Name'))
-    print(user_stats.get_stat('Port 1', 'Port.GeneratorFrameCount', obj_id_stat='Port.Name'))
 
 
 def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:

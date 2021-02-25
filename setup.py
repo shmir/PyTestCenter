@@ -4,7 +4,6 @@
 """
 Package PyTestCenter for distribution.
 """
-
 from setuptools import setup, find_packages
 
 

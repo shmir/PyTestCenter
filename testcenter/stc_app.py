@@ -126,7 +126,6 @@ class StcApp(TgnApp):
         :param config_file_name: full path to the configuration file.
         :param server_temp_folder: folder on the server where the system will save the files before download.
         """
-
         if type(self.api) == StcRestWrapper:
             config_file_name_full_path = config_file_name
             config_file_name = server_folder + '\\' + path.basename(config_file_name)
@@ -140,7 +139,7 @@ class StcApp(TgnApp):
         if type(self.api) == StcRestWrapper:
             self.api.ls.download(rc['FileName'], config_file_name_full_path)
 
-    def clear_results(self):
+    def clear_results(self) -> None:
         self.project.clear_results()
 
     #
