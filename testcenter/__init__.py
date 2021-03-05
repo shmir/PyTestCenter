@@ -5,7 +5,7 @@ from testcenter.stc_device import (StcDevice, StcEmulation, StcServer, StcClient
                                    StcIgmpQuerier, StcIgmpGroup, StcOseSwitch, StcIsisRouter, StcBfdRouter,
                                    StcIsisRouterRange, StcBfdSession, StcRsvpRouter, StcRsvpTunnel, StcLdpPrefixLsp,
                                    StcMldHost, StcMldGroupMembership, StcLdpRouter)
-from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer, StcLag
+from testcenter.stc_port import StcPort, StcGenerator, StcAnalyzer, StcLag, StcCapture
 from testcenter.stc_project import StcProject, StcIpv4Group, StcIpv6Group
 from testcenter.stc_stream import StcStream, StcGroupCollection, StcTrafficGroup
 from testcenter.stc_hw import StcHw, StcPhyChassis, StcPhyModule, StcPhyPortGroup, StcPhyPort
@@ -18,6 +18,7 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'bgprouterconfig': StcBgpRouter,
                  'bgpipv4routeconfig': StcBgpRoute,
                  'bgpipv6routeconfig': StcBgpRoute,
+                 'capture': StcCapture,
                  'dhcpv4serverconfig': StcServer,
                  'dhcpv4blockconfig': StcClient,
                  'emulateddevice': StcDevice,
@@ -56,5 +57,4 @@ TYPE_2_OBJECT = {'analyzer': StcAnalyzer,
                  'rsvprouterconfig': StcRsvpRouter,
                  'streamblock': StcStream,
                  'summarylsablock': StcOspfLsa,
-                 'trafficgroup': StcTrafficGroup,
-                 }
+                 'trafficgroup': StcTrafficGroup}

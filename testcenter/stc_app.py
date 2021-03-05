@@ -67,7 +67,7 @@ class StcApp(TgnApp):
         self.system.api = self.api
         self.system.logger = self.logger
         self.lab_server = None
-        self.project = None
+        self.project: Optional[StcProject] = None
         self.hw = None
 
     def connect(self, lab_server=None):

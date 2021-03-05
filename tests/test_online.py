@@ -124,9 +124,9 @@ def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
         assert dhcp_client.get_attribute('BlockState') == 'BOUND'
 
 
-def test_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
     """ Test traffic and counters. """
-    logger.info(test_port_traffic.__doc__.strip())
+    logger.info(test_traffic.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
     reserve_ports(stc, locations, wait_for_up=True)
@@ -165,6 +165,20 @@ def test_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str])
     gen_stats.read_stats()
     analyzer_stats.read_stats()
     assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == analyzer_stats.statistics['Port 2']['SigFrameCount']
+
+
+def test_capture(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+    """ Test traffic and capture. """
+    logger.info(test_capture.__doc__.strip())
+
+    stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
+    reserve_ports(stc, locations, wait_for_up=True)
+
+    stc.project.ports['Port 2'].start_capture()
+    stc.project.ports['Port 1'].start()
+    stc.project.ports['Port 1'].stop()
+    stc.project.ports['Port 2'].stop_capture()
+    stc.project.ports['Port 2'].save_capture(Path(__file__).parent.joinpath('configs', 'temp', 'capture.pcap'))
 
 
 def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
