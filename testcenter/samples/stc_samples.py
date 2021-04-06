@@ -20,10 +20,10 @@ logger = logging.getLogger('log')
 logger.setLevel('INFO')
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-api = ApiType.tcl
+api = ApiType.rest
 install_dir = 'C:/Program Files/Spirent Communications/Spirent TestCenter 5.11'
 lab_server = None
-rest_server = 'localhost'
+rest_server = '10.100.102.25'
 rest_port = 8888
 
 stc_config_file = Path(__file__).parent.joinpath('test_config.xml')

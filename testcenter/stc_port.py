@@ -54,7 +54,7 @@ class StcPort(StcObject):
             self.location = self.get_attribute('Location')
 
         if not is_local_host(self.location):
-            self.api.perform('AttachPorts', PortList=self.obj_ref(), AutoConnect=True, RevokeOwner=force)
+            self.api.perform('AttachPorts', PortList=self.ref, AutoConnect=True, RevokeOwner=force)
             self.api.apply()
             self.active_phy = StcObject(parent=self, objRef=self.get_attribute('activephy-Targets'))
             self.active_phy.get_attributes()

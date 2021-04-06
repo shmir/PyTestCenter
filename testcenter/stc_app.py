@@ -70,7 +70,7 @@ class StcApp(TgnApp):
         self.project: Optional[StcProject] = None
         self.hw = None
 
-    def connect(self, lab_server=None):
+    def connect(self, lab_server=None) -> None:
         """ Create object and (optionally) connect to lab server.
 
         :param lab_server: optional lab server address.
@@ -84,7 +84,7 @@ class StcApp(TgnApp):
         StcObject.project = self.project
         self.hw = self.system.get_child('PhysicalChassisManager')
 
-    def disconnect(self, terminate=True):
+    def disconnect(self, terminate=True) -> None:
         """ Disconnect from lab server (if used) and reset configuration.
 
         :param terminate: True - terminate session, False - leave session on server.
@@ -95,7 +95,7 @@ class StcApp(TgnApp):
         if self.lab_server:
             self.api.perform('CSTestSessionDisconnect', Terminate=terminate)
 
-    def load_config(self, config_file_name):
+    def load_config(self, config_file_name: str) -> None:
         """ Load configuration file from tcc or xml.
 
         Configuration file type is extracted from the file suffix - xml or tcc.
@@ -112,19 +112,20 @@ class StcApp(TgnApp):
         elif ext == '.xml':
             self.api.perform('LoadFromXml', FileName=path.normpath(config_file_name))
         else:
-            raise ValueError('Configuration file type {} not supported.'.format(ext))
+            raise ValueError(f'Configuration file type {ext} not supported.')
         self.project.objects = {}
         self.project.get_children('port')
 
     def reset_config(self):
         self.api.perform('ResetConfig', config='system1')
 
-    def save_config(self, config_file_name, server_folder='c:\\temp'):
+    def save_config(self, config_file_name: str, server_folder: Optional[str] = 'c:\\temp') -> None:
         """ Save configuration file as tcc or xml.
 
         Configuration file type is extracted from the file suffix - xml or tcc.
+
         :param config_file_name: full path to the configuration file.
-        :param server_temp_folder: folder on the server where the system will save the files before download.
+        :param server_folder: folder on the server where the system will save the files before download.
         """
         if type(self.api) == StcRestWrapper:
             config_file_name_full_path = config_file_name

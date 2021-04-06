@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 import time
 from collections import OrderedDict
-from typing import Optional
+from typing import Optional, List
 
 from trafficgenerator.tgn_object import TgnObject
 from trafficgenerator.tgn_tcl import build_obj_ref_list
@@ -125,7 +125,11 @@ class StcObject(TgnObject):
             values[attribute] = self.get_attribute(attribute)
         return values
 
-    def get_children(self, *types):
+    def get_children(self, *types: str) -> List[StcObject]:
+        """ Get list of all children of the object.
+
+        :param types: get only children of type in types, if types not specified, get all children.
+        """
         children_objs = OrderedDict()
         if not types:
             types = self.get_all_child_types()

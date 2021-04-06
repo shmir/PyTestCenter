@@ -42,21 +42,20 @@ def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
     logger.info(test_analyze_config.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath('configs').joinpath('test_config.xml').as_posix())
-    project = stc.project
 
-    project.get_children('port')
-    port1_obj = project.get_object_by_name('Port 1')
-    port2_obj = project.get_object_by_name('Port 2')
+    stc.project.get_children('port')
+    port1_obj = stc.project.get_object_by_name('Port 1')
+    port2_obj = stc.project.get_object_by_name('Port 2')
 
     print(f'Port1 object reference = {port1_obj.ref}')
     print(f'Port1 name = {port1_obj.name}')
-    print(f'Ports = {project.get_objects_by_type("port")}')
+    print(f'Ports = {stc.project.get_objects_by_type("port")}')
     print(f'Port 1 state = {port1_obj.get_attribute("Location")}')
     print(f'Port 1 attributes = {port1_obj.get_attributes()}')
     print(f'Port 1 streamblocks = {port1_obj.get_children("streamblock")}')
     print(f'Port 2 streamblocks = {port2_obj.get_children("streamblock")}')
 
-    stc_ports = project.get_children('port')
+    stc_ports = stc.project.get_children('port')
     assert len(stc_ports) == 2
 
     assert len(stc_ports[0].get_children('emulateddevice')) == 1
