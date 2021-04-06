@@ -20,10 +20,10 @@ logger = logging.getLogger('log')
 logger.setLevel('INFO')
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-api = ApiType.rest
+api = ApiType.tcl
 install_dir = 'C:/Program Files/Spirent Communications/Spirent TestCenter 5.11'
 lab_server = None
-rest_server = '10.100.102.25'
+rest_server = 'localhost'
 rest_port = 8888
 
 stc_config_file = Path(__file__).parent.joinpath('test_config.xml')
@@ -104,16 +104,16 @@ def manage_traffic():
     port_stats.read_stats()
 
     # You can get a table of all counters, similar to the GUI.
-    print(port_stats.get_all_stats().dumps(indent=2))
+    print(port_stats.statistics.dumps(indent=2))
 
     # Or a table of all counters of a specific object.
-    print(json.dumps(port_stats.get_object_stats('Port 1'), indent=2))
+    print(json.dumps(port_stats.statistics['Port 1'], indent=2))
 
     # Or a list of all values of a specific counters for all objects.
     print(port_stats.get_column_stats('TotalFrameCount'))
 
     # Or a single value of of a single counter os a single object.
-    print(port_stats.get_stat('Port 1', 'TotalFrameCount'))
+    print(port_stats.statistics['Port 1']['TotalFrameCount'])
 
 
 def get_inventory():

@@ -17,7 +17,7 @@ from testcenter.stc_app import StcSequencerOperation
 
 
 def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Get inventory and test some basic info. """
+    """ Get inventory and tests some basic info. """
     logger.info(test_inventory.__doc__.strip())
 
     chassis = stc.hw.get_chassis(locations[0].split('/')[0])
@@ -62,7 +62,7 @@ def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
             sb.send_arp_ns()
 
 
-# If this test fails, consider adding delay between ping commands.
+# If this tests fails, consider adding delay between ping commands.
 def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
     """ Test Ping commands. """
     logger.info(test_ping.__doc__.strip())
@@ -196,7 +196,7 @@ def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) ->
 
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') >= 7900
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] >= 7900
 
 
 def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
@@ -223,7 +223,7 @@ def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) 
 def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
     """ Test traffic and counters in loopback mode.
 
-    This test cannot run on virtual ports.
+    This tests cannot run on virtual ports.
     """
     logger.info(test_single_port_traffic.__doc__.strip())
 
@@ -235,25 +235,25 @@ def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: Lis
 
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == 0
+    assert analyzer_stats.statistics['Port 1']['SigFrameCount'] == 0
+    assert (gen_stats.statistics['Port 1']['GeneratorFrameCount'] ==
+            analyzer_stats.statistics['Port 1']['SigFrameCount'])
 
     stc.project.ports['Port 1'].start()
     stc.project.ports['Port 1'].stop()
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') != 0
-    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') != 0
-    assert (gen_stats.get_counter('Port 1', 'GeneratorFrameCount') ==
-            analyzer_stats.get_counter('Port 1', 'SigFrameCount'))
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] != 0
+    assert analyzer_stats.statistics['Port 1']['SigFrameCount'] != 0
+    assert (gen_stats.statistics['Port 1']['GeneratorFrameCount'] ==
+            analyzer_stats.statistics['Port 1']['SigFrameCount'])
 
     stc.project.ports['Port 1'].clear_results()
     gen_stats.read_stats()
     analyzer_stats.read_stats()
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == 0
-    assert analyzer_stats.get_counter('Port 1', 'SigFrameCount') == 0
+    assert gen_stats.statistics['Port 1']['GeneratorFrameCount'] == 0
+    assert analyzer_stats.statistics['Port 1']['SigFrameCount'] == 0
 
 
 def reserve_ports(stc: StcApp, locations: List[str], wait_for_up: bool = True) -> None:
@@ -265,7 +265,7 @@ def reserve_ports(stc: StcApp, locations: List[str], wait_for_up: bool = True) -
     """
     ports = stc.project.ports.values()
     for port, location in list(zip(ports, locations)):
-        port.reserve(location, force=False, wait_for_up=False)
+        port.reserve(location, force=True, wait_for_up=False)
     if wait_for_up:
         for port in ports:
             port.wait_for_states(40, 'UP')

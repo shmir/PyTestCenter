@@ -156,7 +156,7 @@ def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
 def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:
 
     if type(stc.api) is not StcRestWrapper:
-        pytest.skip('Skip test - non rest API')
+        pytest.skip('Skip tests - non rest API')
 
     print(stc.api.ls.get(stc.project.ref, 'children').split())
     print(stc.api.ls.get(stc.project.ref, 'children-port').split())
@@ -170,13 +170,3 @@ def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:
 
     print(stc.api.ls.config(ports[0], Name='New Name', Active=False))
     print(stc.api.ls.get(ports[0], 'Name', 'Active'))
-
-
-def test_stats_no_traffic(logger: logging.Logger, stc: StcApp) -> None:
-    """ Get statistics without traffic. """
-    gen_stats = StcStats('GeneratorPortResults')
-    assert not gen_stats.get_all_stats()
-    assert not gen_stats.get_column_stats()
-    assert not gen_stats.get_object_stats('Port 1')
-    assert gen_stats.get_stat('Port 1', 'GeneratorFrameCount') == '-1'
-    assert gen_stats.get_counter('Port 1', 'GeneratorFrameCount') == -1
