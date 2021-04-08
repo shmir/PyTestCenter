@@ -11,7 +11,6 @@ import pytest
 
 from testcenter.api.stc_rest import StcRestWrapper
 from testcenter.stc_app import StcApp
-from testcenter.stc_statistics_view import StcStats
 from testcenter import StcObject, StcPort, StcDevice, StcStream
 
 
@@ -29,12 +28,12 @@ def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
     stc.load_config(config_file.as_posix())
     temp_dir = configs_dir.joinpath('temp')
     config_file_save = temp_dir.joinpath(f'{config_file.stem}-save{config_file.suffix}')
-    stc.save_config(config_file_save)
+    stc.save_config(config_file_save.as_posix())
 
     with pytest.raises(Exception):
-        stc.load_config(configs_dir.joinpath('tcc.invalid'))
+        stc.load_config(configs_dir.joinpath('tcc.invalid').as_posix())
     with pytest.raises(Exception):
-        stc.load_config(configs_dir.joinpath('invalid.tcc'))
+        stc.load_config(configs_dir.joinpath('invalid.tcc').as_posix())
 
 
 def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
@@ -116,7 +115,7 @@ def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
         assert(len(stc_port.get_children('streamblock')) == 2)
 
     test_name = inspect.stack()[0][3]
-    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc').as_posix())
 
 
 def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
@@ -134,7 +133,7 @@ def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
             stc_eth.set_attributes(DstMac='00:10:20:30:40:50')
 
     test_name = inspect.stack()[0][3]
-    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc').as_posix())
 
 
 def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
@@ -150,7 +149,7 @@ def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
     StcObject(objType='BgpRouterConfig', parent=stc_dev)
 
     test_name = inspect.stack()[0][3]
-    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc'))
+    stc.save_config(Path(__file__).parent.joinpath('configs/temp', test_name + '.tcc').as_posix())
 
 
 def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:

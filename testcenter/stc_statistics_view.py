@@ -1,11 +1,10 @@
 """
 Classes and utilities to manage STC statistics views.
 """
-from collections import OrderedDict
-from typing import Dict, Optional
+from typing import Optional
 
-from trafficgenerator.tgn_utils import is_false
 from trafficgenerator.tgn_object import TgnObjectsDict
+from trafficgenerator.tgn_utils import is_false
 
 from testcenter.stc_object import StcObject
 
@@ -50,8 +49,7 @@ class StcStats:
         if view.lower() in view_2_config_type:
             if not config_type:
                 config_type = view_2_config_type[view.lower()]
-            rds = StcObject.project.api.subscribe(Parent=StcObject.project.obj_ref(),
-                                                  ResultParent=StcObject.project.ref,
+            rds = StcObject.project.api.subscribe(Parent=StcObject.project.ref, ResultParent=StcObject.project.ref,
                                                   ConfigType=config_type, ResultType=view)
             self.rds = StcObject(objType='ResultDataSet', parent=StcObject.project, objRef=rds)
         else:
@@ -62,7 +60,7 @@ class StcStats:
 
     def unsubscribe(self) -> None:
         """ UnSubscribe from statistics view. """
-        StcObject.project.api.unsubscribe(self.rds.obj_ref())
+        StcObject.project.api.unsubscribe(self.rds.ref)
 
     def read_stats(self, obj_id_stat: Optional[str] = 'topLevelName') -> TgnObjectsDict:
         """ Reads the statistics view from STC and saves it in statistics dictionary.
@@ -114,7 +112,7 @@ class StcStats:
 
     def _read_view(self, obj_id_stat: Optional[str] = 'topLevelName') -> None:
 
-        StcObject.project.command('RefreshResultView', ResultDataSet=self.rds.obj_ref())
+        StcObject.project.command('RefreshResultView', ResultDataSet=self.rds.ref)
         for page_number in range(1, int(self.rds.get_attribute('TotalPageCount')) + 1):
             self.rds.set_attributes(PageNumber=page_number)
             for results in self.rds.get_objects_from_attribute('ResultHandleList'):

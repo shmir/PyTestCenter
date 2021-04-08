@@ -72,7 +72,7 @@ def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None
 
     stc.send_arp_ns()
     for port in stc.project.ports.values():
-        for device in port.get_children('emulateddevice'):
+        for device in port.devices.values():
             gateway = device.get_child('ipv4if', 'ipv6if').get_attribute('Gateway')
             device.ping(gateway)
 
