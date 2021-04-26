@@ -7,5 +7,5 @@ server_properties = {'windows_511': {'server': server_511,
                                      'install_dir': 'C:/Program Files/Spirent Communications/Spirent TestCenter 5.11'}}
 
 # Default for options.
-api = ['tcl']
+api = ['rest']
 server = ['windows_511']

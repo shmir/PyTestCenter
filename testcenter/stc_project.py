@@ -12,7 +12,8 @@ from typing import Dict
 
 from trafficgenerator.tgn_tcl import build_obj_ref_list
 
-from testcenter import StcObject, StcPort
+from testcenter.stc_object import StcObject
+from testcenter.stc_port import StcPort
 
 command_2_config_object = {'Dhcpv4Bind': 'dhcpv4blockconfig',
                            'Dhcpv4Release': 'dhcpv4blockconfig',

@@ -3,10 +3,10 @@ This module implements classes and utility functions to manage STC emulated devi
 
 :author: yoram@ignissoft.com
 """
-
 from typing import Optional
 
 from trafficgenerator.tgn_utils import is_ipv4, is_ipv6
+
 from testcenter.stc_object import StcObject
 
 
@@ -14,27 +14,27 @@ class StcDevice(StcObject):
     """ Represents STC emulated device. """
 
     def __init__(self, parent: Optional[StcObject], **data: str) -> None:
-        """ Create device under port (in STC objects tree emulateddevice is under project).
+        """Create device under port (in STC objects tree emulateddevice is under project).
 
         :param parent: when creating - port, when reading - project.
         """
 
         # Make sure parent is project.
-        data['parent'] = StcObject.project
+        data["parent"] = StcObject.project
 
         # Create StcDevice object.
-        data['objType'] = 'emulateddevice'
+        data["objType"] = "emulateddevice"
         super().__init__(**data)
 
         # If we create new device we should place it under the requested parent.
-        if 'objRef' not in data:
+        if "objRef" not in data:
             self.set_attributes(AffiliatedPort=parent.ref)
             port = parent
         else:
-            port = parent.get_object_by_ref(self.get_attribute('AffiliatedPort'))
+            port = parent.get_object_by_ref(self.get_attribute("AffiliatedPort"))
 
         # Replace parent from project to parent.
-        self._data['parent'] = port
+        self._data["parent"] = port
         port.objects[self.obj_ref()] = self
         self.project.objects.pop(self.obj_ref())
 
@@ -48,36 +48,40 @@ class StcDevice(StcObject):
         return StcObject.get_arp_cache(self)
 
     def ping(self, ip):
-        self.command('PingVerifyConnectivity', PingAddress=ip)
-        self.test_command_rc('PassFailState')
+        self.command("PingVerifyConnectivity", PingAddress=ip)
+        self.test_command_rc("PassFailState")
 
     def start(self, wait_after=4):
-        self.command('DeviceStart', wait_after)
-        self.test_command_rc('Status')
+        self.command("DeviceStart", wait_after)
+        self.test_command_rc("Status")
 
     def stop(self, wait_after=4):
-        self.command('DeviceStop', wait_after)
-        self.test_command_rc('Status')
+        self.command("DeviceStop", wait_after)
+        self.test_command_rc("Status")
 
     def command_emulations(self, command, wait_after=4, **arguments):
         self.project.command_device_emulations(command, wait_after, self, **arguments)
 
     def get_ordered_valns(self):
-        if not self.get_objects_or_children_by_type('VlanIf'):
+        if not self.get_objects_or_children_by_type("VlanIf"):
             return []
-        stc_eth = self.get_objects_or_children_by_type('EthIIIf')[0]
-        stc_next_if_ref = stc_eth.get_attribute('StackedOnEndpoint-sources')
+        stc_eth = self.get_objects_or_children_by_type("EthIIIf")[0]
+        stc_next_if_ref = stc_eth.get_attribute("StackedOnEndpoint-sources")
         stc_next_if = self.get_object_by_ref(stc_next_if_ref)
         stc_vlans = []
-        while stc_next_if and stc_next_if.obj_type() == 'VlanIf':
+        while stc_next_if and stc_next_if.obj_type() == "VlanIf":
             stc_vlans.append(stc_next_if)
-            stc_next_if_ref = stc_next_if.get_attribute('StackedOnEndpoint-sources')
+            stc_next_if_ref = stc_next_if.get_attribute("StackedOnEndpoint-sources")
             stc_next_if = self.get_object_by_ref(stc_next_if_ref)
         return stc_vlans
 
     def has_ip(self, ip_type):
-        return (is_ipv4(ip_type) and self.get_objects_or_children_by_type('ipv4if') or
-                is_ipv6(ip_type) and self.get_objects_or_children_by_type('ipv6if'))
+        return (
+            is_ipv4(ip_type)
+            and self.get_objects_or_children_by_type("ipv4if")
+            or is_ipv6(ip_type)
+            and self.get_objects_or_children_by_type("ipv6if")
+        )
 
 
 class StcEmulation(StcObject):
@@ -89,19 +93,19 @@ class StcEmulation(StcObject):
 
 
 class StcRouter(StcEmulation):
-    objects_list = 'RouterList'
+    objects_list = "RouterList"
 
 
 class StcClient(StcEmulation):
-    objects_list = 'BlockList'
+    objects_list = "BlockList"
 
 
 class StcServer(StcEmulation):
-    objects_list = 'ServerList'
+    objects_list = "ServerList"
 
 
 class StcOseSwitch(StcEmulation):
-    objects_list = 'HandleList'
+    objects_list = "HandleList"
 
 
 class StcOspfv2Router(StcRouter):
@@ -145,9 +149,8 @@ class StcMldHost(StcClient):
 
 
 class StcObjWithNetworkBlock(StcObject):
-
     def get_network_block(self):
-        return self.get_objects_by_type_in_subtree('ipv4networkblock', 'ipv6networkblock')[0]
+        return self.get_objects_by_type_in_subtree("ipv4networkblock", "ipv6networkblock")[0]
 
 
 class StcBgpRoute(StcObjWithNetworkBlock):
@@ -159,15 +162,13 @@ class StcOspfLsa(StcObjWithNetworkBlock):
 
 
 class StcPimv4Group(StcObjWithNetworkBlock):
-
     def get_network_block(self):
-        return self.get_object_from_attribute('JoinedGroup-targets').get_object_by_type('ipv4networkblock')
+        return self.get_object_from_attribute("JoinedGroup-targets").get_object_by_type("ipv4networkblock")
 
 
 class StcIgmpGroup(StcObjWithNetworkBlock):
-
     def get_network_block(self):
-        return self.get_object_from_attribute('SubscribedGroups-targets').get_object_by_type('ipv4networkblock')
+        return self.get_object_from_attribute("SubscribedGroups-targets").get_object_by_type("ipv4networkblock")
 
 
 class StcMldGroupMembership(StcObjWithNetworkBlock):
@@ -183,9 +184,8 @@ class StcBfdSession(StcObjWithNetworkBlock):
 
 
 class StcRsvpTunnel(StcObjWithNetworkBlock):
-
     def get_network_block(self):
-        return self.get_objects_or_children_by_type('ipv4networkblock', 'ipv6networkblock')[0]
+        return self.get_objects_or_children_by_type("ipv4networkblock", "ipv6networkblock")[0]
 
 
 class StcLdpPrefixLsp(StcObjWithNetworkBlock):

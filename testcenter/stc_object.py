@@ -4,10 +4,11 @@ Base classes and utilities to manage Spirent Test Center (STC).
 :author: yoram@ignissoft.com
 """
 from __future__ import annotations
+
 import re
 import time
 from collections import OrderedDict
-from typing import Optional, List
+from typing import List, Optional
 
 from trafficgenerator.tgn_object import TgnObject
 from trafficgenerator.tgn_tcl import build_obj_ref_list
@@ -18,12 +19,12 @@ from testcenter.api.stc_rest import StcRestWrapper
 
 
 def extract_stc_obj_type_from_obj_ref(obj_ref: str) -> str:
-    """ Extract object type from object reference.
+    """Extract object type from object reference.
 
     :param obj_ref: object reference.
     """
     # There are rare cases where object reference has no sequential number suffix like 'automationoptions'.
-    m = re.search(r'(.*\D+)\d+', obj_ref)
+    m = re.search(r"(.*\D+)\d+", obj_ref)
     return m.group(1) if m else obj_ref
 
 
@@ -32,16 +33,16 @@ class StcObject(TgnObject):
 
     str_2_class = {}
 
-    project: Optional[testcenter.StcProject] = None
+    project: Optional[testcenter.stc_project.StcProject] = None
 
     def __init__(self, parent: StcObject, **data: str) -> None:
-        if 'objRef' in data:
-            data['objType'] = extract_stc_obj_type_from_obj_ref(data['objRef'])
-            if not parent and data['objType'] != 'system':
-                self._data['objRef'] = data['objRef']
-                parent = self.get_object_from_attribute('parent')
+        if "objRef" in data:
+            data["objType"] = extract_stc_obj_type_from_obj_ref(data["objRef"])
+            if not parent and data["objType"] != "system":
+                self._data["objRef"] = data["objRef"]
+                parent = self.get_object_from_attribute("parent")
         if type(self) == StcObject:
-            self.__class__ = self.get_obj_class(data['objType'])
+            self.__class__ = self.get_obj_class(data["objType"])
         super().__init__(parent, **data)
 
     def get_obj_class(self, obj_type):
@@ -53,20 +54,20 @@ class StcObject(TgnObject):
         return StcObject.str_2_class.get(obj_type.lower(), StcObject)
 
     def _create(self):
-        """ Create new object on STC.
+        """Create new object on STC.
 
         @return: STC object reference.
         """
 
         # At this time objRef is not set yet so we must use direct calls to api.
         attributes = dict(self._data)
-        attributes.pop('objType')
-        attributes.pop('parent')
-        if 'name' in self._data:
+        attributes.pop("objType")
+        attributes.pop("parent")
+        if "name" in self._data:
             return self.api.create(self.type, self.parent, **attributes)
         else:
             stc_obj = self.api.create(self.type, self.parent, **attributes)
-            self._data['name'] = self._get_name(self.api.get(stc_obj, 'name'), stc_obj)
+            self._data["name"] = self._get_name(self.api.get(stc_obj, "name"), stc_obj)
             return stc_obj
 
     def command(self, command, wait_after=0, **arguments):
@@ -75,7 +76,7 @@ class StcObject(TgnObject):
         return rc
 
     def get_attribute(self, attribute):
-        """ Get single attribute value.
+        """Get single attribute value.
 
         :param attribute: attribute name.
         :return: attribute value.
@@ -99,11 +100,11 @@ class StcObject(TgnObject):
 
     def append_attribute(self, attribute, value, apply_=False):
         cur_value = self.api.get(self.obj_ref(), attribute)
-        attributes = {attribute: cur_value + ' ' + str(value)}
+        attributes = {attribute: cur_value + " " + str(value)}
         self.set_attributes(apply_=apply_, **attributes)
 
     def get_attributes(self, *attributes):
-        """ Get multiple attributes values.
+        """Get multiple attributes values.
 
         Some low level APIs (like Tcl over Telnet) supports limited output length.
         When using get_attributes() the method will use simple stc::get to read all attributes. This is efficient but
@@ -126,21 +127,21 @@ class StcObject(TgnObject):
         return values
 
     def get_children(self, *types: str) -> List[StcObject]:
-        """ Get list of all children of the object.
+        """Get list of all children of the object.
 
         :param types: get only children of type in types, if types not specified, get all children.
         """
-        children_objs = OrderedDict()
+        children_objects = OrderedDict()
         if not types:
             types = self.get_all_child_types()
         for child_type in types:
-            output = self.get_attribute('children' + '-' + child_type)
-            children_objs.update(self._build_children_objs(child_type, output.split(' ')))
-        return list(children_objs.values())
+            output = self.get_attribute("children" + "-" + child_type)
+            children_objects.update(self._build_children_objs(child_type, output.split(" ")))
+        return list(children_objects.values())
 
     def get_all_child_types(self):
-        children = self.get_attribute('children').split()
-        return list(set([m.group(1) for c in children for m in [re.search(r'(.*\D+)\d+', c)]]))
+        children = self.get_attribute("children").split()
+        return list(set([m.group(1) for c in children for m in [re.search(r"(.*\D+)\d+", c)]]))
 
     def set_attributes(self, apply_=False, **attributes):
         self.api.config(self.ref, **attributes)
@@ -149,7 +150,7 @@ class StcObject(TgnObject):
 
     def set_attributes_serializer(self, _apply, attributes):
         """ Set attributes from serialized key value dictionary. """
-        
+
         self.api.config(self.obj_ref(), **attributes)
         if _apply:
             self.api.apply()
@@ -160,13 +161,13 @@ class StcObject(TgnObject):
     def set_targets(self, apply_=False, **attributes):
         attributes_targets = {}
         for attribute, value in attributes.items():
-            attributes_targets[attribute + '-targets'] = value
+            attributes_targets[attribute + "-targets"] = value
         self.set_attributes(apply_, **attributes_targets)
 
     def set_sources(self, apply_=False, **attributes):
         attributes_targets = {}
         for attribute, value in attributes.items():
-            attributes_targets[attribute + '-sources'] = value
+            attributes_targets[attribute + "-sources"] = value
         self.set_attributes(apply_, **attributes_targets)
 
     def delete(self):
@@ -174,37 +175,37 @@ class StcObject(TgnObject):
         self.del_object_from_parent()
 
     def get_name(self):
-        self._data['name'] = self._get_name(self.get_attribute('Name'), self.obj_ref())
-        return self._data['name']
+        self._data["name"] = self._get_name(self.get_attribute("Name"), self.obj_ref())
+        return self._data["name"]
 
     def get_active(self):
-        return self.get_attribute('Active')
+        return self.get_attribute("Active")
 
     def test_command_rc(self, attribute):
         status = self.api.command_rc[attribute].lower()
-        if status and 'passed' not in status and 'successful' not in status:
-            raise TgnError('{} = {}'.format(attribute, status))
+        if status and "passed" not in status and "successful" not in status:
+            raise TgnError("{} = {}".format(attribute, status))
 
     def wait(self):
         """ Wait until sequencer is finished. """
         self.api.wait()
 
     @classmethod
-    def send_arp_ns(cls, *objects) -> None:
+    def send_arp_ns(cls, *objects: StcObject) -> None:
         """ Send ARP and NS for ports, devices or stream blocks. """
-        objects[0].api.perform('ArpNdStart', HandleList=build_obj_ref_list(objects))
+        objects[0].api.perform("ArpNdStart", HandleList=build_obj_ref_list(list(objects)))
 
     @classmethod
-    def get_arp_cache(self, *objects):
+    def get_arp_cache(cls, *objects):
         arp_table = []
         for obj in objects:
-            obj.command('ArpNdUpdateArpCache', HandleList=obj.obj_ref())
-            arp_cache = obj.get_child('ArpCache')
-            arp_table += arp_cache.get_list_attribute('ArpCacheData')
+            obj.command("ArpNdUpdateArpCache", HandleList=obj.obj_ref())
+            arp_cache = obj.get_child("ArpCache")
+            arp_table += arp_cache.get_list_attribute("ArpCacheData")
         return arp_table
 
     def _get_name(self, read_name, obj_ref):
         name = read_name
-        if read_name.replace(' ', '').lower() == obj_ref:
-            name = self.obj_parent().obj_name() + '/' + self.obj_type()
+        if read_name.replace(" ", "").lower() == obj_ref:
+            name = self.obj_parent().obj_name() + "/" + self.obj_type()
         return name
