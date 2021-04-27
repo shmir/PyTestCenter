@@ -1,7 +1,10 @@
+[![Python 3.7|3.8|3.9](https://img.shields.io/badge/python-3.7%7C3.8%7C.3.9-blue.svg)](https://www.python.org/downloads/release/downloads/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![Build status](https://github.com/shmir/PyTestCenter/actions/workflows/python-package.yml/badge.svg?branch=dev)
 
-## Python OO API for Spirent TestCenter (STC).
+# Python OO API for Spirent TestCenter (STC).
 
-### Functionality
+## Functionality
 The current version supports the following test flow:
 
 - Load configuration -> Get/Set attributes -> Start/Stop traffic -> Get statistics.
@@ -17,26 +20,42 @@ Supported operations:
 - Save configuration and results
 - Disconnect
 
-### Low level APIs
+## Low level APIs
 
-- StcTclWrapper - a Python wrapper (using Python Tk package) over STC native Tcl API (SpirentTestCenter) .
 - StcRestWrapper - a Python wrapper over STC lab server REST API (using stcrestclient package).
+- StcTclWrapper - a Python wrapper (using Python Tk package) over STC native Tcl API (SpirentTestCenter) .
 
-### Installation
+## Installation
 
 pip install pytestcenter
 
 **Prerequisite**
 
-- TestCenter application installed for Tcl
 - Lab/Rest server for REST API.
+- TestCenter application installed for Tcl
 
-### Getting started
+## Getting started
 Under testcenter.test.stc_samples you will find some basic samples.
 See inside for more info.
 
-### Documentation
+## Documentation
 http://pytestcenter.readthedocs.io/en/latest/
 
-### Contact
+## Contact
 Feel free to contact me with any question or feature request at yoram@ignissoft.com
+
+## Change Log
+###3.1.0
+####Functionality
+- Add github Python package action 
+- isort and flake8
+####Bug Fixes
+
+###3.1.3
+####Functionality
+- Support capture - start/stop/save
+- Save statistics in TgnObjectsDict
+- Refine and test custom statistics views
+- Python 3, typing, and docstrings
+- Refactor stc samples
+####Bug Fixes

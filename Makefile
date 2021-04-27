@@ -22,3 +22,7 @@ upload:
 
 test:
 	pytest --cache-clear --flake8 --isort --cov=testcenter --tgn-api=rest --tgn-server=windows_511
+
+release:
+	git tag -a $(tag) -m "$(message)"
+	gh release create $(tag) -F ChangeLog.md
