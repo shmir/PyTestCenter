@@ -45,17 +45,4 @@ http://pytestcenter.readthedocs.io/en/latest/
 Feel free to contact me with any question or feature request at yoram@ignissoft.com
 
 ## Change Log
-###3.1.0
-####Functionality
-- Add github Python package action 
-- isort and flake8
-####Bug Fixes
-
-###3.1.3
-####Functionality
-- Support capture - start/stop/save
-- Save statistics in TgnObjectsDict
-- Refine and test custom statistics views
-- Python 3, typing, and docstrings
-- Refactor stc samples
-####Bug Fixes
+[ChangeLog.md](ChangeLog.md)

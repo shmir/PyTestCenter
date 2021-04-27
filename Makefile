@@ -1,6 +1,5 @@
 #
 # Makefile to build and upload to local pypi servers.
-# To upload to pypi.org use plain twine upload.
 #
 
 repo=localhost
@@ -24,5 +23,6 @@ test:
 	pytest --cache-clear --flake8 --isort --cov=testcenter --tgn-api=rest --tgn-server=windows_511
 
 release:
+	# Github workflow python-publish will upload the release to pypi.
 	git tag -a $(tag) -m "$(message)"
-	gh release create $(tag) -F ChangeLog.md
+	gh release create $(tag) -F .changelog
