@@ -90,9 +90,7 @@ venv*/
 *-save.*
 *-1way.*
 *-2way.*
-test*.tcc
-testcenter/test/logs
-testcenter/test/configs/test*.tcc
+tests/config/temp
 
 syntax: regexp
 ^ixnetwork/test/logs/configs_per_protocol$
@@ -100,7 +98,6 @@ syntax: regexp
 ^\.pydevproject$
 
 .idea/
-testcenter/test/configs/*.xml
 
 .pytest_cache
 .README.md.html
