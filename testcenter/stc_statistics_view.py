@@ -60,7 +60,7 @@ class StcStats:
             self.rds = StcObject(objType="DynamicResultView", parent=StcObject.project, objRef=rc["DynamicResultView"])
 
     def unsubscribe(self) -> None:
-        """ UnSubscribe from statistics view. """
+        """UnSubscribe from statistics view."""
         StcObject.project.api.unsubscribe(self.rds.ref)
 
     def read_stats(self, obj_id_stat: Optional[str] = "topLevelName") -> TgnObjectsDict:

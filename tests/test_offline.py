@@ -18,12 +18,12 @@ from testcenter.stc_stream import StcStream
 
 
 def test_hello_world(stc: StcApp) -> None:
-    """ Just make sure the setup is up and running. """
-    pass
+    """Just make sure the setup is up and running."""
+    assert stc
 
 
 def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
-    """ Load existing configuration. """
+    """Load existing configuration."""
     logger.info(test_load_config.__doc__.strip())
 
     configs_dir = Path(__file__).parent.joinpath("configs")
@@ -40,7 +40,7 @@ def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
 
 
 def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
-    """ Analyze existing configuration. """
+    """Analyze existing configuration."""
     logger.info(test_analyze_config.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -74,7 +74,7 @@ def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
 
 
 def test_children(logger: logging.Logger, stc: StcApp) -> None:
-    """ Test specific get children methods. """
+    """Test specific get children methods."""
     logger.info(test_children.__doc__)
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -86,7 +86,7 @@ def test_children(logger: logging.Logger, stc: StcApp) -> None:
 
 
 def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
-    """ Build simple config from scratch. """
+    """Build simple config from scratch."""
     logger.info(test_build_config.__doc__.strip())
 
     for port_name in ("Port 1", "Port 2"):
@@ -98,8 +98,9 @@ def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
             stc_dev = StcDevice(name=dev_name, parent=stc_port)
             stc_eth = StcObject(objType="EthIIIf", parent=stc_dev)
             stc_eth.set_attributes(SourceMac="00:11:22:33:44:55")
-            stc_ip = StcObject(objType="Ipv4If", parent=stc_dev)
-            stc_ip.set_attributes(Address="1.2.3.4", PrefixLength=16)
+            stc_dev.set_attributes(TopLevelIf=stc_eth.ref, PrimaryIf=stc_eth.ref)
+            # stc_ip = StcObject(objType="Ipv4If", parent=stc_dev)
+            # stc_ip.set_attributes(Address="1.2.3.4", PrefixLength=16)
 
         for sb_name in (port_name + " StreamBlock 1", port_name + " StreamBlock 2"):
             logger.info('Build StreamBlock "%s"', sb_name)
@@ -117,12 +118,14 @@ def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
     for stc_port in stc_ports:
         assert len(stc_port.get_children("streamblock")) == 2
 
+    stc.api.apply()
+
     test_name = inspect.stack()[0][3]
     stc.save_config(Path(__file__).parent.joinpath("configs/temp", test_name + ".tcc").as_posix())
 
 
 def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
-    """ Build simple config with ports under project object. """
+    """Build simple config with ports under project object."""
     logger.info(test_stream_under_project.__doc__.strip())
 
     for port_name in ("Port 1", "Port 2"):
@@ -140,7 +143,7 @@ def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
 
 
 def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
-    """ Build simple BGP configuration. """
+    """Build simple BGP configuration."""
     logger.info(test_build_emulation.__doc__.strip())
 
     stc_port = StcPort(name="Port 1", parent=stc.project)
@@ -155,20 +158,20 @@ def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
     stc.save_config(Path(__file__).parent.joinpath("configs/temp", test_name + ".tcc").as_posix())
 
 
-def test_backdoor(logger: logging.Logger, stc: StcApp) -> None:
-
-    if type(stc.api) is not StcRestWrapper:
+def test_backdoor(stc: StcApp) -> None:
+    """Test direct access to stcrestclient."""
+    if not isinstance(stc.api, StcRestWrapper):
         pytest.skip("Skip tests - non rest API")
 
-    print(stc.api.ls.get(stc.project.ref, "children").split())
-    print(stc.api.ls.get(stc.project.ref, "children-port").split())
+    print(stc.api.client.get(stc.project.ref, "children").split())
+    print(stc.api.client.get(stc.project.ref, "children-port").split())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
-    ports = stc.api.ls.get(stc.project.ref, "children-port").split()
+    ports = stc.api.client.get(stc.project.ref, "children-port").split()
 
-    print(stc.api.ls.get(ports[0]))
-    print(stc.api.ls.get(ports[0], "Name"))
-    print(stc.api.ls.get(ports[0], "Name", "Active"))
+    print(stc.api.client.get(ports[0]))
+    print(stc.api.client.get(ports[0], "Name"))
+    print(stc.api.client.get(ports[0], "Name", "Active"))
 
-    print(stc.api.ls.config(ports[0], Name="New Name", Active=False))
-    print(stc.api.ls.get(ports[0], "Name", "Active"))
+    print(stc.api.client.config(ports[0], Name="New Name", Active=False))
+    print(stc.api.client.get(ports[0], "Name", "Active"))

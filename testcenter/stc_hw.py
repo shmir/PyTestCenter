@@ -12,7 +12,7 @@ from testcenter.stc_object import StcObject
 
 
 class StcHw(StcObject):
-    """ Represent STC hardware. """
+    """Represent STC hardware."""
 
     def get_chassis(self, hostname: str) -> StcPhyChassis:
         for chassis in self.get_children("PhysicalChassis"):
@@ -46,7 +46,7 @@ class StcPhyChassis(StcPhyBase):
     pss = {}
 
     def get_inventory(self):
-        super(self.__class__, self).get_inventory()
+        super().get_inventory()
 
         self.pss = {}
         ps_status = self.get_child("PhysicalChassisPowerSupplyStatus")
@@ -88,7 +88,7 @@ class StcPhyModule(StcPhyBase):
     ps = None
 
     def get_inventory(self):
-        super(self.__class__, self).get_inventory()
+        super().get_inventory()
 
         supported_speeds = self.command("spirent.core.GetSupportedSpeedsCommand", PhyTestModule=self.obj_ref())
         self.attributes["SupportedSpeeds"] = re.findall(r"([0-9.]*[M|G]):", supported_speeds["SpeedInfoList"])

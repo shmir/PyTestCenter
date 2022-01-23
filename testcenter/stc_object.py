@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 import time
 from collections import OrderedDict
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from trafficgenerator.tgn_object import TgnObject
 from trafficgenerator.tgn_tcl import build_obj_ref_list
@@ -24,18 +24,18 @@ def extract_stc_obj_type_from_obj_ref(obj_ref: str) -> str:
     :param obj_ref: object reference.
     """
     # There are rare cases where object reference has no sequential number suffix like 'automationoptions'.
-    m = re.search(r"(.*\D+)\d+", obj_ref)
-    return m.group(1) if m else obj_ref
+    match = re.search(r"(.*\D+)\d+", obj_ref)
+    return match.group(1) if match else obj_ref
 
 
 class StcObject(TgnObject):
-    """ Base class for all STC objects. """
+    """Base class for all STC objects."""
 
     str_2_class = {}
 
     project: Optional[testcenter.stc_project.StcProject] = None
 
-    def __init__(self, parent: StcObject, **data: str) -> None:
+    def __init__(self, parent: Union[StcObject, None], **data: str) -> None:
         if "objRef" in data:
             data["objType"] = extract_stc_obj_type_from_obj_ref(data["objRef"])
             if not parent and data["objType"] != "system":
@@ -45,20 +45,15 @@ class StcObject(TgnObject):
             self.__class__ = self.get_obj_class(data["objType"])
         super().__init__(parent, **data)
 
-    def get_obj_class(self, obj_type):
-        """
-        :param obj_type: STC object type.
-        :return: object class if specific class else StcObject.
-        """
+    def get_obj_class(self, obj_type: str) -> StcObject:
+        """Returns object class if specific class else StcObject.
 
+        :param obj_type: STC object type.
+        """
         return StcObject.str_2_class.get(obj_type.lower(), StcObject)
 
-    def _create(self):
-        """Create new object on STC.
-
-        @return: STC object reference.
-        """
-
+    def _create(self) -> str:
+        """Create new object on STC."""
         # At this time objRef is not set yet so we must use direct calls to api.
         attributes = dict(self._data)
         attributes.pop("objType")
@@ -117,7 +112,7 @@ class StcObject(TgnObject):
         """
 
         if not attributes:
-            if type(self.api) is StcRestWrapper:
+            if isinstance(self.api, StcRestWrapper):
                 attributes = self.api.get(self.ref).split()
             else:
                 return self.api.get(self.ref)
@@ -149,7 +144,7 @@ class StcObject(TgnObject):
             self.api.apply()
 
     def set_attributes_serializer(self, _apply, attributes):
-        """ Set attributes from serialized key value dictionary. """
+        """Set attributes from serialized key value dictionary."""
 
         self.api.config(self.obj_ref(), **attributes)
         if _apply:
@@ -184,15 +179,15 @@ class StcObject(TgnObject):
     def test_command_rc(self, attribute):
         status = self.api.command_rc[attribute].lower()
         if status and "passed" not in status and "successful" not in status:
-            raise TgnError("{} = {}".format(attribute, status))
+            raise TgnError(f"{attribute} = {status}")
 
     def wait(self):
-        """ Wait until sequencer is finished. """
+        """Wait until sequencer is finished."""
         self.api.wait()
 
     @classmethod
     def send_arp_ns(cls, *objects: StcObject) -> None:
-        """ Send ARP and NS for ports, devices or stream blocks. """
+        """Send ARP and NS for ports, devices or stream blocks."""
         objects[0].api.perform("ArpNdStart", HandleList=build_obj_ref_list(list(objects)))
 
     @classmethod

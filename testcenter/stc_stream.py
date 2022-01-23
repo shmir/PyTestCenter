@@ -10,22 +10,22 @@ from testcenter.stc_object import StcObject
 
 
 class StcStream(StcObject):
-    """ Represent STC stream block. """
+    """Represent STC stream block."""
 
     def __init__(self, parent: Optional[StcObject], **data: str) -> None:
-        """ Create new streamblock on STC.
+        """Create new streamblock on STC.
 
         Remove automatically created Ethernet and IPv4 configurations under StreamBlock.
 
         :param parent: port object.
         """
-        data['objType'] = 'StreamBlock'
+        data["objType"] = "StreamBlock"
         super().__init__(parent, **data)
 
     def _create(self):
         sb_ref = super()._create()
         # Remove automatically created Ethernet and IPv4 configurations under StreamBlock.
-        self.api.config(sb_ref, FrameConfig='')
+        self.api.config(sb_ref, FrameConfig="")
         return sb_ref
 
     def send_arp_ns(self):
@@ -36,17 +36,17 @@ class StcStream(StcObject):
 
 
 class StcGroupCollection(StcObject):
-    """ Represent STC group collection. """
+    """Represent STC group collection."""
 
     def __init__(self, **data):
-        """ Create new group collection on STC.
+        """Create new group collection on STC.
 
         Set GroupName = name.
 
         :param name: group name.
         :return: group collection object.
         """
-        data['objType'] = 'GroupCollection'
+        data["objType"] = "GroupCollection"
         super(StcGroupCollection, self).__init__(**data)
 
     def _create(self):
@@ -55,14 +55,14 @@ class StcGroupCollection(StcObject):
         return gc_ref
 
     def get_name(self):
-        return self.get_attribute('GroupName')
+        return self.get_attribute("GroupName")
 
 
 class StcTrafficGroup(StcObject):
-    """ Represent STC traffic group. """
+    """Represent STC traffic group."""
 
     def __init__(self, **data):
-        """ Create new traffic group object.
+        """Create new traffic group object.
 
         Set GroupName = name.
 
@@ -71,7 +71,7 @@ class StcTrafficGroup(StcObject):
         :return: traffic group object.
         """
 
-        data['objType'] = 'TrafficGroup'
+        data["objType"] = "TrafficGroup"
         super(StcTrafficGroup, self).__init__(**data)
 
     def _create(self):
@@ -80,14 +80,14 @@ class StcTrafficGroup(StcObject):
         return tg_ref
 
     def get_name(self):
-        return self.get_attribute('GroupName')
+        return self.get_attribute("GroupName")
 
     def set_attributes(self, apply_=False, **attributes):
         for sb in self.get_stream_blocks():
             sb.set_attributes(apply_, **attributes)
 
     def get_stream_blocks(self):
-        streamBlocks = self.get_list_attribute('AffiliationTrafficGroup-Targets')
+        streamBlocks = self.get_list_attribute("AffiliationTrafficGroup-Targets")
         stc_sbs = [self.project.get_object_by_ref(r) for r in streamBlocks]
         if None in stc_sbs:
             self.project.get_stream_blocks()

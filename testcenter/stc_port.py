@@ -16,7 +16,7 @@ from testcenter.stc_stream import StcStream
 
 
 class StcPort(StcObject):
-    """ Represent STC port. """
+    """Represent STC port."""
 
     def __init__(self, parent: Optional[StcObject], **data: str) -> None:
         data["objType"] = "port"
@@ -27,13 +27,13 @@ class StcPort(StcObject):
         self.active_phy = None
 
     def get_devices(self) -> Dict[str, StcDevice]:
-        """ Returns all devices. """
+        """Returns all devices."""
         return {o.name: o for o in self.get_objects_or_children_by_type("EmulatedDevice")}
 
     devices = property(get_devices)
 
     def get_stream_blocks(self) -> Dict[str, StcStream]:
-        """ Returns all stream blocks. """
+        """Returns all stream blocks."""
         return {o.name: o for o in self.get_objects_or_children_by_type("StreamBlock")}
 
     stream_blocks = property(get_stream_blocks)
@@ -78,24 +78,24 @@ class StcPort(StcObject):
         raise TgnError(f"Port failed to reach state {states}, port state is {link_state} after {timeout} seconds")
 
     def release(self) -> None:
-        """ Release the physical port reserved for the port. """
+        """Release the physical port reserved for the port."""
         if not is_local_host(self.location):
             self.api.perform("ReleasePort", portList=self.obj_ref())
 
     def is_online(self) -> bool:
-        """ Returns port link status. """
+        """Returns port link status."""
         return self.active_phy.get_attribute("LinkStatus").lower() == "up"
 
     def is_running(self) -> bool:
-        """ Returns running state of the port. """
+        """Returns running state of the port."""
         return self.generator.get_attribute("state") == "RUNNING"
 
     def send_arp_ns(self) -> None:
-        """ Send ARP/ND for the port. """
+        """Send ARP/ND for the port."""
         StcObject.send_arp_ns(self)
 
     def get_arp_cache(self):
-        """ Send ARP/ND for the port. """
+        """Send ARP/ND for the port."""
         return StcObject.get_arp_cache(self)
 
     def start(self, blocking=False):
@@ -106,15 +106,15 @@ class StcPort(StcObject):
         self.project.start_ports(blocking, self)
 
     def stop(self):
-        """ Stop port traffic. """
+        """Stop port traffic."""
         self.project.stop_ports(self)
 
     def wait(self):
-        """ Wait for traffic end. """
+        """Wait for traffic end."""
         self.project.wait_traffic(self)
 
     def clear_results(self):
-        """ Clear all port results. """
+        """Clear all port results."""
         self.project.clear_results(self)
 
     def set_media_type(self, media_type):
@@ -129,11 +129,11 @@ class StcPort(StcObject):
             self.active_phy = new_phy
 
     def start_capture(self):
-        """ Start capture. """
+        """Start capture."""
         self.capture.api.perform("CaptureStart", CaptureProxyId=self.ref)
 
     def stop_capture(self):
-        """ Stop capture. """
+        """Stop capture."""
         self.capture.api.perform("CaptureStop", CaptureProxyId=self.ref)
 
     def save_capture(self, capture_file: Path, start_frame: Optional[int] = 0, end_frame: Optional[int] = 0) -> None:
@@ -184,35 +184,35 @@ class StcPort(StcObject):
 
 
 class StcGenerator(StcObject):
-    """ Represent STC port generator. """
+    """Represent STC port generator."""
 
     def __init__(self, **data):
         super().__init__(**data)
         self.config = self.get_child("GeneratorConfig")
 
     def get_attributes(self):
-        """ Get generator attribute from generatorConfig object. """
+        """Get generator attribute from generatorConfig object."""
         return self.config.get_attributes()
 
     def set_attributes(self, apply_=False, **attributes):
-        """ Set generator attributes to generatorConfig object. """
+        """Set generator attributes to generatorConfig object."""
         self.config.set_attributes(apply_=apply_, **attributes)
 
 
 class StcAnalyzer(StcObject):
-    """ Represent STC port analyzer. """
+    """Represent STC port analyzer."""
 
     pass
 
 
 class StcCapture(StcObject):
-    """ Represent STC capture. """
+    """Represent STC capture."""
 
     pass
 
 
 class StcLag(StcObject):
-    """ Represents STC LAG. """
+    """Represents STC LAG."""
 
     def __init__(self, parent: StcObject, **data: str) -> None:
         self.port = StcPort(parent, name=data["name"])

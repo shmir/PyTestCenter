@@ -8,10 +8,12 @@ pytest-isort
 tox
 
 # Packaging
-setuptools
-setuptools-scm
 wheel
+setuptools-scm
 twine
 
 # Documentation
 mkdocs
+
+pre-commit
+pylint

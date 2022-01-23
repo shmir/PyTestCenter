@@ -1,7 +1,6 @@
 """
-:author: yoram@ignissoft.com
+STC Tcl wrapper.
 """
-
 from os import path
 from sys import platform
 
@@ -14,13 +13,14 @@ else:
 
 
 class StcTclWrapper(TgnTclWrapper):
-    """ STC Python API over Tcl interpreter. """
+    """STC Python API over Tcl interpreter."""
 
     def __init__(self, logger, stc_install_dir, tcl_interp=None):
         super().__init__(logger, tcl_interp)
         self.eval("set dir " + tcl_file_name(path.join(stc_install_dir, app_subdir)))
         self.source(path.join(stc_install_dir, app_subdir, "pkgIndex.tcl"))
         self.ver = self.eval("package require SpirentTestCenter")
+        self.command_rc = None
 
     def stc_command(self, command, *attributes):
         return self.eval("stc::" + command + " " + " ".join(attributes))
@@ -30,7 +30,7 @@ class StcTclWrapper(TgnTclWrapper):
     #
 
     def apply(self):
-        """ Sends a test configuration to the Spirent TestCenter chassis. """
+        """Sends a test configuration to the Spirent TestCenter chassis."""
         self.stc_command("apply")
 
     def config(self, obj_ref, **attributes):
@@ -90,7 +90,6 @@ class StcTclWrapper(TgnTclWrapper):
         :param arguments: additional arguments.
         :return: dictionary {attribute, value} as returned by 'perform command'.
         """
-
         rc = self.stc_command("perform", command, get_args_pairs(arguments))
         self.command_rc = {k[1:]: v for k, v in dict(zip(*[iter(tcl_list_2_py_list(rc))] * 2)).items()}
         return self.command_rc
@@ -113,6 +112,6 @@ class StcTclWrapper(TgnTclWrapper):
         self.stc_command("unsubscribe", result_data_set)
 
     def wait(self):
-        """ Wait until sequencer is finished. """
+        """Wait until sequencer is finished."""
 
         self.stc_command("waituntilcomplete")

@@ -11,14 +11,13 @@ from testcenter.stc_object import StcObject
 
 
 class StcDevice(StcObject):
-    """ Represents STC emulated device. """
+    """Represents STC emulated device."""
 
     def __init__(self, parent: Optional[StcObject], **data: str) -> None:
         """Create device under port (in STC objects tree emulateddevice is under project).
 
         :param parent: when creating - port, when reading - project.
         """
-
         # Make sure parent is project.
         data["parent"] = StcObject.project
 
@@ -62,7 +61,7 @@ class StcDevice(StcObject):
     def command_emulations(self, command, wait_after=4, **arguments):
         self.project.command_device_emulations(command, wait_after, self, **arguments)
 
-    def get_ordered_valns(self):
+    def get_ordered_vlans(self):
         if not self.get_objects_or_children_by_type("VlanIf"):
             return []
         stc_eth = self.get_objects_or_children_by_type("EthIIIf")[0]
@@ -85,10 +84,10 @@ class StcDevice(StcObject):
 
 
 class StcEmulation(StcObject):
-    """ Base class for all STC emulations. """
+    """Base class for all STC emulations."""
 
-    def command(self, command, wait_after=4, **arguments):
-        """ Perform """
+    def command(self, command, wait_after=4, **arguments) -> None:
+        """Perform emulation command."""
         self.project.command_emulations(command, wait_after, self, **arguments)
 
 

@@ -1,9 +1,9 @@
-import testcenter.stc_device
-import testcenter.stc_hw
-import testcenter.stc_object
-import testcenter.stc_port
-import testcenter.stc_project
-import testcenter.stc_stream
+from testcenter.stc_device import *
+from testcenter.stc_hw import *
+from testcenter.stc_object import *
+from testcenter.stc_port import *
+from testcenter.stc_project import *
+from testcenter.stc_stream import *
 
 TYPE_2_OBJECT = {
     "analyzer": testcenter.stc_port.StcAnalyzer,

@@ -16,7 +16,7 @@ from testcenter.stc_statistics_view import StcStats
 
 
 def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Get inventory and tests some basic info. """
+    """Get inventory and tests some basic info."""
     logger.info(test_inventory.__doc__.strip())
 
     chassis = stc.hw.get_chassis(locations[0].split("/")[0])
@@ -29,7 +29,7 @@ def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) ->
 
 
 def test_online(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Load configuration on ports and verify that ports are online. """
+    """Load configuration on ports and verify that ports are online."""
     logger.info(test_online.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -46,7 +46,7 @@ def test_online(logger: logging.Logger, stc: StcApp, locations: List[str]) -> No
 
 
 def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test ARP commands. """
+    """Test ARP commands."""
     logger.info(test_arp.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -63,7 +63,7 @@ def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
 
 # If this tests fails, consider adding delay between ping commands.
 def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test Ping commands. """
+    """Test Ping commands."""
     logger.info(test_ping.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -77,7 +77,7 @@ def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None
 
 
 def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test device operations using DHCP emulation. """
+    """Test device operations using DHCP emulation."""
     logger.info(test_devices.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("dhcp_sample.tcc").as_posix())
@@ -124,7 +124,7 @@ def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
 
 
 def test_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test traffic and counters. """
+    """Test traffic and counters."""
     logger.info(test_traffic.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -167,7 +167,7 @@ def test_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
 
 
 def test_capture(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test traffic and capture. """
+    """Test traffic and capture."""
     logger.info(test_capture.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_config.xml").as_posix())
@@ -181,7 +181,7 @@ def test_capture(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
 
 
 def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
-    """ Test Sequencer commands. """
+    """Test Sequencer commands."""
     logger.info(test_sequencer.__doc__.strip())
 
     stc.load_config(Path(__file__).parent.joinpath("configs").joinpath("test_sequencer.tcc").as_posix())

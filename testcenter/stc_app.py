@@ -57,7 +57,7 @@ def init_stc(
 
 
 class StcApp(TgnApp):
-    """ TestCenter driver. Equivalent to TestCenter Application. """
+    """TestCenter driver. Equivalent to TestCenter Application."""
 
     def __init__(self, logger: logging.Logger, api_wrapper: Union[StcRestWrapper, StcTclWrapper]) -> None:
         """Set all kinds of application level objects - logger, api, etc.
@@ -75,7 +75,7 @@ class StcApp(TgnApp):
         self.system.api = self.api
         self.system.logger = self.logger
         self.lab_server = None
-        self.project: Optional[StcProject] = None
+        self.project: StcProject = None
         self.hw = None
 
     def connect(self, lab_server=None) -> None:
@@ -112,7 +112,7 @@ class StcApp(TgnApp):
         """
 
         if type(self.api) == StcRestWrapper:
-            self.api.ls.upload(config_file_name)
+            self.api.client.upload(config_file_name)
             config_file_name = path.basename(config_file_name)
         ext = path.splitext(config_file_name)[-1].lower()
         if ext == ".tcc":
@@ -146,7 +146,7 @@ class StcApp(TgnApp):
         else:
             raise ValueError("Configuration file type {0} not supported.".format(ext))
         if type(self.api) == StcRestWrapper:
-            self.api.ls.download(rc["FileName"], config_file_name_full_path)
+            self.api.client.download(rc["FileName"], config_file_name_full_path)
 
     def clear_results(self) -> None:
         self.project.clear_results()
@@ -157,7 +157,7 @@ class StcApp(TgnApp):
     #
 
     def send_arp_ns(self) -> None:
-        """ Run ARP on all ports. """
+        """Run ARP on all ports."""
         StcObject.send_arp_ns(*self.project.ports.values())
 
     def get_arp_cache(self):
@@ -175,7 +175,7 @@ class StcApp(TgnApp):
         self._command_devices("DeviceStart")
 
     def stop_devices(self) -> None:
-        """ Stop all devices. """
+        """Stop all devices."""
         self._command_devices("DeviceStop")
 
     def _command_devices(self, command) -> None:
@@ -188,15 +188,15 @@ class StcApp(TgnApp):
     #
 
     def start_traffic(self, blocking: Optional[bool] = False) -> None:
-        """ Start traffic on all ports. """
+        """Start traffic on all ports."""
         self.project.start_ports(blocking)
 
     def stop_traffic(self) -> None:
-        """ Stop traffic on all ports. """
+        """Stop traffic on all ports."""
         self.project.stop_ports()
 
     def wait_traffic(self) -> None:
-        """ Wait for traffic to end on all ports. """
+        """Wait for traffic to end on all ports."""
         self.project.wait_traffic()
 
     #

@@ -20,18 +20,19 @@ logger.setLevel("INFO")
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 api = ApiType.tcl
-install_dir = "C:/Program Files/Spirent Communications/Spirent TestCenter 5.11"
-lab_server = None
-rest_server = "localhost"
-rest_port = 8888
+INSTALL_DIR = "C:/Program Files/Spirent Communications/Spirent TestCenter 5.11"
+LAB_SERVER = None
+REST_SERVER = "localhost"
+REST_PORT = 8888
 
 stc_config_file = Path(__file__).parent.joinpath("test_config.xml")
 
-port1_location = "192.168.65.24/1/1"
-port2_location = "192.168.65.24/1/2"
+PORT_1_LOCATION = "192.168.65.24/1/1"
+PORT_2_LOCATION = "192.168.65.24/1/2"
 
 
 def access_object():
+    """Demonstrates how to get objects and attributes."""
 
     # You can read all objects by calling the general method get_children
     stc.project.get_children("port")
@@ -53,6 +54,7 @@ def access_object():
 
 
 def get_set_attribute():
+    """Demonstrates how to set attributes."""
 
     device = stc.project.ports["Port 1"].devices["Device 1"]
 
@@ -79,13 +81,15 @@ def get_set_attribute():
 
 
 def reserve_ports():
+    """Demonstrates how to reserve ports."""
 
     # To reserve a port, you need to map it to a location.
-    stc.project.ports["Port 1"].reserve(port1_location)
-    stc.project.ports["Port 2"].reserve(port2_location)
+    stc.project.ports["Port 1"].reserve(PORT_1_LOCATION)
+    stc.project.ports["Port 2"].reserve(PORT_2_LOCATION)
 
 
 def manage_devices():
+    """Demonstrates how to manage devices - arp/start/stop..."""
 
     stc.send_arp_ns()
     print(stc.get_arp_cache())
@@ -95,6 +99,7 @@ def manage_devices():
 
 
 def manage_traffic():
+    """Demonstrates how to manage traffic - start/stop/statistics..."""
 
     stc.start_traffic()
     time.sleep(8)
@@ -116,8 +121,9 @@ def manage_traffic():
 
 
 def get_inventory():
+    """Demonstrates how to get chassis inventory."""
 
-    chassis = stc.hw.get_chassis(port1_location.split("/")[0])
+    chassis = stc.hw.get_chassis(PORT_1_LOCATION.split("/", maxsplit=1)[0], maxsplit=1)
     chassis.get_inventory()
 
     print("Full Inventory")
@@ -127,14 +133,14 @@ def get_inventory():
     for module_name, module in chassis.modules.items():
         print("\t" + module_name)
         print("\t" + str(module.attributes))
-        for pg_name, pg in module.pgs.items():
-            print("\t\t" + pg_name)
-            print("\t\t" + str(pg.attributes))
-            for port_name, port in pg.ports.items():
-                print("\t\t\t" + port_name)
-                print("\t\t\t" + str(port.attributes))
-    for ps_name in chassis.pss:
-        print("\t" + ps_name)
+        for name, port_group in module.pgs.items():
+            print(f"\t\t{name}")
+            print(f"\t\t{port_group.attributes}")
+            for port_name, port in port_group.ports.items():
+                print(f"\t\t\t{port_name}")
+                print(f"\t\t\t{port.attributes}")
+    for power_supply_name in chassis.pss:
+        print(f"\t{power_supply_name}")
 
     print("\nThin Inventory")
     print("=" * len("Thin Inventory"))
@@ -145,14 +151,14 @@ def get_inventory():
 
 
 if __name__ == "__main__":
-    stc = init_stc(api, logger, install_dir=install_dir, rest_server=rest_server, rest_port=rest_port)
-    stc.connect(lab_server)
+    stc = init_stc(api, logger, install_dir=INSTALL_DIR, rest_server=REST_SERVER, rest_port=REST_PORT)
+    stc.connect(LAB_SERVER)
     stc.load_config(stc_config_file)
     stc.api.apply()
-    # access_object()
-    # get_set_attribute()
-    # get_inventory()
+    access_object()
+    get_set_attribute()
+    get_inventory()
     reserve_ports()
-    # manage_devices()
+    manage_devices()
     manage_traffic()
     stc.disconnect(terminate=False)
