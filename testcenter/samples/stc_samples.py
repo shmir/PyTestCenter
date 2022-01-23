@@ -31,7 +31,7 @@ PORT_1_LOCATION = "192.168.65.24/1/1"
 PORT_2_LOCATION = "192.168.65.24/1/2"
 
 
-def access_object():
+def access_object() -> None:
     """Demonstrates how to get objects and attributes."""
 
     # You can read all objects by calling the general method get_children
@@ -53,7 +53,7 @@ def access_object():
         print(f"{port.name}\t{port.ref}\t{port}")
 
 
-def get_set_attribute():
+def get_set_attribute() -> None:
     """Demonstrates how to set attributes."""
 
     device = stc.project.ports["Port 1"].devices["Device 1"]
@@ -80,7 +80,7 @@ def get_set_attribute():
     assert is_false(device.get_active())
 
 
-def reserve_ports():
+def reserve_ports() -> None:
     """Demonstrates how to reserve ports."""
 
     # To reserve a port, you need to map it to a location.
@@ -88,7 +88,7 @@ def reserve_ports():
     stc.project.ports["Port 2"].reserve(PORT_2_LOCATION)
 
 
-def manage_devices():
+def manage_devices() -> None:
     """Demonstrates how to manage devices - arp/start/stop..."""
 
     stc.send_arp_ns()
@@ -98,7 +98,7 @@ def manage_devices():
     stc.stop_devices()
 
 
-def manage_traffic():
+def manage_traffic() -> None:
     """Demonstrates how to manage traffic - start/stop/statistics..."""
 
     stc.start_traffic()
@@ -120,10 +120,10 @@ def manage_traffic():
     print(port_stats.statistics["Port 1"]["TotalFrameCount"])
 
 
-def get_inventory():
+def get_inventory() -> None:
     """Demonstrates how to get chassis inventory."""
 
-    chassis = stc.hw.get_chassis(PORT_1_LOCATION.split("/", maxsplit=1)[0], maxsplit=1)
+    chassis = stc.hw.get_chassis(PORT_1_LOCATION.split("/", maxsplit=1)[0])
     chassis.get_inventory()
 
     print("Full Inventory")
@@ -153,7 +153,7 @@ def get_inventory():
 if __name__ == "__main__":
     stc = init_stc(api, logger, install_dir=INSTALL_DIR, rest_server=REST_SERVER, rest_port=REST_PORT)
     stc.connect(LAB_SERVER)
-    stc.load_config(stc_config_file)
+    stc.load_config(stc_config_file.as_posix())
     stc.api.apply()
     access_object()
     get_set_attribute()
