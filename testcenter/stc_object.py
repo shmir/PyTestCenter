@@ -46,7 +46,7 @@ class StcObject(TgnObject):
         super().__init__(parent, **data)
 
     def get_obj_class(self, obj_type: str) -> StcObject:
-        """Returns object class if specific class else StcObject.
+        """Return object class if specific class else StcObject.
 
         :param obj_type: STC object type.
         """
@@ -60,10 +60,9 @@ class StcObject(TgnObject):
         attributes.pop("parent")
         if "name" in self._data:
             return self.api.create(self.type, self.parent, **attributes)
-        else:
-            stc_obj = self.api.create(self.type, self.parent, **attributes)
-            self._data["name"] = self._get_name(self.api.get(stc_obj, "name"), stc_obj)
-            return stc_obj
+        stc_obj = self.api.create(self.type, self.parent, **attributes)
+        self._data["name"] = self._get_name(self.api.get(stc_obj, "name"), stc_obj)
+        return stc_obj
 
     def command(self, command, wait_after=0, **arguments):
         rc = self.api.perform(command, **arguments)
@@ -82,7 +81,7 @@ class StcObject(TgnObject):
         """
         :return: attribute value as Python list.
         """
-        return self.api.getList(self.obj_ref(), attribute)
+        return self.api.get_list(self.obj_ref(), attribute)
 
     def get_objects_from_attribute(self, attribute):
         objects = []
@@ -110,7 +109,6 @@ class StcObject(TgnObject):
         :param attributes: list of attributes to retrieve. If empty (default) return all attribute values.
         :return: dictionary {attribute: value} of all requested attributes.
         """
-
         if not attributes:
             if isinstance(self.api, StcRestWrapper):
                 attributes = self.api.get(self.ref).split()
@@ -145,7 +143,6 @@ class StcObject(TgnObject):
 
     def set_attributes_serializer(self, _apply, attributes):
         """Set attributes from serialized key value dictionary."""
-
         self.api.config(self.obj_ref(), **attributes)
         if _apply:
             self.api.apply()
@@ -159,13 +156,13 @@ class StcObject(TgnObject):
             attributes_targets[attribute + "-targets"] = value
         self.set_attributes(apply_, **attributes_targets)
 
-    def set_sources(self, apply_=False, **attributes):
+    def set_sources(self, apply_=False, **attributes) -> None:
         attributes_targets = {}
         for attribute, value in attributes.items():
             attributes_targets[attribute + "-sources"] = value
         self.set_attributes(apply_, **attributes_targets)
 
-    def delete(self):
+    def delete(self) -> None:
         self.api.delete(self.ref)
         self.del_object_from_parent()
 
@@ -176,12 +173,12 @@ class StcObject(TgnObject):
     def get_active(self):
         return self.get_attribute("Active")
 
-    def test_command_rc(self, attribute):
+    def test_command_rc(self, attribute) -> None:
         status = self.api.command_rc[attribute].lower()
         if status and "passed" not in status and "successful" not in status:
             raise TgnError(f"{attribute} = {status}")
 
-    def wait(self):
+    def wait(self) -> None:
         """Wait until sequencer is finished."""
         self.api.wait()
 

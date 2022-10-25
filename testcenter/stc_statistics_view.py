@@ -1,6 +1,7 @@
 """
 Classes and utilities to manage STC statistics views.
 """
+import time
 from typing import Optional
 
 from trafficgenerator.tgn_object import TgnObjectsDict
@@ -50,7 +51,11 @@ class StcStats:
             if not config_type:
                 config_type = view_2_config_type[view.lower()]
             rds = StcObject.project.api.subscribe(
-                Parent=StcObject.project.ref, ResultParent=StcObject.project.ref, ConfigType=config_type, ResultType=view
+                Parent=StcObject.project.ref,
+                ResultParent=StcObject.project.ref,
+                ConfigType=config_type,
+                ResultType=view,
+                RecordsPerPage=256,
             )
             self.rds = StcObject(objType="ResultDataSet", parent=StcObject.project, objRef=rds)
         else:
@@ -60,11 +65,11 @@ class StcStats:
             self.rds = StcObject(objType="DynamicResultView", parent=StcObject.project, objRef=rc["DynamicResultView"])
 
     def unsubscribe(self) -> None:
-        """UnSubscribe from statistics view."""
+        """Unsubscribe from statistics view."""
         StcObject.project.api.unsubscribe(self.rds.ref)
 
     def read_stats(self, obj_id_stat: Optional[str] = "topLevelName") -> TgnObjectsDict:
-        """Reads the statistics view from STC and saves it in statistics dictionary.
+        """Read the statistics view from STC and saves it in statistics dictionary.
 
         :param obj_id_stat: which statistics name to use as object ID, sometimes topLevelName is
             not meaningful and it is better to use other unique identifier like stream ID.
@@ -77,7 +82,7 @@ class StcStats:
         return self.statistics
 
     def get_column_stats(self, name: str) -> TgnObjectsDict:
-        """Returns all statistics values for the requested statistics.
+        """Return all statistics values for the requested statistics.
 
         N/A for custom views.
 
@@ -92,8 +97,7 @@ class StcStats:
     # Private methods.
     #
 
-    def _read_custom_view(self):
-
+    def _read_custom_view(self) -> None:
         StcObject.project.command("RefreshResultView", ResultDataSet=self.rds.ref)
         StcObject.project.command("UpdateDynamicResultViewCommand", DynamicResultView=self.rds.ref)
         presentationResultQuery = self.rds.get_child("PresentationResultQuery")
@@ -112,10 +116,10 @@ class StcStats:
             self._get_result_data(child_rvd, num_columns)
 
     def _read_view(self, obj_id_stat: Optional[str] = "topLevelName") -> None:
-
         StcObject.project.command("RefreshResultView", ResultDataSet=self.rds.ref)
         for page_number in range(1, int(self.rds.get_attribute("TotalPageCount")) + 1):
-            self.rds.set_attributes(PageNumber=page_number)
+            self.rds.set_attributes(apply_=True, PageNumber=page_number)
+            time.sleep(2)
             for results in self.rds.get_objects_from_attribute("ResultHandleList"):
                 parent = results.get_object_from_attribute("parent")
                 parents = parent.ref

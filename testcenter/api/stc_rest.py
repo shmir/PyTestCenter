@@ -12,7 +12,9 @@ from stcrestclient import stchttp
 class StcRestWrapper:
     """STC Python API over REST Server."""
 
-    def __init__(self, logger: logging.Logger, server, port=80, user_name=getpass.getuser(), session_name=None):
+    def __init__(
+        self, logger: logging.Logger, server: str, port: int = 80, user_name: str = getpass.getuser(), session_name: str = None
+    ):
         """Init STC REST client.
 
         :TODO: Add logger to log STC REST commands only. This creates a clean REST script that can be used later for debug.
@@ -32,11 +34,11 @@ class StcRestWrapper:
             self.session_id = self.client.new_session(user_name, session_name, kill_existing=True)
         self.command_rc = None
 
-    def disconnect(self, terminate):
+    def disconnect(self, terminate: bool) -> None:
         self.client.end_session(terminate)
 
     def create(self, obj_type, parent, **attributes):
-        """Creates one or more Spirent TestCenter Automation objects.
+        """Create one or more Spirent TestCenter Automation objects.
 
         :param obj_type: object type.
         :param parent: object parent - object will be created under this parent.
@@ -52,19 +54,19 @@ class StcRestWrapper:
         """
         self.client.delete(obj_ref)
 
-    def perform(self, command, **arguments):
+    def perform(self, command, **arguments) -> dict:
         """Execute a command.
 
         :param command: requested command.
         :param arguments: additional arguments.
         """
         if command in ["CSTestSessionConnect", "CSTestSessionDisconnect"]:
-            return
+            return {}
         self.command_rc = self.client.perform(command, **arguments)
         return self.command_rc
 
     def get(self, obj_ref: str, attribute: Optional[str] = "") -> str:
-        """Returns the value(s) of one or more object attributes or a set of object handles.
+        """Return the value(s) of one or more object attributes or a set of object handles.
 
         :param obj_ref: requested object reference.
         :param attribute: requested attribute. If empty - return values of all object attributes.
@@ -73,16 +75,15 @@ class StcRestWrapper:
         output = self.client.get(obj_ref, attribute)
         return output if isinstance(output, str) else " ".join(output)
 
-    def getList(self, obj_ref: str, attribute: str) -> List[str]:
-        """Returns the value of the object attributes or a python list.
+    def get_list(self, obj_ref: str, attribute: str) -> List[str]:
+        """Return the value of the object attributes or a python list.
 
         :param obj_ref: requested object reference.
         :param attribute: requested attribute.
-        :return: requested value as returned by get command.
         """
         return self.client.get(obj_ref, attribute).split()
 
-    def config(self, obj_ref, **attributes):
+    def config(self, obj_ref: str, **attributes: object) -> None:
         """Set or modifies one or more object attributes, or a relation.
 
         :param obj_ref: requested object reference.
@@ -90,27 +91,26 @@ class StcRestWrapper:
         """
         self.client.config(obj_ref, attributes)
 
-    def subscribe(self, **arguments):
+    def subscribe(self, **arguments: object) -> str:
         """Subscribe to statistics view.
 
         :param arguments: subscribe command arguments.
-            must arguments: parent, resultParent, configType, resultType
+            mandatory arguments: parent, ResultParent, ConfigType, ResultType
             + additional arguments.
-        :return: ResultDataSet handler
         """
         return self.perform("ResultsSubscribe", **arguments)["ReturnedDataSet"]
 
-    def unsubscribe(self, result_data_set):
+    def unsubscribe(self, result_data_set: str) -> None:
         """Unsubscribe from statistics view.
 
         :param result_data_set: ResultDataSet handler
         """
         self.perform("ResultDataSetUnsubscribe", ResultDataSet=result_data_set)
 
-    def apply(self):
-        """Sends a test configuration to the Spirent TestCenter chassis."""
+    def apply(self) -> None:
+        """Send a test configuration to the Spirent TestCenter chassis."""
         self.client.apply()
 
-    def wait(self):
+    def wait(self) -> None:
         """Wait until sequencer is finished."""
         self.client.wait_until_complete()

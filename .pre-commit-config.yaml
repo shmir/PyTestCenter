@@ -6,13 +6,13 @@ repos:
         language_version: python3.9
         args: [--line-length=127]
   - repo: https://github.com/python/black
-    rev: 21.12b0
+    rev: 22.8.0
     hooks:
       - id: black
         language_version: python3.9
         args: [--line-length=127]
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 4.0.1
+    rev: 5.0.4
     hooks:
       - id: flake8
         additional_dependencies: [
@@ -25,9 +25,8 @@ repos:
         language_version: python3.9
         args: [
           --max-line-length=127,
-          '--ignore=D100,D101,D102,D103,D104,D105,D106,D107,D200,D210,D401,W503,E203,D202'
+          '--ignore=D105,D200,W503,F401,F811'
         ]
-  # See https://stackoverflow.com/questions/61238318/pylint-and-pre-commit-hook-unable-to-import/61238571#61238571
   - repo: local
     hooks:
       - id: pylint
@@ -39,11 +38,12 @@ repos:
           --max-line-length=127,
           --max-public-methods=32,
           --max-args=8,
-          '--disable=too-few-public-methods,logging-fstring-interpolation,too-many-instance-attributes,no-else-return,too-many-locals,no-self-use,duplicate-code,broad-except,logging-not-lazy,unspecified-encoding',
-          '--good-names=ip,rc,hw,pg,sb'
+          '--disable=logging-fstring-interpolation,logging-not-lazy,unspecified-encoding',
+          '--good-names=ip,rc,hw,pg,sb',
+          '--load-plugins=pylint_pytest'
         ]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.930
+    rev: v0.981
     hooks:
     -   id: mypy
         verbose: true

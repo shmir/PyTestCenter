@@ -36,7 +36,7 @@ def init_stc(
     rest_server: Optional[str] = None,
     rest_port: Optional[int] = 80,
 ) -> StcApp:
-    """Helper function to create STC object.
+    """Create STC object.
 
     This helper supports only new sessions. In order to connect to existing session on Lab server create
     StcRestWrapper and StcApp directly.
@@ -65,7 +65,6 @@ class StcApp(TgnApp):
         :param logger: python logger (e.g. logging.getLogger('log'))
         :param api_wrapper: api wrapper object inheriting and implementing StcApi base class.
         """
-
         super().__init__(logger, api_wrapper)
 
         StcObject.logger = self.logger
@@ -110,7 +109,6 @@ class StcApp(TgnApp):
 
         :param config_file_name: full path to the configuration file.
         """
-
         if type(self.api) == StcRestWrapper:
             self.api.client.upload(config_file_name)
             config_file_name = path.basename(config_file_name)
@@ -124,7 +122,7 @@ class StcApp(TgnApp):
         self.project.objects = {}
         self.project.get_children("port")
 
-    def reset_config(self):
+    def reset_config(self) -> None:
         self.api.perform("ResetConfig", config="system1")
 
     def save_config(self, config_file_name: str, server_folder: Optional[str] = "c:\\temp") -> None:
