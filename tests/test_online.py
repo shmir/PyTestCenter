@@ -3,8 +3,6 @@ TestCenter package tests that require actual TestCenter chassis and active ports
 
 Test setup:
 Two STC ports connected back to back.
-
-@author yoram@ignissoft.com
 """
 import json
 import logging
@@ -14,8 +12,10 @@ from typing import List
 from testcenter.stc_app import StcApp, StcSequencerOperation
 from testcenter.stc_statistics_view import StcStats
 
+logger = logging.getLogger("tgn.testcenter")
 
-def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+
+def test_inventory(stc: StcApp, locations: List[str]) -> None:
     """Get inventory and tests some basic info."""
     logger.info(test_inventory.__doc__.strip())
 
@@ -28,7 +28,7 @@ def test_inventory(logger: logging.Logger, stc: StcApp, locations: List[str]) ->
             assert len(pg.ports) >= 1
 
 
-def test_online(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_online(stc: StcApp, locations: List[str]) -> None:
     """Load configuration on ports and verify that ports are online."""
     logger.info(test_online.__doc__.strip())
 
@@ -45,7 +45,7 @@ def test_online(logger: logging.Logger, stc: StcApp, locations: List[str]) -> No
     stc.project.get_object_by_name("Port 2").reserve(wait_for_up=False)
 
 
-def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_arp(stc: StcApp, locations: List[str]) -> None:
     """Test ARP commands."""
     logger.info(test_arp.__doc__.strip())
 
@@ -62,7 +62,7 @@ def test_arp(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
 
 
 # If this tests fails, consider adding delay between ping commands.
-def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_ping(stc: StcApp, locations: List[str]) -> None:
     """Test Ping commands."""
     logger.info(test_ping.__doc__.strip())
 
@@ -76,7 +76,7 @@ def test_ping(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None
             device.ping(gateway)
 
 
-def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_devices(stc: StcApp, locations: List[str]) -> None:
     """Test device operations using DHCP emulation."""
     logger.info(test_devices.__doc__.strip())
 
@@ -123,7 +123,7 @@ def test_devices(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
         assert dhcp_client.get_attribute("BlockState") == "BOUND"
 
 
-def test_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_traffic(stc: StcApp, locations: List[str]) -> None:
     """Test traffic and counters."""
     logger.info(test_traffic.__doc__.strip())
 
@@ -166,7 +166,7 @@ def test_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
     assert gen_stats.statistics["Port 1"]["GeneratorFrameCount"] == analyzer_stats.statistics["Port 2"]["SigFrameCount"]
 
 
-def test_capture(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_capture(stc: StcApp, locations: List[str]) -> None:
     """Test traffic and capture."""
     logger.info(test_capture.__doc__.strip())
 
@@ -180,7 +180,7 @@ def test_capture(logger: logging.Logger, stc: StcApp, locations: List[str]) -> N
     stc.project.ports["Port 2"].save_capture(Path(__file__).parent.joinpath("configs", "temp", "capture.pcap"))
 
 
-def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_sequencer(stc: StcApp, locations: List[str]) -> None:
     """Test Sequencer commands."""
     logger.info(test_sequencer.__doc__.strip())
 
@@ -198,7 +198,7 @@ def test_sequencer(logger: logging.Logger, stc: StcApp, locations: List[str]) ->
     assert gen_stats.statistics["Port 1"]["GeneratorFrameCount"] >= 7900
 
 
-def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_custom_view(stc: StcApp, locations: List[str]) -> None:
     """Test custom statistics view.
 
     Need to create proper configuration.
@@ -219,7 +219,7 @@ def test_custom_view(logger: logging.Logger, stc: StcApp, locations: List[str]) 
     print(json.dumps(user_stats.statistics, indent=2))
 
 
-def test_single_port_traffic(logger: logging.Logger, stc: StcApp, locations: List[str]) -> None:
+def test_single_port_traffic(stc: StcApp, locations: List[str]) -> None:
     """Test traffic and counters in loopback mode.
 
     This tests cannot run on virtual ports.

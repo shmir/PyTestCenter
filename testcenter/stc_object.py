@@ -10,12 +10,14 @@ import time
 from collections import OrderedDict
 from typing import List, Optional, Union
 
+from trafficgenerator import TgnError
 from trafficgenerator.tgn_object import TgnObject
 from trafficgenerator.tgn_tcl import build_obj_ref_list
-from trafficgenerator.tgn_utils import TgnError
 
 import testcenter
 from testcenter.api.stc_rest import StcRestWrapper
+
+child_type_wo_number = re.compile(r"(.*\D+)\d+")
 
 
 def extract_stc_obj_type_from_obj_ref(obj_ref: str) -> str:
@@ -41,7 +43,7 @@ class StcObject(TgnObject):
             if not parent and data["objType"] != "system":
                 self._data["objRef"] = data["objRef"]
                 parent = self.get_object_from_attribute("parent")
-        if type(self) == StcObject:
+        if type(self) == StcObject:  # pylint: disable=unidiomatic-typecheck
             self.__class__ = self.get_obj_class(data["objType"])
         super().__init__(parent, **data)
 
@@ -59,8 +61,8 @@ class StcObject(TgnObject):
         attributes.pop("objType")
         attributes.pop("parent")
         if "name" in self._data:
-            return self.api.create(self.type, self.parent, **attributes)
-        stc_obj = self.api.create(self.type, self.parent, **attributes)
+            return self.api.create(self.type, self.parent.ref, **attributes)
+        stc_obj = self.api.create(self.type, self.parent.ref, **attributes)
         self._data["name"] = self._get_name(self.api.get(stc_obj, "name"), stc_obj)
         return stc_obj
 
@@ -69,7 +71,7 @@ class StcObject(TgnObject):
         time.sleep(wait_after)
         return rc
 
-    def get_attribute(self, attribute):
+    def get_attribute(self, attribute: str) -> str:
         """Get single attribute value.
 
         :param attribute: attribute name.
@@ -132,11 +134,11 @@ class StcObject(TgnObject):
             children_objects.update(self._build_children_objs(child_type, output.split(" ")))
         return list(children_objects.values())
 
-    def get_all_child_types(self):
+    def get_all_child_types(self) -> List[str]:
         children = self.get_attribute("children").split()
-        return list(set([m.group(1) for c in children for m in [re.search(r"(.*\D+)\d+", c)]]))
+        return list({m for c in children for m in child_type_wo_number.findall(c)})
 
-    def set_attributes(self, apply_=False, **attributes):
+    def set_attributes(self, apply_: bool = False, **attributes: object) -> None:
         self.api.config(self.ref, **attributes)
         if apply_:
             self.api.apply()
@@ -188,7 +190,7 @@ class StcObject(TgnObject):
         objects[0].api.perform("ArpNdStart", HandleList=build_obj_ref_list(list(objects)))
 
     @classmethod
-    def get_arp_cache(cls, *objects):
+    def get_arp_cache(cls, *objects) -> list:
         arp_table = []
         for obj in objects:
             obj.command("ArpNdUpdateArpCache", HandleList=obj.obj_ref())

@@ -25,7 +25,7 @@ clean:
 install:
 	make clean
 	python -m pip install -U pip
-	pip install -U -r requirements.txt
+	pip install --no-cache-dir -U -r requirements.txt
 
 build:
 	make clean

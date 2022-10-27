@@ -32,7 +32,7 @@ class StcProject(StcObject):
 
     wait_for_ports = 4
 
-    def __init__(self, parent, **data) -> None:
+    def __init__(self, parent: StcObject, **data: object) -> None:
         super().__init__(parent, objType="project", **data)
 
     def get_ports(self) -> Dict[str, StcPort]:
@@ -167,14 +167,12 @@ class StcProject(StcObject):
         """
         self._command_emulations("ProtocolStop", wait_after, ProtocolList=build_obj_ref_list(emulations))
 
-    def get_stream_blocks(self):
-        """
-        :return: all stream blocks in the configuration.
-        """
-        streamblocks = []
-        for port in self.project.get_objects_by_type("port"):
-            streamblocks.extend(port.get_children("streamblock"))
-        return streamblocks
+    def get_stream_blocks(self) -> dict:
+        """Return all stream blocks in the configuration."""
+        stream_blocks = {}
+        for port in self.project.ports.values():
+            stream_blocks.update(port.stream_blocks)
+        return stream_blocks
 
     #
     # private methods.
@@ -202,7 +200,7 @@ class StcIpGroup(StcObject):
     """Base class for STC IP groups."""
 
     def __init__(self, **data):
-        super(StcIpGroup, self).__init__(**data)
+        super().__init__(**data)
         if "joinedGroup" in data:
             self.set_sources(JoinedGroup=data["joinedGroup"].obj_ref())
 

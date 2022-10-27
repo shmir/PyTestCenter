@@ -1,14 +1,13 @@
 """
 This module implements classes and utility functions to manage STC port.
-
-:author: yoram@ignissoft.com
 """
 import re
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from trafficgenerator.tgn_utils import TgnError, is_local_host
+from trafficgenerator import TgnError
+from trafficgenerator.tgn_utils import is_local_host
 
 from testcenter.stc_device import StcDevice
 from testcenter.stc_object import StcObject
@@ -23,17 +22,17 @@ class StcPort(StcObject):
         super().__init__(parent, **data)
         self.generator = self.get_child("generator")
         self.capture = self.get_child("capture")
-        self.location = None
-        self.active_phy = None
+        self.location: str = None
+        self.active_phy: StcObject = None
 
     def get_devices(self) -> Dict[str, StcDevice]:
-        """Returns all devices."""
+        """Return all devices."""
         return {o.name: o for o in self.get_objects_or_children_by_type("EmulatedDevice")}
 
     devices = property(get_devices)
 
     def get_stream_blocks(self) -> Dict[str, StcStream]:
-        """Returns all stream blocks."""
+        """Return all stream blocks."""
         return {o.name: o for o in self.get_objects_or_children_by_type("StreamBlock")}
 
     stream_blocks = property(get_stream_blocks)
@@ -83,56 +82,55 @@ class StcPort(StcObject):
             self.api.perform("ReleasePort", portList=self.obj_ref())
 
     def is_online(self) -> bool:
-        """Returns port link status."""
+        """Return port link status."""
         return self.active_phy.get_attribute("LinkStatus").lower() == "up"
 
     def is_running(self) -> bool:
-        """Returns running state of the port."""
+        """Return running state of the port."""
         return self.generator.get_attribute("state") == "RUNNING"
 
     def send_arp_ns(self) -> None:
         """Send ARP/ND for the port."""
         StcObject.send_arp_ns(self)
 
-    def get_arp_cache(self):
+    def get_arp_cache(self) -> list:
         """Send ARP/ND for the port."""
         return StcObject.get_arp_cache(self)
 
-    def start(self, blocking=False):
+    def start(self, blocking: bool = False) -> None:
         """Start port traffic.
 
         :param blocking: True - wait for traffic end. False - return immediately.
         """
         self.project.start_ports(blocking, self)
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop port traffic."""
         self.project.stop_ports(self)
 
-    def wait(self):
+    def wait(self) -> None:
         """Wait for traffic end."""
         self.project.wait_traffic(self)
 
-    def clear_results(self):
+    def clear_results(self) -> None:
         """Clear all port results."""
         self.project.clear_results(self)
 
-    def set_media_type(self, media_type):
+    def set_media_type(self, media_type) -> None:
         """Set media type for dual phy 1G ports.
 
         :param media_type: requested media type - EthernetCopper or EthernetFiber.
         """
-
-        if media_type != self.active_phy.obj_type():
+        if media_type != self.active_phy.type:
             new_phy = StcObject(parent=self, objType=media_type)
             self.set_targets(apply_=True, ActivePhy=new_phy.obj_ref())
             self.active_phy = new_phy
 
-    def start_capture(self):
+    def start_capture(self) -> None:
         """Start capture."""
         self.capture.api.perform("CaptureStart", CaptureProxyId=self.ref)
 
-    def stop_capture(self):
+    def stop_capture(self) -> None:
         """Stop capture."""
         self.capture.api.perform("CaptureStop", CaptureProxyId=self.ref)
 
@@ -179,7 +177,7 @@ class StcPort(StcObject):
             children_objects = self.get_objects_by_type("emulateddevice")
             types = tuple(t for t in types if t != "emulateddevice")
         if types:
-            children_objects.extend(super(StcPort, self).get_children(*types))
+            children_objects.extend(super().get_children(*types))
         return children_objects
 
 
@@ -202,13 +200,9 @@ class StcGenerator(StcObject):
 class StcAnalyzer(StcObject):
     """Represent STC port analyzer."""
 
-    pass
-
 
 class StcCapture(StcObject):
     """Represent STC capture."""
-
-    pass
 
 
 class StcLag(StcObject):

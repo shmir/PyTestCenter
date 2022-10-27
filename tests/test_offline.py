@@ -1,7 +1,5 @@
 """
 TestCenter package tests that can run in offline mode.
-
-@author yoram@ignissoft.com
 """
 import inspect
 import logging
@@ -16,13 +14,15 @@ from testcenter.stc_object import StcObject
 from testcenter.stc_port import StcPort
 from testcenter.stc_stream import StcStream
 
+logger = logging.getLogger("tgn.testcenter")
+
 
 def test_hello_world(stc: StcApp) -> None:
     """Just make sure the setup is up and running."""
     assert stc
 
 
-def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
+def test_load_config(stc: StcApp) -> None:
     """Load existing configuration."""
     logger.info(test_load_config.__doc__.strip())
 
@@ -39,7 +39,7 @@ def test_load_config(logger: logging.Logger, stc: StcApp) -> None:
         stc.load_config(configs_dir.joinpath("invalid.tcc").as_posix())
 
 
-def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
+def test_analyze_config(stc: StcApp) -> None:
     """Analyze existing configuration."""
     logger.info(test_analyze_config.__doc__.strip())
 
@@ -73,7 +73,7 @@ def test_analyze_config(logger: logging.Logger, stc: StcApp) -> None:
     assert len(stc.project.get_stream_blocks()) == 2
 
 
-def test_children(logger: logging.Logger, stc: StcApp) -> None:
+def test_children(stc: StcApp) -> None:
     """Test specific get children methods."""
     logger.info(test_children.__doc__)
 
@@ -85,7 +85,7 @@ def test_children(logger: logging.Logger, stc: StcApp) -> None:
         assert len(port.stream_blocks) == 1
 
 
-def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
+def test_build_config(stc: StcApp) -> None:
     """Build simple config from scratch."""
     logger.info(test_build_config.__doc__.strip())
 
@@ -99,8 +99,8 @@ def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
             stc_eth = StcObject(objType="EthIIIf", parent=stc_dev)
             stc_eth.set_attributes(SourceMac="00:11:22:33:44:55")
             stc_dev.set_attributes(TopLevelIf=stc_eth.ref, PrimaryIf=stc_eth.ref)
-            # stc_ip = StcObject(objType="Ipv4If", parent=stc_dev)
-            # stc_ip.set_attributes(Address="1.2.3.4", PrefixLength=16)
+            stc_ip = StcObject(objType="Ipv4If", parent=stc_dev)
+            stc_ip.set_attributes(Address="1.2.3.4", PrefixLength=16)
 
         for sb_name in (port_name + " StreamBlock 1", port_name + " StreamBlock 2"):
             logger.info('Build StreamBlock "%s"', sb_name)
@@ -124,7 +124,7 @@ def test_build_config(logger: logging.Logger, stc: StcApp) -> None:
     stc.save_config(Path(__file__).parent.joinpath("configs/temp", test_name + ".tcc").as_posix())
 
 
-def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
+def test_stream_under_project(stc: StcApp) -> None:
     """Build simple config with ports under project object."""
     logger.info(test_stream_under_project.__doc__.strip())
 
@@ -142,7 +142,7 @@ def test_stream_under_project(logger: logging.Logger, stc: StcApp) -> None:
     stc.save_config(Path(__file__).parent.joinpath("configs/temp", test_name + ".tcc").as_posix())
 
 
-def test_build_emulation(logger: logging.Logger, stc: StcApp) -> None:
+def test_build_emulation(stc: StcApp) -> None:
     """Build simple BGP configuration."""
     logger.info(test_build_emulation.__doc__.strip())
 

@@ -25,8 +25,7 @@ class StcRestWrapper:
         :param user_name: user name, part of session ID.
         :param session_name: session, name part of session ID.
         """
-        debug_print = logger.level == 10
-        self.client = stchttp.StcHttp(server, port, debug_print=debug_print)
+        self.client = stchttp.StcHttp(server, port, debug_print=logger.getEffectiveLevel() == logging.DEBUG)
         if session_name:
             self.session_id = self.client.join_session(session_name)
         else:
@@ -37,24 +36,24 @@ class StcRestWrapper:
     def disconnect(self, terminate: bool) -> None:
         self.client.end_session(terminate)
 
-    def create(self, obj_type, parent, **attributes):
+    def create(self, obj_type: str, parent_obj_ref: str, **attributes: object) -> str:
         """Create one or more Spirent TestCenter Automation objects.
 
         :param obj_type: object type.
-        :param parent: object parent - object will be created under this parent.
+        :param parent_obj_ref: parent object ref - object will be created under this parent.
         :param attributes: additional attributes.
         :return: STC object reference.
         """
-        return self.client.create(obj_type, under=parent.ref, **attributes)
+        return self.client.create(obj_type, under=parent_obj_ref, **attributes)
 
-    def delete(self, obj_ref):
+    def delete(self, obj_ref: str) -> None:
         """Delete Spirent TestCenter Automation object.
 
         :param obj_ref: object handle to delete.
         """
         self.client.delete(obj_ref)
 
-    def perform(self, command, **arguments) -> dict:
+    def perform(self, command: str, **arguments: object) -> dict:
         """Execute a command.
 
         :param command: requested command.

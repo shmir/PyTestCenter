@@ -1,0 +1,12 @@
+
+chassis:
+  ip: IP
+  ports:
+    - CARD/PORT
+    - CARD/PORT
+    - ...
+server:
+  ip: IP
+  port: PORT
+lab_server: IP
+install_dir: C:/Program Files/Spirent Communications/VERSION
