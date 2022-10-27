@@ -10,7 +10,8 @@ import sys
 import time
 from pathlib import Path
 
-from trafficgenerator.tgn_utils import ApiType, is_false
+from trafficgenerator import ApiType
+from trafficgenerator.tgn_utils import is_false
 
 from testcenter.stc_app import init_stc
 from testcenter.stc_statistics_view import StcStats
@@ -27,13 +28,12 @@ REST_PORT = 8888
 
 stc_config_file = Path(__file__).parent.joinpath("test_config.xml")
 
-PORT_1_LOCATION = "192.168.65.24/1/1"
-PORT_2_LOCATION = "192.168.65.24/1/2"
+PORT_1_LOCATION = "192.168.65.31/1/1"
+PORT_2_LOCATION = "192.168.65.31/1/2"
 
 
 def access_object() -> None:
     """Demonstrates how to get objects and attributes."""
-
     # You can read all objects by calling the general method get_children
     stc.project.get_children("port")
 
@@ -55,7 +55,6 @@ def access_object() -> None:
 
 def get_set_attribute() -> None:
     """Demonstrates how to set attributes."""
-
     device = stc.project.ports["Port 1"].devices["Device 1"]
 
     # Get all attributes
@@ -82,7 +81,6 @@ def get_set_attribute() -> None:
 
 def reserve_ports() -> None:
     """Demonstrates how to reserve ports."""
-
     # To reserve a port, you need to map it to a location.
     stc.project.ports["Port 1"].reserve(PORT_1_LOCATION)
     stc.project.ports["Port 2"].reserve(PORT_2_LOCATION)
@@ -90,7 +88,6 @@ def reserve_ports() -> None:
 
 def manage_devices() -> None:
     """Demonstrates how to manage devices - arp/start/stop..."""
-
     stc.send_arp_ns()
     print(stc.get_arp_cache())
     stc.start_devices()
@@ -100,7 +97,6 @@ def manage_devices() -> None:
 
 def manage_traffic() -> None:
     """Demonstrates how to manage traffic - start/stop/statistics..."""
-
     stc.start_traffic()
     time.sleep(8)
     stc.stop_traffic()
@@ -122,7 +118,6 @@ def manage_traffic() -> None:
 
 def get_inventory() -> None:
     """Demonstrates how to get chassis inventory."""
-
     chassis = stc.hw.get_chassis(PORT_1_LOCATION.split("/", maxsplit=1)[0])
     chassis.get_inventory()
 
@@ -151,7 +146,7 @@ def get_inventory() -> None:
 
 
 if __name__ == "__main__":
-    stc = init_stc(api, logger, install_dir=INSTALL_DIR, rest_server=REST_SERVER, rest_port=REST_PORT)
+    stc = init_stc(api, install_dir=INSTALL_DIR, rest_server=REST_SERVER, rest_port=REST_PORT)
     stc.connect(LAB_SERVER)
     stc.load_config(stc_config_file.as_posix())
     stc.api.apply()
